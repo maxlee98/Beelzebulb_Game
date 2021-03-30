@@ -1,0 +1,191 @@
+---
+title: "Beelzebulb's Logic Code"
+output: html_notebook
+---
+
+# Libraries that will be required
+```{r}
+library(tidyverse)
+library(DBI)
+library(rsconnect)
+```
+
+# AWS Connection
+```{r}
+getAWSConnection <- function(){
+  conn <- dbConnect(
+    drv = RMySQL::MySQL(),
+    dbname = "student055",
+    host = "esddbinstance-1.ceo4ehzjeeg0.ap-southeast-1.rds.amazonaws.com",
+    username = "student055",
+    password = "gVU4KpWT")
+  conn
+}
+```
+
+
+# Cards of A Deck Logic
+
+## Generating the deck of cards dataframe
+```{r}
+cardID_deck <- rep(c(1001, 1002, 1003, 1004), each = 5)
+cardNAME_deck <- rep(c("Wire_Left", "Wire_Right", "Wire_Up", "Wire_Down"), each = 5)
+df_id <- data.frame(Card_ID = cardID_deck, Card_Name = cardNAME_deck)
+
+df_id2 <- data.frame(Card_ID = rep(c(2001, 2002, 2003, 2004), each = 5), Card_Name = rep(c("Wire_Left", "Wire_Right", "Wire_Up", "Wire_Down"), each = 5))
+# df_id2
+```
+## Sending Fresh Deck of Cards to Database (For Every new Game)
+```{r}
+querytemplate <- "INSERT INTO CardDeck (Card_ID, Card_Name) VALUES"
+sql_qry <- paste0(querytemplate, paste(sprintf("('%s', '%s')", as.numeric(df_id$Card_ID), df_id$Card_Name), collapse = ","))
+print(sql_qry)
+# conn <- getAWSConnection()
+# # query<- sqlInterpolate(conn, sql_qry)
+# result <- dbExecute(conn, sql_qry)
+# result
+
+## TRY THIS
+#If Dataframe or Table == df_id:
+# conn <- getAWSConnection()
+# dbWriteTable(conn, "CardDeck", df_id, overwrite = TRUE)
+```
+
+## Drawing a sample from the deck
+
+```{r}
+conn <- getAWSConnection()
+query_draw_cards <- dbGetQuery(conn, "SELECT row_names, Card_ID, Card_Name FROM CardDeck ORDER BY RAND() LIMIT 5")
+dbDisconnect(conn)
+query_draw_cards
+```
+## Assigning the Cards to the Player
+```{r}
+conn <- getAWSConnection()
+playerid <- 3
+query_draw_cards["PlayerID"] <- playerid
+query_draw_cards
+querytemplate <- "INSERT INTO HandCards (PlayerID, Card_ID, Card_Name) VALUES"
+sql_qry <- paste0(querytemplate, paste(sprintf("(%d, %d, '%s')",
+as.numeric(query_draw_cards$PlayerID),
+as.numeric(query_draw_cards$Card_ID),
+query_draw_cards$Card_Name), collapse = ","))
+sql_qry
+send_query <- dbExecute(conn, sql_qry)
+# send_query
+dbDisconnect(conn)
+```
+
+
+## Removing the sample drawn from the deck
+
+```{r}
+conn <- getAWSConnection()
+for(i in 1:nrow(query_draw_cards)){
+  remove_template <- "DELETE FROM CardDeck where row_names = ?row"
+  qrc <- sqlInterpolate(conn, remove_template, row = query_draw_cards[i, 1])
+  print(qrc)
+  query_remove_card <- dbExecute(conn, qrc)
+}
+dbDisconnect(conn)
+```
+
+
+## Clearing the database of any other cards still in it (Working)
+```{r}
+# use   truncate tableName;
+# Truncate: will also delete the rows from your table but it will start from new row with 1.
+qry_truncate <- "TRUNCATE CardDeck"
+exec_trunctate <- dbExecute(conn, qry_truncate)
+```
+
+# Placing of Cards on the board
+
+## Obtaining the grid cells for the board
+
+## Placing an image that will represent the board
+
+## Opening a module for any of the cell that is clicked.
+
+## Retrieving from database the cards that the current player_id has.
+
+## Dropdown box to select the card and press confirm
+
+## Show the card on the board.
+
+
+
+
+# Physics Questions
+
+## Adding of Data to the databases
+```{r}
+mcq <- 4
+qns <- 10
+mcq_choices <- function(qns, mcq){
+  ch <- c()
+  print(ch)
+  for(i in 1:qns){
+    for(j in 1:mcq){
+      ch <- c(ch, paste("This is qn", i, "and here is the choice", j))
+    }
+  }
+  return(ch)
+}
+
+physicsans <- data.frame(qn_id = rep(c(1:10), each = mcq),
+                          ans_id = c(1:(qns*mcq)),
+                          choice = mcq_choices(qns, mcq))
+physicsans
+  
+conn <- getAWSConnection()
+dbWriteTable(conn, "PhysicsAns", physicsans, overwrite = TRUE)
+```
+
+
+## Retrieving Random Physics Question from the database
+
+```{r}
+conn <- getAWSConnection()
+physics_qn_id <- 1
+query_pn_template <- "SELECT question, ans_id FROM PhysicsQn WHERE qn_id = ?qn_id"
+query_physics_question <- sqlInterpolate(conn, query_pn_template, qn_id = physics_qn_id)
+exec_query_pq <- dbGetQuery(conn, query_physics_question)
+dbDisconnect(conn)
+exec_query_pq
+```
+
+
+## Retrieving Random Phyiscs Question Answer Choices from the database
+
+```{r}
+conn <- getAWSConnection()
+physics_qn_id <- 1
+query_pc_template <- "SELECT ans_ID, choice FROM PhysicsAns WHERE qn_id = ?qn_id"
+query_physics_choices <- sqlInterpolate(conn, query_pc_template, qn_id = physics_qn_id)
+exec_query_pc <- dbGetQuery(conn, query_physics_choices)
+dbDisconnect(conn)
+exec_query_pc
+```
+
+
+## Displaying Question and Choices on a module screen (with drop down and confirm button or Radio Button)
+
+## Checking if the answer given is the same as the correct answer ID in the database for that question
+
+## Module Response to show whether correct or wrong.
+
+## Consequence of Right / Wrong answer.
+
+# Checking for Defeat Condition
+```{r}
+query_cards_result <- dbGetQuery(conn,"SELECT Card_ID FROM CardDeck")
+query_cards_result
+
+if (nrow(query_cards_result) == 0){
+  print("Zero rows returned, Defeat Condition Reached")
+}
+
+dbDisconnect(conn)
+```
+
