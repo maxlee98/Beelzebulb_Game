@@ -66,11 +66,13 @@ body <- dashboardBody(
     
     tabItem(tabName = "game",
             h1("This is the Game Lobby to Game Tab"),
+            verbatimTextOutput("playerturn"),
+            verbatimTextOutput("gamePhase"),
             fluidRow(
               # the trick here is to make the gameboard image 'position:absolute;z-order:0'; 
               # Then, to superimpose images, style them to be 'position:relative;z-order:999'
-              img(src='FantasyMap.jpg',style="position:absolute;z-order:0",width="100%",height="400px"),
-              lapply(1:4, function(i){
+              img(src='FantasyMap.jpg',style="position:absolute;z-order:0",width="100%",height="300px"),
+              lapply(1:3, function(i){
                 lapply(1:4, function(j){
                   column(3,
                   imageOutput(paste0("cell", i, j),height="100px",width="100px",click=paste0("click", i, j),inline=TRUE)

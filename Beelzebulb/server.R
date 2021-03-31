@@ -5,10 +5,11 @@ library(jsonlite)
 library(shinydashboard)
 library(rsconnect)
 
-# Added Functions
+#Global Variables 
+turn <- 0
 
-# AWS Connection #
 
+# AWS Connection
 getAWSConnection <- function(){
   conn <- dbConnect(
     drv = RMySQL::MySQL(),
@@ -19,8 +20,23 @@ getAWSConnection <- function(){
   conn
 }
 
-# REGISTER #
+# General
 
+checkPhase <- function(){
+  conn <- getAWSConnection()
+  query <- "SELECT phase FROM Phase"
+  phase <- dbGetQuery(conn, query)[1, 1]
+  dbDisconnect(conn)
+  return(phase)
+}
+
+updatePhase <- function(update){
+  conn <- getAWSConnection()
+  dbExecute(conn, sprintf("UPDATE Phase SET phase = %d", update))
+  dbDisconnect(conn)
+}
+
+# REGISTER
 createNewPlayerQuery <- function(conn,username,password){
   #password could contain an SQL insertion attack
   #Create a template for the query with placeholder for  password
@@ -109,7 +125,14 @@ getPlayerID <- function(username,password){
 }
 
 # Game Lobby
-
+refresh <- function(page = NULL){
+  if(page == "GameLobby"){
+    conn <- getAWSConnection()
+    lobby <- dbGetQuery(conn, "SELECT PlayerID, Username FROM GameLobby LIMIT 4")
+    dbDisconnect(conn)
+    return(lobby)
+  }
+}
 
 gameLobby <- function(totalPlayers, failed = FALSE){
   if(totalPlayers > 3){
@@ -133,6 +156,84 @@ gameLobby <- function(totalPlayers, failed = FALSE){
   }
 }
 
+#Get Physics Question
+getPhysicsQn <- function(){
+  conn <- getAWSConnection()
+  qna <- dbGetQuery(conn, "SELECT qn_id, question, ans_id FROM PhysicsQn ORDER BY RAND() LIMIT 1")
+  qid <- qna[1, 1]
+  qn <- qna[1, 2]
+  aid <- qna[1, 3]
+  dbDisconnect(conn)
+  return_list = list("qn" = qn, "aid" = aid, "qid" = qid)
+  return(return_list)
+}
+
+getOptions <- function(qid){
+  conn <- getAWSConnection()
+  opt <- sqlInterpolate(conn, "SELECT choice, ans_id FROM PhysicsAns WHERE qn_id = ?qnid ORDER BY RAND()", qnid = qid)
+  q_opt <- dbGetQuery(conn, opt)
+  dbDisconnect(conn)
+  return(q_opt)
+}
+
+getAnswer <- function(aid){
+  conn <- getAWSConnection()
+  opt <- sqlInterpolate(conn, "SELECT choice FROM PhysicsAns WHERE ans_id = ?aid ORDER BY RAND()", aid = aid)
+  ans <- dbGetQuery(conn, opt)
+  dbDisconnect(conn)
+  return(ans[1, 1])
+}
+
+# Physics Question
+answerPhysicsQn <- function(qn, q_opt, failed = FALSE){
+  modalDialog(
+    title = "Physics Question:",
+    p(qn),
+    lapply(1:nrow(q_opt), function(i){
+      p(sprintf("%d ) %s", i, q_opt[i, 1]))
+    }),
+    selectInput("optionSelect", "Which Option is your answer?", choices = c(1:4), selected = 1),
+    footer = tagList(
+      actionButton("confirmOption", "Confirm"),
+      modalButton("Cancel")
+    )
+  )
+}
+
+physicsResult <- function(result, ans){
+  if(result == "correct"){
+    modalDialog(
+      title = "You got the right answer!",
+      strong("You will Draw a Card.."),
+      p("Please press the button below to continue on to your Action Phase to place a card!"),
+      footer = tagList(
+        actionButton("correctCont", "Continue")
+      )
+    )
+  }else{
+    modalDialog(
+      title = "Your Answer is Wrong",
+      strong("The correct answer is:"),
+      p(ans),
+      p("For getting the question wrong, you will be moving to the end phase"),
+      footer = tagList(
+        actionButton("wrongCont", "Continue")
+      )
+    )
+  }
+}
+
+
+#Get Handcards
+getHandCards <- function(userid){
+  conn <- getAWSConnection()
+  q_temp <- "SELECT Card_ID, Card_Name FROM HandCards WHERE ?userid"
+  query_HandCards <- sqlInterpolate(conn, q_temp, userid = userid)
+  exec_query <- dbGetQuery(conn, query_HandCards)
+  dbDisconnect(conn)
+  return(exec_query)
+}
+
 # Choose Card Modal
 chooseCard <- function(handCards, failed=FALSE){
   cards <- nrow(handCards)
@@ -142,10 +243,11 @@ chooseCard <- function(handCards, failed=FALSE){
     lapply(1:cards, function(i){
       img(src='RedStoneSmall.png')
       switch(sprintf("%d", handCards[i, 1]),
-             '1001' = {img(src='RedStoneSmall.png')},
-             '1002' = {img(src='RedStoneSmall.png')},
-             '1003' = {img(src='BlueStoneSmall.png')},
-             '1004' = {img(src='BlueStoneSmall.png')},
+             '1001' = {img(src='Wire_Designs-01.png')},
+             '1002' = {img(src='Wire_Designs-02.png')},
+             '1003' = {img(src='Wire_Designs-03.png')},
+             '1004' = {img(src='Wire_Designs-04.png')},
+             '1005' = {img(src='Wire_Designs-05.png')},
              {img(src='RedStoneSmall.png')}
              )
       }),
@@ -156,6 +258,7 @@ chooseCard <- function(handCards, failed=FALSE){
       )
     )
 }
+
 
 
 #End Game Modal
@@ -174,8 +277,11 @@ gameEnd <- function(failed = FALSE){
 
 ############################################ SERVER ################################################
 server <- function(input, output, session) {
-  vals <- reactiveValues(password = NULL,userid=NULL,username=NULL, lobby=NULL)
+  vals <- reactiveValues(password = NULL, userid=NULL,username=NULL, lobby=NULL)
+  physics <- reactiveValues(qid = NULL, aid = NULL, qn = NULL, q_opt = NULL)
   
+  output$playerturn <- renderText("The game has yet to start.")
+  output$gamePhase <- renderText("Please wait for the game to begin...")
   
   output$status <- renderText({
     if (is.null(vals$username))
@@ -237,25 +343,17 @@ server <- function(input, output, session) {
     query <- sqlInterpolate(conn, querytemplate, playerid = vals$userid, username = vals$username)
     result <- dbExecute(conn, query)
     #Obtaining the GameLobby table from database
-    vals$lobby<- dbGetQuery(conn, "SELECT PlayerID, Username FROM GameLobby LIMIT 4")
+    vals$players <- dbGetQuery(conn, "SELECT PlayerID, Username FROM GameLobby LIMIT 4")
     dbDisconnect(conn)
-    totalPlayers <- nrow(vals$lobby)
+    totalPlayers <- nrow(vals$players)
     showModal(gameLobby(totalPlayers = totalPlayers, failed = FALSE))
-    # 
   })
   
-  output$gameLobbyTable <- renderTable(vals$lobby)
+  output$gameLobbyTable <- renderTable(vals$players)
   
   observeEvent(input$refreshLobby, {
-    conn <- getAWSConnection()
-    vals$lobby<- dbGetQuery(conn, "SELECT PlayerID, Username FROM GameLobby LIMIT 4")
-    dbDisconnect(conn)
-    output$gameLobbyTable <- renderTable(vals$lobby)
-  })
-  
-  observeEvent(input$entergame, {
-    updateTabsetPanel(session, "tabs", selected = "game")
-    removeModal()
+    vals$players <- refresh("GameLobby")
+    output$gameLobbyTable <- renderTable(vals$players)
   })
   
   ## Game Tab 
@@ -267,26 +365,84 @@ server <- function(input, output, session) {
   }
   
   #Giving Each Cell IDs and their Click function
-  lapply(1:4, function(i){
-    lapply(1:4, function(j){
-      id <- sprintf("cell%d%d", i, j)
-      output[[id]] <- renderCell()
-      click_id <- sprintf("click%d%d", i, j)
-      observeEvent(input[[click_id]], {
-        conn <- getAWSConnection()
-        q_temp <- "SELECT Card_ID, Card_Name FROM HandCards WHERE ?userid"
-        query_HandCards <- sqlInterpolate(conn, q_temp, userid = vals$userid)
-        exec_query <- dbGetQuery(conn, query_HandCards)
-        dbDisconnect(conn)
-        print(exec_query)
-        showModal(chooseCard(handCards = exec_query, failed=FALSE))
+  observeEvent(input$entergame, {
+    updateTabsetPanel(session, "tabs", selected = "game")
+    #Inserting Players into GamePlayers
+    conn <- getAWSConnection()
+    dbWriteTable(conn, "GamePlayers", vals$players, overwrite=TRUE)
+    #Update the Game Turn number
+    turn <- turn + 1
+    dbExecute(conn, sprintf("UPDATE TurnNumber SET turn = %d", turn))
+    output$playerturn <- renderText(paste(sprintf("%s's turn", vals$players[turn %% 4, 2])))
+    #Resetting Game Lobby (Cant Truncate here, other people needs to enter)
+    # qry_truncate <- "TRUNCATE GameLobby"
+    # exec_trunctate <- dbExecute(conn, qry_truncate)
+    
+    #Inserting Initial Hand Cards from Database
+    query_draw_cards <- dbGetQuery(conn, "SELECT row_names, Card_ID, Card_Name FROM CardDeck ORDER BY RAND() LIMIT 5")
+    playerid <- vals$userid
+    query_draw_cards["PlayerID"] <- playerid
+    querytemplate_drawcards <- "INSERT INTO HandCards (PlayerID, Card_ID, Card_Name) VALUES"
+    sql_qry <- paste0(querytemplate_drawcards, paste(sprintf("(%d, %d, '%s')",
+                                                             as.numeric(query_draw_cards$PlayerID),
+                                                             as.numeric(query_draw_cards$Card_ID),
+                                                             query_draw_cards$Card_Name), collapse = ","))
+    send_query <- dbExecute(conn, sql_qry)
+    dbDisconnect(conn)
+    removeModal()
+    # Buttons for the players to Click
+    lapply(1:4, function(i){
+      lapply(1:4, function(j){
+        cell_id <- sprintf("cell%d%d", i, j)
+        output[[cell_id]] <- renderCell()
+        click_id <- sprintf("click%d%d", i, j)
+        observeEvent(input[[click_id]], {
+          qna <- getPhysicsQn()
+          physics$qid <- qna$qid
+          physics$aid <- qna$aid
+          physics$qn <- qna$qn
+          physics$q_opt <- getOptions(physics$qid)
+          showModal(answerPhysicsQn(qn = physics$qn, q_opt = physics$q_opt[, 1, drop=FALSE], failed=FALSE))
+          # 
         })
+      })
     })
+    #Shifting to the first person's standby phase
+    output$gamePhase <- renderText("Standby Phase")
   })
+  
+  # Reaction to Choice of Physics Question's Answer
+  observeEvent(input$confirmOption, {
+    # print(input$optionSelect)
+    choice <- input$optionSelect
+    ans_id <- physics$q_opt[choice, 2]
+    # print(ans_id)
+    # print(physics$aid)
+    ans <- getAnswer(physics$aid)
+    if(ans_id == physics$aid){showModal(physicsResult("correct", ans))}else{showModal(physicsResult("wrong", ans))}
+  })
+  
+  # Reacting to correct Answer of Physics Question
+  
+  observeEvent(input$correctCont, {
+    # Draw A card First
+    
+    #Get hand Cards
+    exec_query <- getHandCards(userid = vals$userid)
+    showModal(chooseCard(handCards = exec_query, failed=FALSE))
+  })
+  
+  # Reacting to Wrong Answer of Physics Question
+  observeEvent(input$wrongCont, {
+    #Get Handcards
+    exec_query <- getHandCards(userid = vals$userid)
+    showModal(chooseCard(handCards = exec_query, failed=FALSE))
+  })
+  
   
   ### Choosing Card
   observeEvent(input$confirmCard, {
-    return(NULL)
+    # renderCell(cell_id, card_select = output$cardSelect)
   })
   
   
