@@ -1,4 +1,5 @@
 library(stringr)
+library(dplyr)
 library(shiny)
 library(DBI)
 library(jsonlite)
@@ -7,7 +8,8 @@ library(rsconnect)
 
 #Global Variables 
 turn <- 0
-
+current_row <- 0
+current_col <- 0
 
 # AWS Connection
 getAWSConnection <- function(){
@@ -235,7 +237,7 @@ getHandCards <- function(userid){
 }
 
 # Choose Card Modal
-chooseCard <- function(handCards, failed=FALSE){
+chooseCard <- function(pos, handCards, failed=FALSE){
   cards <- nrow(handCards)
   modalDialog(
     title = "Choose Your Card",
@@ -251,6 +253,7 @@ chooseCard <- function(handCards, failed=FALSE){
              {img(src='RedStoneSmall.png')}
              )
       }),
+    
     selectInput("cardSelect", "Choice of Card", choices = handCards$Card_Name, selected = handCards$Card_Name[1]),
     footer = tagList(
       actionButton("confirmCard", "Confirm"),
@@ -258,8 +261,6 @@ chooseCard <- function(handCards, failed=FALSE){
       )
     )
 }
-
-
 
 #End Game Modal
 gameEnd <- function(failed = FALSE){
@@ -277,8 +278,10 @@ gameEnd <- function(failed = FALSE){
 
 ############################################ SERVER ################################################
 server <- function(input, output, session) {
-  vals <- reactiveValues(password = NULL, userid=NULL,username=NULL, lobby=NULL)
+  vals <- reactiveValues(password = NULL, userid=NULL,username=NULL, lobby=NULL, playercolor=1)
   physics <- reactiveValues(qid = NULL, aid = NULL, qn = NULL, q_opt = NULL)
+  pieces <- matrix(rep(0,3*5),nrow=3,ncol=5,byrow=TRUE)
+  gamevals <- reactiveValues(turncount=0,pieces=pieces)
   
   output$playerturn <- renderText("The game has yet to start.")
   output$gamePhase <- renderText("Please wait for the game to begin...")
@@ -359,10 +362,85 @@ server <- function(input, output, session) {
   ## Game Tab 
   
   ### Board Image
-  renderCell <- function(){
-    renderImage({list(src="www/blanksmall.png",style="position:relative;z-order:999") },
-                deleteFile=FALSE)
+  renderCell <- function(gridrow,gridcol,cell_num=1){
+    renderImage({
+      #select the icon appropriate for this cell
+      #imageid <- 1
+      #if (!is.null(gamevals$pieces)) #imageid <- cell_num#gamevals$pieces[gridrow,gridcol]+1
+      imgsrc=switch(cell_num,"www/blanksmall.png","www/BlueStoneSmall.png","www/RedStoneSmall.png","www/Wire_Designs-01.png","www/Wire_Designs-02.png","www/Wire_Designs-03.png","www/Wire_Designs-04.png", "www/Wire_Designs-05.png" )
+      # Unfortunately, we are not able to re-size the image and still have the click event work.
+      # So the image files must have exactly the size we want.
+      # Also, z-order works only if 'position' is set.
+      list(src=imgsrc,style="position:relative;z-order:999")
+    },deleteFile=FALSE)
   }
+  
+  updateGameState <- function(){
+    conn <- getAWSConnection()
+    result <- dbGetQuery(conn, "SELECT * FROM GameState")
+    dbDisconnect(conn)
+    result$img_num <- as.numeric(result$img_num)
+    for ( i in 1:15) {print(result[["img_num"]][[i]])}
+    output$cell11 <- renderCell(1,1,result[["img_num"]][[1]])
+    output$cell12 <- renderCell(1,2,result[["img_num"]][[2]])
+    output$cell13 <- renderCell(1,3,result[["img_num"]][[3]])
+    output$cell14 <- renderCell(1,4,result[["img_num"]][[4]])
+    output$cell15 <- renderCell(1,5,result[["img_num"]][[5]])
+    output$cell21 <- renderCell(2,1,result[["img_num"]][[6]])
+    output$cell22 <- renderCell(2,2,result[["img_num"]][[7]])
+    output$cell23 <- renderCell(2,3,result[["img_num"]][[8]])
+    output$cell24 <- renderCell(2,4,result[["img_num"]][[9]])
+    output$cell25 <- renderCell(2,5,result[["img_num"]][[10]])
+    output$cell31 <- renderCell(3,1,result[["img_num"]][[11]])
+    output$cell32 <- renderCell(3,2,result[["img_num"]][[12]])
+    output$cell33 <- renderCell(3,3,result[["img_num"]][[13]])
+    output$cell34 <- renderCell(3,4,result[["img_num"]][[14]])
+    output$cell35 <- renderCell(3,5,result[["img_num"]][[15]])
+  }
+  
+  processClickEvent <- function(gridrow,gridcol){
+    # If it is not this player's turn or if the cell is occupied, then ignore the click
+    print(paste0("click", gridrow, gridcol))
+    current_row <<- gridrow
+    current_col <<- gridcol
+    qna <- getPhysicsQn()
+    physics$qid <- qna$qid
+    physics$aid <- qna$aid
+    physics$qn <- qna$qn
+    physics$q_opt <- getOptions(physics$qid)
+    showModal(answerPhysicsQn(qn = physics$qn, q_opt = physics$q_opt[, 1, drop=FALSE], failed=FALSE))
+    req(vals$playerid)
+    if ((gamevals$pieces[gridrow,gridcol]==0)&&(vals$turnstate==as.integer(vals$playercolor))){
+      #change the state of the game
+      gamevals$pieces[gridrow,gridcol] <- as.integer(vals$playercolor) # as.integer necessary because vals$playercolor is actually a string
+      gamevals$turncount <- gamevals$turncount+1
+      newstate <- list(turncount=gamevals$turncount,pieces=gamevals$pieces)
+      # check for end of game
+      if (gamevals$turncount>MAXTURNS){
+        vals$turnstate <- 0 # turnstate=0 signals end of the game
+      } else{
+        #switch turnstate between player colors
+        if (vals$turnstate==1)vals$turnstate <- 2 else vals$turnstate <- 1
+      }
+      updateGame(vals$playerid,vals$gamevariantid,vals$turnstate,newstate)
+    }
+  }
+  
+  observeEvent(input$click11,{processClickEvent(1,1)})
+  observeEvent(input$click12,{processClickEvent(1,2)})
+  observeEvent(input$click13,{processClickEvent(1,3)})
+  observeEvent(input$click14,{processClickEvent(1,4)})
+  observeEvent(input$click15,{processClickEvent(1,5)})
+  observeEvent(input$click21,{processClickEvent(2,1)})
+  observeEvent(input$click22,{processClickEvent(2,2)})
+  observeEvent(input$click23,{processClickEvent(2,3)})
+  observeEvent(input$click24,{processClickEvent(2,4)})
+  observeEvent(input$click25,{processClickEvent(2,5)})
+  observeEvent(input$click31,{processClickEvent(3,1)})
+  observeEvent(input$click32,{processClickEvent(3,2)})
+  observeEvent(input$click33,{processClickEvent(3,3)})
+  observeEvent(input$click34,{processClickEvent(3,4)})
+  observeEvent(input$click35,{processClickEvent(3,5)})
   
   #Giving Each Cell IDs and their Click function
   observeEvent(input$entergame, {
@@ -390,26 +468,42 @@ server <- function(input, output, session) {
     send_query <- dbExecute(conn, sql_qry)
     dbDisconnect(conn)
     removeModal()
+    updateGameState()
+    # output$cell11 <- renderCell(1,1)
+    # output$cell12 <- renderCell(1,2)
+    # output$cell13 <- renderCell(1,3)
+    # output$cell14 <- renderCell(1,4)
+    # output$cell15 <- renderCell(1,5)
+    # output$cell21 <- renderCell(2,1)
+    # output$cell22 <- renderCell(2,2)
+    # output$cell23 <- renderCell(2,3)
+    # output$cell24 <- renderCell(2,4)
+    # output$cell25 <- renderCell(2,5)
+    # output$cell31 <- renderCell(3,1)
+    # output$cell32 <- renderCell(3,2)
+    # output$cell33 <- renderCell(3,3)
+    # output$cell34 <- renderCell(3,4)
+    # output$cell35 <- renderCell(3,5)
     # Buttons for the players to Click
-    lapply(1:4, function(i){
-      lapply(1:4, function(j){
-        cell_id <- sprintf("cell%d%d", i, j)
-        output[[cell_id]] <- renderCell()
-        click_id <- sprintf("click%d%d", i, j)
-        observeEvent(input[[click_id]], {
-          qna <- getPhysicsQn()
-          physics$qid <- qna$qid
-          physics$aid <- qna$aid
-          physics$qn <- qna$qn
-          physics$q_opt <- getOptions(physics$qid)
-          showModal(answerPhysicsQn(qn = physics$qn, q_opt = physics$q_opt[, 1, drop=FALSE], failed=FALSE))
+    # lapply(1:3, function(i){
+    #   lapply(1:5, function(j){
+    #     cell_id <- sprintf("cell%d%d", i, j)
+    #     output[[cell_id]] <- renderCell()
+    #     click_id <- sprintf("click%d%d", i, j)
+    #     observeEvent(input[[click_id]], {
+    #       qna <- getPhysicsQn()
+    #       physics$qid <- qna$qid
+    #       physics$aid <- qna$aid
+    #       physics$qn <- qna$qn
+    #       physics$q_opt <- getOptions(physics$qid)
+    #       showModal(answerPhysicsQn(qn = physics$qn, q_opt = physics$q_opt[, 1, drop=FALSE], failed=FALSE))
           # 
         })
-      })
-    })
+      
+    
     #Shifting to the first person's standby phase
     output$gamePhase <- renderText("Standby Phase")
-  })
+  
   
   # Reaction to Choice of Physics Question's Answer
   observeEvent(input$confirmOption, {
@@ -442,7 +536,42 @@ server <- function(input, output, session) {
   
   ### Choosing Card
   observeEvent(input$confirmCard, {
-    # renderCell(cell_id, card_select = output$cardSelect)
+    print(paste(current_row, current_col, input$cardSelect))
+    num_id <- case_when(
+      input$cardSelect == "Wire_Left" ~ 4,
+      input$cardSelect == "Wire_Right" ~ 5,
+      input$cardSelect == "Wire_Up" ~ 6,
+      input$cardSelect == "Wire_Down" ~ 7
+    )
+    cell_number <- case_when(
+      current_row == 1 ~ case_when(
+        current_col == 1 ~ 1,
+        current_col == 2 ~ 2,
+        current_col == 3 ~ 3,
+        current_col == 4 ~ 4,
+        current_col == 5 ~ 5
+      ),
+      current_row == 2 ~ case_when(
+        current_col == 1 ~ 6,
+        current_col == 2 ~ 7,
+        current_col == 3 ~ 8,
+        current_col == 4 ~ 9,
+        current_col == 5 ~ 10
+      ),
+      current_row == 3 ~ case_when(
+        current_col == 1 ~ 11,
+        current_col == 2 ~ 12,
+        current_col == 3 ~ 13,
+        current_col == 4 ~ 14,
+        current_col == 5 ~ 15
+      )
+    )
+    conn <- getAWSConnection()
+    query <- paste0("UPDATE GameState SET img_num=", num_id, " WHERE cell_number=", cell_number)
+    result <- dbExecute(conn,query)
+    dbDisconnect(conn)
+    removeModal()
+    updateGameState()
   })
   
   

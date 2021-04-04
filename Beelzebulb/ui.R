@@ -64,24 +64,57 @@ body <- dashboardBody(
             uiOutput("buttonGameLobby")
             ),
     
+    # tabItem(tabName = "game",
+    #         h1("This is the Game Lobby to Game Tab"),
+    #         verbatimTextOutput("playerturn"),
+    #         verbatimTextOutput("gamePhase"),
+    #         fluidRow(
+    #           # the trick here is to make the gameboard image 'position:absolute;z-order:0'; 
+    #           # Then, to superimpose images, style them to be 'position:relative;z-order:999'
+    #           img(src='FantasyMap.jpg',style="position:absolute;z-order:0",width="515px",height="315px"),
+    #           lapply(1:3, function(i){
+    #             lapply(1:5, function(j){
+    #               imageOutput(paste0("cell", i, j),height="100px",width="100px",click=paste0("click", i, j),inline=TRUE)
+    #             })
+    #           })
+    #         )
+    #       ),
+    
     tabItem(tabName = "game",
-            h1("This is the Game Lobby to Game Tab"),
+            h2("This is the Game Lobby to Game Tab"),
             verbatimTextOutput("playerturn"),
             verbatimTextOutput("gamePhase"),
             fluidRow(
-              # the trick here is to make the gameboard image 'position:absolute;z-order:0'; 
-              # Then, to superimpose images, style them to be 'position:relative;z-order:999'
-              img(src='FantasyMap.jpg',style="position:absolute;z-order:0",width="100%",height="300px"),
-              lapply(1:3, function(i){
-                lapply(1:4, function(j){
-                  column(3,
-                  imageOutput(paste0("cell", i, j),height="100px",width="100px",click=paste0("click", i, j),inline=TRUE)
-                  )
-                })
-              })
+              box(
+                title = "A Very Simple Board Game",width=12,
+                htmlOutput("playercolorchoice"),
+                uiOutput("moreControls"),
+                # the trick here is to make the gameboard image 'position:absolute;z-order:0'; 
+                # Then, to superimpose images, style them to be 'position:relative;z-order:999'
+                img(src='FantasyMap.jpg',style="position:absolute;z-order:0",width="500px",height="300px"),
+                imageOutput("cell11",height="100px",width="100px",click="click11",inline=TRUE), # height and width are for the containing div, not the image itself
+                imageOutput("cell12",height="100px",width="100px",click="click12",inline=TRUE),  # height and width are for the containing div, not the image itself
+                imageOutput("cell13",height="100px",width="100px",click="click13",inline=TRUE), # height and width are for the containing div, not the image itself
+                imageOutput("cell14",height="100px",width="100px",click="click14",inline=TRUE),  # height and width are for the containing div, not the image itself
+                imageOutput("cell15",height="100px",width="100px",click="click15",inline=TRUE),
+                tags$br(),
+                imageOutput("cell21",height="100px",width="100px",click="click21",inline=TRUE), # height and width are for the containing div, not the image itself
+                imageOutput("cell22",height="100px",width="100px",click="click22",inline=TRUE),  # height and width are for the containing div, not the image itself
+                imageOutput("cell23",height="100px",width="100px",click="click23",inline=TRUE), # height and width are for the containing div, not the image itself
+                imageOutput("cell24",height="100px",width="100px",click="click24",inline=TRUE),  # height and width are for the containing div, not the image itself
+                imageOutput("cell25",height="100px",width="100px",click="click25",inline=TRUE),
+                tags$br(),
+                imageOutput("cell31",height="100px",width="100px",click="click31",inline=TRUE), # height and width are for the containing div, not the image itself
+                imageOutput("cell32",height="100px",width="100px",click="click32",inline=TRUE),  # height and width are for the containing div, not the image itself
+                imageOutput("cell33",height="100px",width="100px",click="click33",inline=TRUE), # height and width are for the containing div, not the image itself
+                imageOutput("cell34",height="100px",width="100px",click="click34",inline=TRUE),  # height and width are for the containing div, not the image itself
+                imageOutput("cell35",height="100px",width="100px",click="click35",inline=TRUE),
+                tags$br(),
+                p("ESD Fantasy Map and Game Pieces by Tan Yi Lin")
+              )
             )
-          ),
-
+    ),
+    
     tabItem(tabName = "instruct",
             h2("Widgets tab content"),
             p("Instruction goes here")
