@@ -320,7 +320,7 @@ chooseCard <- function(pos, handCards, failed=FALSE){
 
 #Checking End Game Condition
 checkWin <- function(){
-  return(NULL)
+  return(FALSE)
 }
 
 checkLoss <- function(){
@@ -558,7 +558,7 @@ server <- function(input, output, session) {
     # exec_trunctate <- dbExecute(conn, qry_truncate)
     
     #Inserting Initial Hand Cards from Database
-    drawCard(vals$userid, 5)
+    #drawCard(vals$userid, 5)
     removeModal()
     updateGameState()
   })
@@ -579,7 +579,7 @@ server <- function(input, output, session) {
   # Reacting to correct Answer of Physics Question
   observeEvent(input$correctCont, {
     # Draw A card First
-    drawCard(vals$userid, 1)
+    #drawCard(vals$userid, 1)
     #Get hand Cards
     exec_query <- getHandCards(userid = vals$userid)
     showModal(chooseCard(handCards = exec_query, failed=FALSE))
@@ -655,6 +655,7 @@ server <- function(input, output, session) {
   
   observeEvent(input$backToHome, {
     updateTabsetPanel(session, "tabs", selected = "home")
+    removeModal()
     # resetDatabase()
   })
 
