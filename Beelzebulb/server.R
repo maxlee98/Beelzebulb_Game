@@ -5,8 +5,37 @@ library(DBI)
 library(jsonlite)
 library(shinydashboard)
 library(rsconnect)
+source("BoardLogicCode.r")
+
 
 #Global Variables 
+boardState <- tibble(
+  c1 = list(
+    tibble(n = 0, e = 0, s = 0, w = 0),
+    tibble(n = 1, e = 1, s = 1, w = 0),
+    tibble(n = 0, e = 0, s = 0, w = 0)
+  ),
+  c2 = list(
+    tibble(n = 0, e = 0, s = 0, w = 0),
+    tibble(n = 0, e = 0, s = 1, w = 1),
+    tibble(n = 1, e = 1, s = 0, w = 0)
+  ),
+  c3 = list(
+    tibble(n = 0, e = 0, s = 0, w = 0),
+    tibble(n = 0, e = 0, s = 0, w = 0),
+    tibble(n = 0, e = 1, s = 0, w = 1)
+  ),
+  c4 = list(
+    tibble(n = 0, e = 0, s = 0, w = 0),
+    tibble(n = 0, e = 1, s = 1, w = 0),
+    tibble(n = 1, e = 0, s = 0, w = 1)
+  ),
+  c5 = list(
+    tibble(n = 0, e = 0, s = 0, w = 0),
+    tibble(n = 1, e = 0, s = 1, w = 1),
+    tibble(n = 0, e = 0, s = 0, w = 0)
+  )
+)
 current_row <- 0
 current_col <- 0
 
@@ -320,7 +349,11 @@ chooseCard <- function(pos, handCards, failed=FALSE){
 
 #Checking End Game Condition
 checkWin <- function(){
-  return(FALSE)
+  conn <- getAWSConnection()
+  boardState <-dbGetQuery(conn, "SELECT * FROM GameState")
+  dbDisconnect(conn)
+  print(boardLogic(boardState))
+  return(boardLogic(boardState))
 }
 
 checkLoss <- function(){
@@ -625,6 +658,22 @@ server <- function(input, output, session) {
         current_col == 5 ~ 15
       )
     )
+    print("Here")
+    print(current_col)
+    print(current_row)
+    print(num_id)
+    if (num_id == 4){
+      boardState[[current_col]][[current_row]] <- tibble(n = 0, e = 0, s = 1, w = 1)
+    }
+    else if (num_id == 5){
+      boardState[[current_col]][[current_row]] <- tibble(n = 0, e = 1, s = 0, w = 1)
+    }
+    else if (num_id == 6){
+      boardState[[current_col]][[current_row]] <- tibble(n = 1, e = 1, s = 0, w = 0)
+    }
+    else {
+      boardState[[current_col]][[current_row]] <- tibble(n = 1, e = 0, s = 0, w = 1)
+    }
     conn <- getAWSConnection()
     query <- paste0("UPDATE GameState SET img_num=", num_id, " WHERE cell_number=", cell_number)
     result <- dbExecute(conn,query)
@@ -642,6 +691,7 @@ server <- function(input, output, session) {
       vals$players <- rbind(playerWin, playerLose)
       output$resultTable <- renderTable(vals$players)
       showModal(gameEnd(failed=FALSE))
+      return()
     }
     # Check Loss Condition
     if(checkLoss()){
@@ -650,6 +700,7 @@ server <- function(input, output, session) {
       vals$players <- rbind(playerWin, playerLose)
       output$resultTable <- renderTable(vals$players)
       showModal(gameEnd(failed=FALSE))
+      return()
     }
   })
   

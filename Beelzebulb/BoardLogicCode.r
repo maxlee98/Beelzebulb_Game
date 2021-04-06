@@ -50,9 +50,9 @@ cellCheck <- function(df, col, row, prevConn){
 
 boardLogic <- function(board){
   # First step: check whether cells right next to bulb have any connection first
-  if (df1[[4]][[2]][["e"]]==1){if (cellCheck(df1, 4, 2, "e")){return("GAME END")}}
-  if (df1[[5]][[1]][["s"]]==1){if (cellCheck(df1, 5, 1, "s")){return("GAME END")}}
-  if (df1[[5]][[3]][["n"]]==1){if (cellCheck(df1, 5, 3, "n")){return("GAME END")}}
+  if (df1[[4]][[2]][["e"]]==1){if (cellCheck(df1, 4, 2, "e")){return(TRUE)}}
+  if (df1[[5]][[1]][["s"]]==1){if (cellCheck(df1, 5, 1, "s")){return(TRUE)}}
+  if (df1[[5]][[3]][["n"]]==1){if (cellCheck(df1, 5, 3, "n")){return(TRUE)}}
   # Then, recursively check 
   return(FALSE)
 }
