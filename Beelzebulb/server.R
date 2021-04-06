@@ -22,21 +22,6 @@ getAWSConnection <- function(){
 }
 
 # General
-
-checkPhase <- function(){
-  conn <- getAWSConnection()
-  query <- "SELECT phase FROM Phase"
-  phase <- dbGetQuery(conn, query)[1, 1]
-  dbDisconnect(conn)
-  return(phase)
-}
-
-updatePhase <- function(update){
-  conn <- getAWSConnection()
-  dbExecute(conn, sprintf("UPDATE Phase SET phase = %d", update))
-  dbDisconnect(conn)
-}
-
 nextPlayer <- function(turn){
   conn <- getAWSConnection()
   if(turn %% 4 == 0){
@@ -333,6 +318,23 @@ chooseCard <- function(pos, handCards, failed=FALSE){
   )
 }
 
+#Checking End Game Condition
+checkWin <- function(){
+  return(NULL)
+}
+
+checkLoss <- function(){
+  conn <- getAWSConnection()
+  cardDeck <- nrow(dbGetQuery(conn, "SELECT * FROM CardDeck"))
+  boardState <- dbGetQuery(conn, "SELECT * FROM GameState")
+  dbDisconnect(conn)
+  if(cardDeck == 0 || nrow(boardState[boardState$img_num == 1, ]) == 0){
+    return(TRUE)
+  }else{
+    return(FALSE)
+  }
+}
+
 #End Game Modal
 gameEnd <- function(failed = FALSE){
   modalDialog(
@@ -340,8 +342,8 @@ gameEnd <- function(failed = FALSE){
     p("testing Input"),
     tableOutput("resultTable"),
     footer = tagList(
-      modalButton("Cancel"),
-      actionButton("backToLobby", "OK")
+      # modalButton("Cancel"),
+      actionButton("backToHome", "OK")
     )
   )
 }
@@ -356,7 +358,6 @@ server <- function(input, output, session) {
   gamevals <- reactiveValues(turncount=0,pieces=pieces)
   
   output$playerturn <- renderText("The Game has yet to start.")
-  output$gamePhase <- renderText("Please wait for the game to begin...")
   output$assignedRole <- renderText("You have yet to be assigned a role for the game.")
   
 
@@ -438,6 +439,7 @@ server <- function(input, output, session) {
     pTurn <- refresh("Game")
     vals$turn <- pTurn$numturn
     output$playerturn <- renderText(sprintf("%s's turn", vals$players[vals$turn %% 4, 2]))
+    updateGameState()
   })
   
   
@@ -632,23 +634,30 @@ server <- function(input, output, session) {
     output$playerturn <- renderText(paste(sprintf("%s's turn", vals$players[vals$turn %% 4, 2])))
     removeModal()
     updateGameState()
+    
+    # Check Win Condition
+    if(checkWin()){
+      playerWin <- vals$players[vals$players$Roles == "Engineer", ] %>% mutate(Outcome = "Win")
+      playerLose <- vals$players[vals$players$Roles == "Imposter", ] %>% mutate(Outcome = "Lose")
+      vals$players <- rbind(playerWin, playerLose)
+      output$resultTable <- renderTable(vals$players)
+      showModal(gameEnd(failed=FALSE))
+    }
+    # Check Loss Condition
+    if(checkLoss()){
+      playerLose <- vals$players[vals$players$Roles == "Engineer", ] %>% mutate(Outcome = "Lose")
+      playerWin <- vals$players[vals$players$Roles == "Imposter", ] %>% mutate(Outcome = "Win")
+      vals$players <- rbind(playerWin, playerLose)
+      output$resultTable <- renderTable(vals$players)
+      showModal(gameEnd(failed=FALSE))
+    }
   })
   
-  
-  
-  ## End Game Results
-  observeEvent(input$endGameResult, showModal(gameEnd(failed=FALSE)))
-  
-  hasGameEnded <- TRUE
-  if (hasGameEnded == TRUE){
-    allplayers <- c("Player1", "Player2", "Player3", "Player4")
-    role <- c("Normal Player", "Normal Player", "Normal Player", "Imposter")
-    outcome <- c("Win", "Win", "Win", "Lose")
-    df <- data.frame(Players = allplayers,
-                     Roles = role,
-                     Outcome = outcome)
-    output$resultTable <- renderTable(df)
-  }
+  observeEvent(input$backToHome, {
+    updateTabsetPanel(session, "tabs", selected = "home")
+    # resetDatabase()
+  })
+
 }
 
 
