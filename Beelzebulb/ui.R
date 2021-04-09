@@ -4,7 +4,7 @@ library(DBI)
 library(jsonlite)
 library(shinydashboard)
 library(rsconnect)
-
+library(shinyjs)
 
 header <- dashboardHeader(
   title = "Beelzebulb",
@@ -43,12 +43,13 @@ header <- dashboardHeader(
 )
 
 sidebar <- dashboardSidebar(
+  useShinyjs(),
+  
   sidebarMenu(
     id = "tabs",
     menuItem("Home Page", tabName = "home", icon = icon("home")),
-    menuItem("Game", tabName = "game", icon = icon("dice")),
-    menuItem("Instructions", tabName = "instruct", icon = icon("compass")),
-    menuItem("Testing Screen (Test)", tabName = "test", icon = icon("question"))
+    menuItem("Game", tabName = "game", icon = icon("dice")) %>% shinyjs::hidden(),
+    menuItem("Instructions", tabName = "instruct", icon = icon("compass"))
   )
 )
 
@@ -61,7 +62,8 @@ body <- dashboardBody(
             actionButton("register", "Register"),
             actionButton("login", "Login"),
             HTML("<p></p>"),
-            uiOutput("buttonGameLobby")
+            uiOutput("buttonGameLobby"),
+            uiOutput("backToGame")
     ),
     
     tabItem(tabName = "game",
@@ -97,8 +99,8 @@ body <- dashboardBody(
                 tags$br(),
                 p("ESD Fantasy Map and Game Pieces by Tan Yi Lin")
               )
-            ),
-            actionButton("refreshGame", "Refresh")
+            )
+            # actionButton("refreshGame", "Refresh")
     ),
     
     tabItem(tabName = "instruct",
@@ -120,19 +122,6 @@ body <- dashboardBody(
             p("During this phase, the board status would be checked. Upon connection to the bulb or
               the deck running out of cards, the game will end and the conclusion of the game would
               be shown.")
-    ),
-    tabItem(tabName = "test",
-            h2("Testing Goes Here"),
-            h3("End Game Screen (Result) with a return to lobby button"),
-            actionButton("endGameResult", "End Game Results"),
-            h4("Drawing of cards for each players"),
-            actionButton("drawCards", "Draw Cards"),
-            h3("Placing of Cards on the board"),
-            h4("Edit the game tab with the board and the cells available to be clicked"),
-            h3("Answering of Physics Question"),
-            h4("Popup with a random physics question and the multiple choice answers with submit button"),
-            h3("Defeat Condition Logic"),
-            h4("Running out of cards")
     )
   )
 )
