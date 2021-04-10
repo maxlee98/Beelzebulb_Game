@@ -16,17 +16,17 @@ boardState <- tibble(
   ),
   c2 = list(
     tibble(n = 0, e = 0, s = 0, w = 0),
-    tibble(n = 0, e = 0, s = 0, w = 0),
+    tibble(n = 0, e = 1, s = 0, w = 1),
     tibble(n = 0, e = 0, s = 0, w = 0)
   ),
   c3 = list(
     tibble(n = 0, e = 0, s = 0, w = 0),
-    tibble(n = 0, e = 0, s = 0, w = 0),
+    tibble(n = 0, e = 1, s = 0, w = 1),
     tibble(n = 0, e = 0, s = 0, w = 0)
   ),
   c4 = list(
     tibble(n = 0, e = 0, s = 0, w = 0),
-    tibble(n = 0, e = 0, s = 0, w = 0),
+    tibble(n = 0, e = 1, s = 0, w = 1),
     tibble(n = 0, e = 0, s = 0, w = 0)
   ),
   c5 = list(
@@ -36,80 +36,52 @@ boardState <- tibble(
   )
 )
 
+cellCheckHelper <- function(df, col, row, dirToCheck){
+  firstConnection <- boardState[[col]][[row]][[dirToCheck]]
+  if (firstConnection == "1" | firstConnection == 1){
+    firstConnection <- 1
+  }
+  else{
+    return(FALSE)
+  }
+  tryCatch(expr={
+    if (dirToCheck == "n"){
+      if (firstConnection & as.numeric(boardState[[col]][[row-1]][["s"]])){
+        return(c(col,row-1, "e"))
+      }
+    }
+    else if (dirToCheck == "s"){
+      if (firstConnection & as.numeric(boardState[[col]][[row+1]][["n"]])){
+        return(c(col,row+1, "e"))
+      }
+    }
+    else if (dirToCheck == "e"){
+      if (firstConnection & as.numeric(boardState[[col+1]][[row]][["w"]])){
+        return(c(col+1,row, "e"))
+      }
+    }
+    else if (dirToCheck == "w"){
+      if (firstConnection & as.numeric(boardState[[col-1]][[row]][["e"]])){
+        return(c(col-1,row, "e"))
+      }
+    }
+  }, error = function(e){return(FALSE)})
+  return(FALSE)
+}
+
 cellCheck <- function(df, col, row, prevConn){
-  
-#   print(paste0(col, row, prevConn))
-#   if (col == 1 & row == 2){
-#     return(TRUE)
-#   }
-#   cell <- df[[col]][[row]]
-#   if (col == 5){
-#     return(cellCheck(df, col-1, row, "e"))
-#   }
-#   if (col == 1){
-#     if (row == 1){
-#       return(cellCheck(df, col, row+1, "n"))
-#     }
-#     else {
-#       return(cellCheck(df, col, row-1, "s"))
-#     }
-#   }
-#   if (row == 1){
-#     for (cell_dir in c("n", "e", "w"))
-#   }
-#   for (cell_dir in c("n", "s", "e", "w")){
-#     if (cell_dir != prevConn){
-#       if (cell[cell_dir] == 1){
-#         
-#         
-#         
-#         
-#         
-#         
-#         
-#         
-# 
-#         if (row-1 == 0){
-#           if (col-1 == 0){
-#             if (cell_dir == "s"){return(cellCheck(df, col, row+1, "n"))}
-#             if (cell_dir == "e"){return(cellCheck(df, col+1, row, "w"))}
-#           }
-#           else if (col +1 ==6){
-#             if (cell_dir == "s"){return(cellCheck(df, col, row+1, "n"))}
-#             if (cell_dir == "w"){return(cellCheck(df, col-1, row, "e"))}
-#           }
-#           else {
-#             if (cell_dir == "s"){return(cellCheck(df, col, row+1, "n"))}
-#             if (cell_dir == "e"){return(cellCheck(df, col+1, row, "w"))}
-#             if (cell_dir == "w"){return(cellCheck(df, col-1, row, "e"))}
-#           }
-#         }
-#         else if (row+1 == 4){
-#           print("b")
-#           if (col - 1 == 0){
-#             if (cell_dir == "n"){return(cellCheck(df, col, row-1, "s"))}
-#             if (cell_dir == "e"){return(cellCheck(df, col+1, row, "w"))}
-# 
-#           }
-#           else if (col +1 == 4){
-#             if (cell_dir == "n"){return(cellCheck(df, col, row-1, "s"))}
-#             if (cell_dir == "w"){return(cellCheck(df, col-1, row, "e"))}
-#           }
-#           else {
-#             if (cell_dir == "n"){return(cellCheck(df, col, row-1, "s"))}
-#             if (cell_dir == "e"){return(cellCheck(df, col+1, row, "w"))}
-#             if (cell_dir == "w"){return(cellCheck(df, col-1, row, "e"))}
-#           }
-#         }
-#         else{
-#           if (cell_dir == "n"){return(cellCheck(df, col, row-1, "s"))}
-#           if (cell_dir == "s"){return(cellCheck(df, col, row+1, "n"))}
-#           if (cell_dir == "e"){return(cellCheck(df, col+1, row, "w"))}
-#           if (cell_dir == "w"){return(cellCheck(df, col-1, row, "e"))}
-#         }
-#     }
-#   }
-#   }
+  if (col == 1 & row == 2){
+    return(TRUE)
+  }
+  for (dir in c("n", "s", "e", "w")){
+    if (dir != prevConn){
+      connected <- cellCheckHelper(df, col, row, dir)
+      if (connected != FALSE){
+        return(cellCheck(df, connected[[1]], connected[[2]], connected[[3]]))
+      }
+    }
+  }
+  return(FALSE)
 }
 
 boardLogic <- function(board){
@@ -710,12 +682,9 @@ server <- function(input, output, session) {
     # exec_trunctate <- dbExecute(conn, qry_truncate)
     
     #Inserting Initial Hand Cards from Database
-<<<<<<< HEAD
     drawCard(vals$userid, 5)
-=======
     #drawCard(vals$userid, 5)
     removeModal()
->>>>>>> YS_Development_9/4
     updateGameState()
   })
   
