@@ -49,6 +49,7 @@ df_id2 <- data.frame(Card_ID = rep(c(2001, 2002, 2003, 2004), each = 5), Card_Na
 # If Dataframe or Table == df_id:
 conn <- getAWSConnection()
 dbWriteTable(conn, "CardDeck", df_id, overwrite = TRUE)
+dbDisconnect(conn)
 ```
 
 ## Drawing a sample from the deck

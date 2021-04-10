@@ -241,305 +241,198 @@ summary {
 <h1>Libraries that will be required</h1>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KERCSSlcbmxpYnJhcnkocnNjb25uZWN0KVxuYGBgXG5gYGAifQ== -->
-<pre class="r"><code>```r
-library(tidyverse)
-library(DBI)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5gYGAifQ== -->
+<pre class="r"><code>library(tidyverse)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoicGFja2FnZSCRdGlkeXZlcnNlkiB3YXMgYnVpbHQgdW5kZXIgUiB2ZXJzaW9uIDQuMC4zUmVnaXN0ZXJlZCBTMyBtZXRob2RzIG92ZXJ3cml0dGVuIGJ5ICdkYnBseXInOlxuICBtZXRob2QgICAgICAgICBmcm9tXG4gIHByaW50LnRibF9sYXp5ICAgICBcbiAgcHJpbnQudGJsX3NxbCAgICAgIFxuLS0gQXR0YWNoaW5nIHBhY2thZ2VzIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0gdGlkeXZlcnNlIDEuMy4wIC0tXG52IGdncGxvdDIgMy4zLjMgICAgIHYgcmVhZHIgICAxLjQuMFxudiB0aWJibGUgIDMuMC40ICAgICB2IHB1cnJyICAgMC4zLjRcbnYgdGlkeXIgICAxLjEuMiAgICAgdiBmb3JjYXRzIDAuNS4wXG5wYWNrYWdlIJFnZ3Bsb3QykiB3YXMgYnVpbHQgdW5kZXIgUiB2ZXJzaW9uIDQuMC40cGFja2FnZSCRdGliYmxlkiB3YXMgYnVpbHQgdW5kZXIgUiB2ZXJzaW9uIDQuMC4zcGFja2FnZSCRdGlkeXKSIHdhcyBidWlsdCB1bmRlciBSIHZlcnNpb24gNC4wLjNwYWNrYWdlIJFyZWFkcpIgd2FzIGJ1aWx0IHVuZGVyIFIgdmVyc2lvbiA0LjAuM3BhY2thZ2UgkXB1cnJykiB3YXMgYnVpbHQgdW5kZXIgUiB2ZXJzaW9uIDQuMC4zcGFja2FnZSCRZm9yY2F0c5Igd2FzIGJ1aWx0IHVuZGVyIFIgdmVyc2lvbiA0LjAuMy0tIENvbmZsaWN0cyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIHRpZHl2ZXJzZV9jb25mbGljdHMoKSAtLVxueCBkcGx5cjo6ZmlsdGVyKCkgICAgICBtYXNrcyBzdGF0czo6ZmlsdGVyKClcbnggcHVycnI6OmZsYXR0ZW4oKSAgICAgbWFza3MganNvbmxpdGU6OmZsYXR0ZW4oKVxueCBkcGx5cjo6bGFnKCkgICAgICAgICBtYXNrcyBzdGF0czo6bGFnKClcbngganNvbmxpdGU6OnZhbGlkYXRlKCkgbWFza3Mgc2hpbnk6OnZhbGlkYXRlKClcbiJ9 -->
+<pre><code>package 㤼㸱tidyverse㤼㸲 was built under R version 4.0.3Registered S3 methods overwritten by &#39;dbplyr&#39;:
+  method         from
+  print.tbl_lazy     
+  print.tbl_sql      
+-- Attaching packages ------------------------------------------------------------------------------------------------------- tidyverse 1.3.0 --
+v ggplot2 3.3.3     v readr   1.4.0
+v tibble  3.0.4     v purrr   0.3.4
+v tidyr   1.1.2     v forcats 0.5.0
+package 㤼㸱ggplot2㤼㸲 was built under R version 4.0.4package 㤼㸱tibble㤼㸲 was built under R version 4.0.3package 㤼㸱tidyr㤼㸲 was built under R version 4.0.3package 㤼㸱readr㤼㸲 was built under R version 4.0.3package 㤼㸱purrr㤼㸲 was built under R version 4.0.3package 㤼㸱forcats㤼㸲 was built under R version 4.0.3-- Conflicts ---------------------------------------------------------------------------------------------------------- tidyverse_conflicts() --
+x dplyr::filter()      masks stats::filter()
+x purrr::flatten()     masks jsonlite::flatten()
+x dplyr::lag()         masks stats::lag()
+x jsonlite::validate() masks shiny::validate()</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShEQkkpXG5saWJyYXJ5KHJzY29ubmVjdClcbmBgYCJ9 -->
+<pre class="r"><code>library(DBI)
 library(rsconnect)</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-# AWS Connection
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuZ2V0QVdTQ29ubmVjdGlvbiA8LSBmdW5jdGlvbigpe1xuICBjb25uIDwtIGRiQ29ubmVjdChcbiAgICBkcnYgPSBSTXlTUUw6Ok15U1FMKCksXG4gICAgZGJuYW1lID0gXFxzdHVkZW50MDU1XFwsXG4gICAgaG9zdCA9IFxcZXNkZGJpbnN0YW5jZS0xLmNlbzRlaHpqZWVnMC5hcC1zb3V0aGVhc3QtMS5yZHMuYW1hem9uYXdzLmNvbVxcLFxuICAgIHVzZXJuYW1lID0gXFxzdHVkZW50MDU1XFwsXG4gICAgcGFzc3dvcmQgPSBcXGdWVTRLcFdUXFwpXG4gIGNvbm5cbn1cbmBgYFxuYGBgIn0= --&gt;
-
-```r
-```r
-getAWSConnection &lt;- function(){
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="aws-connection" class="section level1">
+<h1>AWS Connection</h1>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2V0QVdTQ29ubmVjdGlvbiA8LSBmdW5jdGlvbigpe1xuICBjb25uIDwtIGRiQ29ubmVjdChcbiAgICBkcnYgPSBSTXlTUUw6Ok15U1FMKCksXG4gICAgZGJuYW1lID0gXCJzdHVkZW50MDU1XCIsXG4gICAgaG9zdCA9IFwiZXNkZGJpbnN0YW5jZS0xLmNlbzRlaHpqZWVnMC5hcC1zb3V0aGVhc3QtMS5yZHMuYW1hem9uYXdzLmNvbVwiLFxuICAgIHVzZXJuYW1lID0gXCJzdHVkZW50MDU1XCIsXG4gICAgcGFzc3dvcmQgPSBcImdWVTRLcFdUXCIpXG4gIGNvbm5cbn1cbmBgYCJ9 -->
+<pre class="r"><code>getAWSConnection &lt;- function(){
   conn &lt;- dbConnect(
     drv = RMySQL::MySQL(),
-    dbname = \student055\,
-    host = \esddbinstance-1.ceo4ehzjeeg0.ap-southeast-1.rds.amazonaws.com\,
-    username = \student055\,
-    password = \gVU4KpWT\)
+    dbname = &quot;student055&quot;,
+    host = &quot;esddbinstance-1.ceo4ehzjeeg0.ap-southeast-1.rds.amazonaws.com&quot;,
+    username = &quot;student055&quot;,
+    password = &quot;gVU4KpWT&quot;)
   conn
 }</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-
-# Cards of A Deck Logic
-
-## Generating the deck of cards dataframe
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuY2FyZElEX2RlY2sgPC0gcmVwKGMoMTAwMSwgMTAwMiwgMTAwMywgMTAwNCksIGVhY2ggPSA1KVxuY2FyZE5BTUVfZGVjayA8LSByZXAoYyhcXFdpcmVfTGVmdFxcLCBcXFdpcmVfUmlnaHRcXCwgXFxXaXJlX1VwXFwsIFxcV2lyZV9Eb3duXFwpLCBlYWNoID0gNSlcbmRmX2lkIDwtIGRhdGEuZnJhbWUoQ2FyZF9JRCA9IGNhcmRJRF9kZWNrLCBDYXJkX05hbWUgPSBjYXJkTkFNRV9kZWNrKVxuXG5kZl9pZDIgPC0gZGF0YS5mcmFtZShDYXJkX0lEID0gcmVwKGMoMjAwMSwgMjAwMiwgMjAwMywgMjAwNCksIGVhY2ggPSA1KSwgQ2FyZF9OYW1lID0gcmVwKGMoXFxXaXJlX0xlZnRcXCwgXFxXaXJlX1JpZ2h0XFwsIFxcV2lyZV9VcFxcLCBcXFdpcmVfRG93blxcKSwgZWFjaCA9IDUpKVxuIyBkZl9pZDJcbmBgYFxuYGBgIn0= --&gt;
-
-```r
-```r
-cardID_deck &lt;- rep(c(1001, 1002, 1003, 1004), each = 5)
-cardNAME_deck &lt;- rep(c(\Wire_Left\, \Wire_Right\, \Wire_Up\, \Wire_Down\), each = 5)
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="cards-of-a-deck-logic" class="section level1">
+<h1>Cards of A Deck Logic</h1>
+<div id="generating-the-deck-of-cards-dataframe" class="section level2">
+<h2>Generating the deck of cards dataframe</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY2FyZElEX2RlY2sgPC0gcmVwKGMoMTAwMSwgMTAwMiwgMTAwMywgMTAwNCksIGVhY2ggPSA1KVxuY2FyZE5BTUVfZGVjayA8LSByZXAoYyhcIldpcmVfMVwiLCBcIldpcmVfMlwiLCBcIldpcmVfM1wiLCBcIldpcmVfNFwiKSwgZWFjaCA9IDUpXG5kZl9pZCA8LSBkYXRhLmZyYW1lKENhcmRfSUQgPSBjYXJkSURfZGVjaywgQ2FyZF9OYW1lID0gY2FyZE5BTUVfZGVjaylcblxuZGZfaWQyIDwtIGRhdGEuZnJhbWUoQ2FyZF9JRCA9IHJlcChjKDIwMDEsIDIwMDIsIDIwMDMsIDIwMDQpLCBlYWNoID0gNSksIENhcmRfTmFtZSA9IHJlcChjKFwiV2lyZV9MZWZ0XCIsIFwiV2lyZV9SaWdodFwiLCBcIldpcmVfVXBcIiwgXCJXaXJlX0Rvd25cIiksIGVhY2ggPSA1KSlcbiMgZGZfaWQyXG5gYGAifQ== -->
+<pre class="r"><code>cardID_deck &lt;- rep(c(1001, 1002, 1003, 1004), each = 5)
+cardNAME_deck &lt;- rep(c(&quot;Wire_1&quot;, &quot;Wire_2&quot;, &quot;Wire_3&quot;, &quot;Wire_4&quot;), each = 5)
 df_id &lt;- data.frame(Card_ID = cardID_deck, Card_Name = cardNAME_deck)
 
-df_id2 &lt;- data.frame(Card_ID = rep(c(2001, 2002, 2003, 2004), each = 5), Card_Name = rep(c(\Wire_Left\, \Wire_Right\, \Wire_Up\, \Wire_Down\), each = 5))
+df_id2 &lt;- data.frame(Card_ID = rep(c(2001, 2002, 2003, 2004), each = 5), Card_Name = rep(c(&quot;Wire_Left&quot;, &quot;Wire_Right&quot;, &quot;Wire_Up&quot;, &quot;Wire_Down&quot;), each = 5))
 # df_id2</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-## Sending Fresh Deck of Cards to Database (For Every new Game)
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucXVlcnl0ZW1wbGF0ZSA8LSBcXElOU0VSVCBJTlRPIENhcmREZWNrIChDYXJkX0lEXG5gYGAifQ== --&gt;
-
-```r
-```r
-querytemplate &lt;- \INSERT INTO CardDeck (Card_ID</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFxcSU5TRVJUIElOVE8gQ2FyZERlY2sgKENhcmRfSURcbiJ9 -->
-<pre><code>[1] \INSERT INTO CardDeck (Card_ID</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyBjb25uIDwtIGdldEFXU0Nvbm5lY3Rpb24oKVxuIyAjIHF1ZXJ5PC0gc3FsSW50ZXJwb2xhdGUoY29ubiwgc3FsX3FyeSlcbiMgcmVzdWx0IDwtIGRiRXhlY3V0ZShjb25uLCBzcWxfcXJ5KVxuIyByZXN1bHRcblxuIyMgVFJZIFRISVNcbiNJZiBEYXRhZnJhbWUgb3IgVGFibGUgPT0gZGZfaWQ6XG4jIGNvbm4gPC0gZ2V0QVdTQ29ubmVjdGlvbigpXG4jIGRiV3JpdGVUYWJsZShjb25uLCBcXENhcmREZWNrXFwsIGRmX2lkLCBvdmVyd3JpdGUgPSBUUlVFKVxuYGBgXG5gYGAifQ== -->
-<pre class="r"><code>```r
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="sending-fresh-deck-of-cards-to-database-for-every-new-game" class="section level2">
+<h2>Sending Fresh Deck of Cards to Database (For Every new Game)</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBxdWVyeXRlbXBsYXRlIDwtIFwiSU5TRVJUIElOVE8gQ2FyZERlY2sgKENhcmRfSUQsIENhcmRfTmFtZSkgVkFMVUVTXCJcbiMgc3FsX3FyeSA8LSBwYXN0ZTAocXVlcnl0ZW1wbGF0ZSwgcGFzdGUoc3ByaW50ZihcIignJXMnLCAnJXMnKVwiLCBhcy5udW1lcmljKGRmX2lkJENhcmRfSUQpLCBkZl9pZCRDYXJkX05hbWUpLCBjb2xsYXBzZSA9IFwiLFwiKSlcbiMgcHJpbnQoc3FsX3FyeSlcbiMgY29ubiA8LSBnZXRBV1NDb25uZWN0aW9uKClcbiMgIyBxdWVyeTwtIHNxbEludGVycG9sYXRlKGNvbm4sIHNxbF9xcnkpXG4jIHJlc3VsdCA8LSBkYkV4ZWN1dGUoY29ubiwgc3FsX3FyeSlcbiMgcmVzdWx0XG5cbiMjIFRSWSBUSElTXG4jIElmIERhdGFmcmFtZSBvciBUYWJsZSA9PSBkZl9pZDpcbmNvbm4gPC0gZ2V0QVdTQ29ubmVjdGlvbigpXG5kYldyaXRlVGFibGUoY29ubiwgXCJDYXJkRGVja1wiLCBkZl9pZCwgb3ZlcndyaXRlID0gVFJVRSlcbmBgYCJ9 -->
+<pre class="r"><code># querytemplate &lt;- &quot;INSERT INTO CardDeck (Card_ID, Card_Name) VALUES&quot;
+# sql_qry &lt;- paste0(querytemplate, paste(sprintf(&quot;(&#39;%s&#39;, &#39;%s&#39;)&quot;, as.numeric(df_id$Card_ID), df_id$Card_Name), collapse = &quot;,&quot;))
+# print(sql_qry)
 # conn &lt;- getAWSConnection()
 # # query&lt;- sqlInterpolate(conn, sql_qry)
 # result &lt;- dbExecute(conn, sql_qry)
 # result
 
 ## TRY THIS
-#If Dataframe or Table == df_id:
-# conn &lt;- getAWSConnection()
-# dbWriteTable(conn, \CardDeck\, df_id, overwrite = TRUE)</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-## Drawing a sample from the deck
-
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuY29ubiA8LSBnZXRBV1NDb25uZWN0aW9uKClcbnF1ZXJ5X2RyYXdfY2FyZHMgPC0gZGJHZXRRdWVyeShjb25uLCBcXFNFTEVDVCByb3dfbmFtZXNcbmBgYCJ9 --&gt;
-
-```r
-```r
+# If Dataframe or Table == df_id:
 conn &lt;- getAWSConnection()
-query_draw_cards &lt;- dbGetQuery(conn, \SELECT row_names</code></pre>
+dbWriteTable(conn, &quot;CardDeck&quot;, df_id, overwrite = TRUE)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiWzFdIFRSVUVcbiJ9 -->
 <pre><code>[1] TRUE</code></pre>
 <!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucXVlcnlfZHJhd19jYXJkc1xuYGBgXG5gYGAifQ== -->
-<pre class="r"><code>```r
-query_draw_cards</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjoiZGF0YS5mcmFtZSIsIm5yb3ciOjUsIm5jb2wiOjMsInN1bW1hcnkiOnsiRGVzY3JpcHRpb24iOiJkZlssM10gWzUgeCAzXSJ9fSwicmRmIjoiSDRzSUFBQUFBQUFBQm5WUjBXckNNQlM5dGtZeG9BaCtoNFU2bE8xTnNBOGJqQ0hDV04rNnJJMWExaVVsamJqSC9ZRi83SmFraVdoZ2dmU2VuSFB2UGJuTkprbnZjSW9CSUlRdUJCQWlCYUczV3NleitReWdHNmhUUnlrREhiOVYxc1NrQW96VlJrNllXeERFOFFVdEx1akJwUzNVWjZUcmxxZEhiUVBMVTJyanV4ZlhZTmUxeitDdEZEUjdwbHRwaWI0aFh1c2JQZUZIOWgrQkRiRXBkM3ZwRFljWSthS05OUXhkdmVESHJCV3M0WXFJSW50S25HNk9MeXJCNjZZTEk5ZHhxUC9DVHpzTzhtM3ppalRPMXBHNElKSkVXMkg2d3RrcjZmTmFscHlwb21EU2Ryd3A3Z2lQR0IrWXZra3h6ZmNIOWptTjc3V0QwZHMxdEJoZDRiRDFESDY5RitoUnRpc1pkWmV2eUFldDdHR2tSallUUjdVb21Yc2hyTmdta2x3U2w0ZHpYam5HREFmblA5OEJUbkNGQWdBQSJ9 --&gt;
-
-&lt;div data-pagedtable=&quot;false&quot;&gt;
-  &lt;script data-pagedtable-source type=&quot;application/json&quot;&gt;
-{&quot;columns&quot;:[{&quot;label&quot;:[&quot;row_names&quot;],&quot;name&quot;:[1],&quot;type&quot;:[&quot;chr&quot;],&quot;align&quot;:[&quot;left&quot;]},{&quot;label&quot;:[&quot;Card_ID&quot;],&quot;name&quot;:[2],&quot;type&quot;:[&quot;dbl&quot;],&quot;align&quot;:[&quot;right&quot;]},{&quot;label&quot;:[&quot;Card_Name&quot;],&quot;name&quot;:[3],&quot;type&quot;:[&quot;chr&quot;],&quot;align&quot;:[&quot;left&quot;]}],&quot;data&quot;:[{&quot;1&quot;:&quot;5&quot;,&quot;2&quot;:&quot;1001&quot;,&quot;3&quot;:&quot;Wire_Left&quot;},{&quot;1&quot;:&quot;11&quot;,&quot;2&quot;:&quot;1003&quot;,&quot;3&quot;:&quot;Wire_Up&quot;},{&quot;1&quot;:&quot;16&quot;,&quot;2&quot;:&quot;1004&quot;,&quot;3&quot;:&quot;Wire_Down&quot;},{&quot;1&quot;:&quot;19&quot;,&quot;2&quot;:&quot;1004&quot;,&quot;3&quot;:&quot;Wire_Down&quot;},{&quot;1&quot;:&quot;6&quot;,&quot;2&quot;:&quot;1002&quot;,&quot;3&quot;:&quot;Wire_Right&quot;}],&quot;options&quot;:{&quot;columns&quot;:{&quot;min&quot;:{},&quot;max&quot;:[10],&quot;total&quot;:[3]},&quot;rows&quot;:{&quot;min&quot;:[10],&quot;max&quot;:[10],&quot;total&quot;:[5]},&quot;pages&quot;:{}}}
-  &lt;/script&gt;
-&lt;/div&gt;
-
-&lt;!-- rnb-frame-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-## Assigning the Cards to the Player
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuY29ubiA8LSBnZXRBV1NDb25uZWN0aW9uKClcbnBsYXllcmlkIDwtIDNcbnF1ZXJ5X2RyYXdfY2FyZHNbXFxQbGF5ZXJJRFxcXSA8LSBwbGF5ZXJpZFxucXVlcnlfZHJhd19jYXJkc1xuYGBgXG5gYGByXG5xdWVyeXRlbXBsYXRlIDwtIFxcSU5TRVJUIElOVE8gSGFuZENhcmRzIChQbGF5ZXJJRFxuYGBgIn0= --&gt;
-
-```r
-```r
-conn &lt;- getAWSConnection()
-playerid &lt;- 3
-query_draw_cards[\PlayerID\] &lt;- playerid
-query_draw_cards</code></pre>
-<pre class="r"><code>querytemplate &lt;- \INSERT INTO HandCards (PlayerID</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGJEaXNjb25uZWN0KGNvbm4pXG5gYGAifQ== -->
+<pre class="r"><code>dbDisconnect(conn)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFxcSU5TRVJUIElOVE8gSGFuZENhcmRzIChQbGF5ZXJJRFxuIn0= -->
-<pre><code>[1] \INSERT INTO HandCards (PlayerID</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFRSVUVcbiJ9 -->
+<pre><code>[1] TRUE</code></pre>
 <!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuc2VuZF9xdWVyeSA8LSBkYkV4ZWN1dGUoY29ubiwgc3FsX3FyeSlcbiMgc2VuZF9xdWVyeVxuZGJEaXNjb25uZWN0KGNvbm4pXG5gYGBcbmBgYCJ9 -->
-<pre class="r"><code>```r
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="drawing-a-sample-from-the-deck" class="section level2">
+<h2>Drawing a sample from the deck</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29ubiA8LSBnZXRBV1NDb25uZWN0aW9uKClcbnF1ZXJ5X2RyYXdfY2FyZHMgPC0gZGJHZXRRdWVyeShjb25uLCBcIlNFTEVDVCByb3dfbmFtZXMsIENhcmRfSUQsIENhcmRfTmFtZSBGUk9NIENhcmREZWNrIE9SREVSIEJZIFJBTkQoKSBMSU1JVCA1XCIpXG5kYkRpc2Nvbm5lY3QoY29ubilcbnF1ZXJ5X2RyYXdfY2FyZHNcbmBgYCJ9 -->
+<pre class="r"><code>conn &lt;- getAWSConnection()
+query_draw_cards &lt;- dbGetQuery(conn, &quot;SELECT row_names, Card_ID, Card_Name FROM CardDeck ORDER BY RAND() LIMIT 5&quot;)
+dbDisconnect(conn)
+query_draw_cards</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="assigning-the-cards-to-the-player" class="section level2">
+<h2>Assigning the Cards to the Player</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29ubiA8LSBnZXRBV1NDb25uZWN0aW9uKClcbnBsYXllcmlkIDwtIDNcbnF1ZXJ5X2RyYXdfY2FyZHNbXCJQbGF5ZXJJRFwiXSA8LSBwbGF5ZXJpZFxucXVlcnlfZHJhd19jYXJkc1xucXVlcnl0ZW1wbGF0ZV9kcmF3Y2FyZHMgPC0gXCJJTlNFUlQgSU5UTyBIYW5kQ2FyZHMgKFBsYXllcklELCBDYXJkX0lELCBDYXJkX05hbWUpIFZBTFVFU1wiXG5zcWxfcXJ5IDwtIHBhc3RlMChxdWVyeXRlbXBsYXRlX2RyYXdjYXJkcywgcGFzdGUoc3ByaW50ZihcIiglZCwgJWQsICclcycpXCIsXG5hcy5udW1lcmljKHF1ZXJ5X2RyYXdfY2FyZHMkUGxheWVySUQpLFxuYXMubnVtZXJpYyhxdWVyeV9kcmF3X2NhcmRzJENhcmRfSUQpLFxucXVlcnlfZHJhd19jYXJkcyRDYXJkX05hbWUpLCBjb2xsYXBzZSA9IFwiLFwiKSlcbnNxbF9xcnlcbnNlbmRfcXVlcnkgPC0gZGJFeGVjdXRlKGNvbm4sIHNxbF9xcnkpXG4jIHNlbmRfcXVlcnlcbmRiRGlzY29ubmVjdChjb25uKVxuYGBgIn0= -->
+<pre class="r"><code>conn &lt;- getAWSConnection()
+playerid &lt;- 3
+query_draw_cards[&quot;PlayerID&quot;] &lt;- playerid
+query_draw_cards
+querytemplate_drawcards &lt;- &quot;INSERT INTO HandCards (PlayerID, Card_ID, Card_Name) VALUES&quot;
+sql_qry &lt;- paste0(querytemplate_drawcards, paste(sprintf(&quot;(%d, %d, &#39;%s&#39;)&quot;,
+as.numeric(query_draw_cards$PlayerID),
+as.numeric(query_draw_cards$Card_ID),
+query_draw_cards$Card_Name), collapse = &quot;,&quot;))
+sql_qry
 send_query &lt;- dbExecute(conn, sql_qry)
 # send_query
 dbDisconnect(conn)</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-output-begin eyJkYXRhIjoiWzFdIFRSVUVcbiJ9 --&gt;
-</code></pre>
-<p>[1] TRUE</p>
-<pre><code>
-
-
-&lt;!-- rnb-output-end --&gt;
-
-&lt;!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjoiZGF0YS5mcmFtZSIsIm5yb3ciOjUsIm5jb2wiOjQsInN1bW1hcnkiOnsiRGVzY3JpcHRpb24iOiJkZlssNF0gWzUgeCA0XSJ9fSwicmRmIjoiSDRzSUFBQUFBQUFBQm9WUlhXdURNQlM5dGRvUG9hWFEzMUZCUnd0N0s5U0hEY2FRd3Bodkx0TzBsYmtvMGRMdGJmK2cvN2pyalNaU0EyTkN2Q2ZuM3B0emJyTDF3enM3dEFHZ0R5WVkwTGNRd21BVHVON1NBekFOM1BVd014YnhDNnZtQ0V4Y00xeVdTaXdsTUZ5M1Jhc1czYXV5RmY2bW9tOTlmaEF5c0Q2SE1yNXBNUUQ1M2VxTVgxTk9veWU2cXlReHJJbVhvcFAzOHhQN2k3QnJZcHZ1RDFYclpkUUkvUmUxeTdBWSthU2xOR2dxUFo2Zm9pWWhEVzRJVDZKSFgrWHI3VE1XU0dJVVpPU2JjaXpvbmk0T2NwVENSTnppVCtQQjBtM0VHU21WRFVYYUNhbUlzK05DQitDaXRRenpva3B6aGszR3ZEbXgwOXpqR2pFN011RWtXY1NISS90WWVKNVFxUFBOTjVIWXVzRm1vMm44YWk4NG9HeWZNalc5bFpGM21zbk5GRWV1SjNZS25qTDF3amF5cFZQbEZWRjFkcHhuaXFtSGc4c1Z0dEU0VzhVQ0FBQT0ifQ== --&gt;
-
-&lt;div data-pagedtable=&quot;false&quot;&gt;
-  &lt;script data-pagedtable-source type=&quot;application/json&quot;&gt;
-{&quot;columns&quot;:[{&quot;label&quot;:[&quot;row_names&quot;],&quot;name&quot;:[1],&quot;type&quot;:[&quot;chr&quot;],&quot;align&quot;:[&quot;left&quot;]},{&quot;label&quot;:[&quot;Card_ID&quot;],&quot;name&quot;:[2],&quot;type&quot;:[&quot;dbl&quot;],&quot;align&quot;:[&quot;right&quot;]},{&quot;label&quot;:[&quot;Card_Name&quot;],&quot;name&quot;:[3],&quot;type&quot;:[&quot;chr&quot;],&quot;align&quot;:[&quot;left&quot;]},{&quot;label&quot;:[&quot;PlayerID&quot;],&quot;name&quot;:[4],&quot;type&quot;:[&quot;dbl&quot;],&quot;align&quot;:[&quot;right&quot;]}],&quot;data&quot;:[{&quot;1&quot;:&quot;5&quot;,&quot;2&quot;:&quot;1001&quot;,&quot;3&quot;:&quot;Wire_Left&quot;,&quot;4&quot;:&quot;3&quot;},{&quot;1&quot;:&quot;11&quot;,&quot;2&quot;:&quot;1003&quot;,&quot;3&quot;:&quot;Wire_Up&quot;,&quot;4&quot;:&quot;3&quot;},{&quot;1&quot;:&quot;16&quot;,&quot;2&quot;:&quot;1004&quot;,&quot;3&quot;:&quot;Wire_Down&quot;,&quot;4&quot;:&quot;3&quot;},{&quot;1&quot;:&quot;19&quot;,&quot;2&quot;:&quot;1004&quot;,&quot;3&quot;:&quot;Wire_Down&quot;,&quot;4&quot;:&quot;3&quot;},{&quot;1&quot;:&quot;6&quot;,&quot;2&quot;:&quot;1002&quot;,&quot;3&quot;:&quot;Wire_Right&quot;,&quot;4&quot;:&quot;3&quot;}],&quot;options&quot;:{&quot;columns&quot;:{&quot;min&quot;:{},&quot;max&quot;:[10],&quot;total&quot;:[4]},&quot;rows&quot;:{&quot;min&quot;:[10],&quot;max&quot;:[10],&quot;total&quot;:[5]},&quot;pages&quot;:{}}}
-  &lt;/script&gt;
-&lt;/div&gt;
-
-&lt;!-- rnb-frame-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-
-## Removing the sample drawn from the deck
-
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuY29ubiA8LSBnZXRBV1NDb25uZWN0aW9uKClcbmZvcihpIGluIDE6bnJvdyhxdWVyeV9kcmF3X2NhcmRzKSl7XG4gIHJlbW92ZV90ZW1wbGF0ZSA8LSBcXERFTEVURSBGUk9NIENhcmREZWNrIHdoZXJlIHJvd19uYW1lcyA9ID9yb3dcXFxuICBxcmMgPC0gc3FsSW50ZXJwb2xhdGUoY29ubiwgcmVtb3ZlX3RlbXBsYXRlLCByb3cgPSBxdWVyeV9kcmF3X2NhcmRzW2ksIDFdKVxuICBwcmludChxcmMpXG4gIHF1ZXJ5X3JlbW92ZV9jYXJkIDwtIGRiRXhlY3V0ZShjb25uLCBxcmMpXG59XG5kYkRpc2Nvbm5lY3QoY29ubilcbmBgYFxuYGBgIn0= --&gt;
-
-```r
-```r
-conn &lt;- getAWSConnection()
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="removing-the-sample-drawn-from-the-deck" class="section level2">
+<h2>Removing the sample drawn from the deck</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29ubiA8LSBnZXRBV1NDb25uZWN0aW9uKClcbmZvcihpIGluIDE6bnJvdyhxdWVyeV9kcmF3X2NhcmRzKSl7XG4gIHJlbW92ZV90ZW1wbGF0ZSA8LSBcIkRFTEVURSBGUk9NIENhcmREZWNrIHdoZXJlIHJvd19uYW1lcyA9ID9yb3dcIlxuICBxcmMgPC0gc3FsSW50ZXJwb2xhdGUoY29ubiwgcmVtb3ZlX3RlbXBsYXRlLCByb3cgPSBxdWVyeV9kcmF3X2NhcmRzW2ksIDFdKVxuICBwcmludChxcmMpXG4gIHF1ZXJ5X3JlbW92ZV9jYXJkIDwtIGRiRXhlY3V0ZShjb25uLCBxcmMpXG59XG5kYkRpc2Nvbm5lY3QoY29ubilcbmBgYCJ9 -->
+<pre class="r"><code>conn &lt;- getAWSConnection()
 for(i in 1:nrow(query_draw_cards)){
-  remove_template &lt;- \DELETE FROM CardDeck where row_names = ?row\
+  remove_template &lt;- &quot;DELETE FROM CardDeck where row_names = ?row&quot;
   qrc &lt;- sqlInterpolate(conn, remove_template, row = query_draw_cards[i, 1])
   print(qrc)
   query_remove_card &lt;- dbExecute(conn, qrc)
 }
 dbDisconnect(conn)</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-
-## Clearing the database of any other cards still in it (Working)
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuIyB1c2UgICB0cnVuY2F0ZSB0YWJsZU5hbWU7XG4jIFRydW5jYXRlOiB3aWxsIGFsc28gZGVsZXRlIHRoZSByb3dzIGZyb20geW91ciB0YWJsZSBidXQgaXQgd2lsbCBzdGFydCBmcm9tIG5ldyByb3cgd2l0aCAxLlxucXJ5X3RydW5jYXRlIDwtIFxcVFJVTkNBVEUgQ2FyZERlY2tcXFxuZXhlY190cnVuY3RhdGUgPC0gZGJFeGVjdXRlKGNvbm4sIHFyeV90cnVuY2F0ZSlcbmBgYFxuYGBgIn0= --&gt;
-
-```r
-```r
-# use   truncate tableName;
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="clearing-the-database-of-any-other-cards-still-in-it-working" class="section level2">
+<h2>Clearing the database of any other cards still in it (Working)</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyB1c2UgICB0cnVuY2F0ZSB0YWJsZU5hbWU7XG4jIFRydW5jYXRlOiB3aWxsIGFsc28gZGVsZXRlIHRoZSByb3dzIGZyb20geW91ciB0YWJsZSBidXQgaXQgd2lsbCBzdGFydCBmcm9tIG5ldyByb3cgd2l0aCAxLlxucXJ5X3RydW5jYXRlIDwtIFwiVFJVTkNBVEUgQ2FyZERlY2tcIlxuZXhlY190cnVuY3RhdGUgPC0gZGJFeGVjdXRlKGNvbm4sIHFyeV90cnVuY2F0ZSlcbmBgYCJ9 -->
+<pre class="r"><code># use   truncate tableName;
 # Truncate: will also delete the rows from your table but it will start from new row with 1.
-qry_truncate &lt;- \TRUNCATE CardDeck\
+qry_truncate &lt;- &quot;TRUNCATE CardDeck&quot;
 exec_trunctate &lt;- dbExecute(conn, qry_truncate)</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-# Placing of Cards on the board
-
-## Obtaining the grid cells for the board
-
-## Placing an image that will represent the board
-
-## Opening a module for any of the cell that is clicked.
-
-## Retrieving from database the cards that the current player_id has.
-
-## Dropdown box to select the card and press confirm
-
-## Show the card on the board.
-
-
-
-
-# Physics Questions
-
-## Adding of Data to the databases
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubWNxIDwtIDRcbnFucyA8LSAxMFxubWNxX2Nob2ljZXMgPC0gZnVuY3Rpb24ocW5zLCBtY3Epe1xuICBjaCA8LSBjKClcbiAgcHJpbnQoY2gpXG4gIGZvcihpIGluIDE6cW5zKXtcbiAgICBmb3IoaiBpbiAxOm1jcSl7XG4gICAgICBjaCA8LSBjKGNoLCBwYXN0ZShcXFRoaXMgaXMgcW5cXCwgaSwgXFxhbmQgaGVyZSBpcyB0aGUgY2hvaWNlXFwsIGopKVxuICAgIH1cbiAgfVxuICByZXR1cm4oY2gpXG59XG5cbnBoeXNpY3NhbnMgPC0gZGF0YS5mcmFtZShxbl9pZCA9IHJlcChjKDE6MTApLCBlYWNoID0gbWNxKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgYW5zX2lkID0gYygxOihxbnMqbWNxKSksXG4gICAgICAgICAgICAgICAgICAgICAgICAgIGNob2ljZSA9IG1jcV9jaG9pY2VzKHFucywgbWNxKSlcbnBoeXNpY3NhbnNcbiAgXG5jb25uIDwtIGdldEFXU0Nvbm5lY3Rpb24oKVxuZGJXcml0ZVRhYmxlKGNvbm4sIFxcUGh5c2ljc0Fuc1xcLCBwaHlzaWNzYW5zLCBvdmVyd3JpdGUgPSBUUlVFKVxuYGBgXG5gYGAifQ== --&gt;
-
-```r
-```r
-mcq &lt;- 4
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+</div>
+<div id="placing-of-cards-on-the-board" class="section level1">
+<h1>Placing of Cards on the board</h1>
+<div id="obtaining-the-grid-cells-for-the-board" class="section level2">
+<h2>Obtaining the grid cells for the board</h2>
+</div>
+<div id="placing-an-image-that-will-represent-the-board" class="section level2">
+<h2>Placing an image that will represent the board</h2>
+</div>
+<div id="opening-a-module-for-any-of-the-cell-that-is-clicked." class="section level2">
+<h2>Opening a module for any of the cell that is clicked.</h2>
+</div>
+<div id="retrieving-from-database-the-cards-that-the-current-player_id-has." class="section level2">
+<h2>Retrieving from database the cards that the current player_id has.</h2>
+</div>
+<div id="dropdown-box-to-select-the-card-and-press-confirm" class="section level2">
+<h2>Dropdown box to select the card and press confirm</h2>
+</div>
+<div id="show-the-card-on-the-board." class="section level2">
+<h2>Show the card on the board.</h2>
+</div>
+</div>
+<div id="physics-questions" class="section level1">
+<h1>Physics Questions</h1>
+<div id="adding-of-data-to-the-databases" class="section level2">
+<h2>Adding of Data to the databases</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubWNxIDwtIDRcbnFucyA8LSAxMFxubWNxX2Nob2ljZXMgPC0gZnVuY3Rpb24ocW5zLCBtY3Epe1xuICBjaCA8LSBjKClcbiAgcHJpbnQoY2gpXG4gIGZvcihpIGluIDE6cW5zKXtcbiAgICBmb3IoaiBpbiAxOm1jcSl7XG4gICAgICBjaCA8LSBjKGNoLCBwYXN0ZShcIlRoaXMgaXMgcW5cIiwgaSwgXCJhbmQgaGVyZSBpcyB0aGUgY2hvaWNlXCIsIGopKVxuICAgIH1cbiAgfVxuICByZXR1cm4oY2gpXG59XG5cbnBoeXNpY3NhbnMgPC0gZGF0YS5mcmFtZShxbl9pZCA9IHJlcChjKDE6MTApLCBlYWNoID0gbWNxKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgYW5zX2lkID0gYygxOihxbnMqbWNxKSksXG4gICAgICAgICAgICAgICAgICAgICAgICAgIGNob2ljZSA9IG1jcV9jaG9pY2VzKHFucywgbWNxKSlcbnBoeXNpY3NhbnNcbiAgXG5jb25uIDwtIGdldEFXU0Nvbm5lY3Rpb24oKVxuZGJXcml0ZVRhYmxlKGNvbm4sIFwiUGh5c2ljc0Fuc1wiLCBwaHlzaWNzYW5zLCBvdmVyd3JpdGUgPSBUUlVFKVxuYGBgIn0= -->
+<pre class="r"><code>mcq &lt;- 4
 qns &lt;- 10
 mcq_choices &lt;- function(qns, mcq){
   ch &lt;- c()
   print(ch)
   for(i in 1:qns){
     for(j in 1:mcq){
-      ch &lt;- c(ch, paste(\This is qn\, i, \and here is the choice\, j))
+      ch &lt;- c(ch, paste(&quot;This is qn&quot;, i, &quot;and here is the choice&quot;, j))
     }
   }
   return(ch)
@@ -551,45 +444,39 @@ physicsans &lt;- data.frame(qn_id = rep(c(1:10), each = mcq),
 physicsans
   
 conn &lt;- getAWSConnection()
-dbWriteTable(conn, \PhysicsAns\, physicsans, overwrite = TRUE)</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-
-## Retrieving Random Physics Question from the database
-
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuY29ubiA8LSBnZXRBV1NDb25uZWN0aW9uKClcbnBoeXNpY3NfcW5faWQgPC0gMVxucXVlcnlfcG5fdGVtcGxhdGUgPC0gXFxTRUxFQ1QgcXVlc3Rpb25cbmBgYCJ9 --&gt;
-
-```r
-```r
-conn &lt;- getAWSConnection()
-physics_qn_id &lt;- 1
-query_pn_template &lt;- \SELECT question</code></pre>
+dbWriteTable(conn, &quot;PhysicsAns&quot;, physicsans, overwrite = TRUE)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+</div>
+<div id="retrieving-random-physics-question-from-the-database" class="section level2">
+<h2>Retrieving Random Physics Question from the database</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29ubiA8LSBnZXRBV1NDb25uZWN0aW9uKClcbnBoeXNpY3NfcW5faWQgPC0gMVxucXVlcnlfcG5fdGVtcGxhdGUgPC0gXCJTRUxFQ1QgcXVlc3Rpb24sIGFuc19pZCBGUk9NIFBoeXNpY3NRbiBXSEVSRSBxbl9pZCA9ID9xbl9pZFwiXG5xdWVyeV9waHlzaWNzX3F1ZXN0aW9uIDwtIHNxbEludGVycG9sYXRlKGNvbm4sIHF1ZXJ5X3BuX3RlbXBsYXRlLCBxbl9pZCA9IHBoeXNpY3NfcW5faWQpXG5leGVjX3F1ZXJ5X3BxIDwtIGRiR2V0UXVlcnkoY29ubiwgcXVlcnlfcGh5c2ljc19xdWVzdGlvbilcbmRiRGlzY29ubmVjdChjb25uKVxuZXhlY19xdWVyeV9wcVxuYGBgIn0= -->
+<pre class="r"><code>conn &lt;- getAWSConnection()
+physics_qn_id &lt;- 1
+query_pn_template &lt;- &quot;SELECT question, ans_id FROM PhysicsQn WHERE qn_id = ?qn_id&quot;
+query_physics_question &lt;- sqlInterpolate(conn, query_pn_template, qn_id = physics_qn_id)
+exec_query_pq &lt;- dbGetQuery(conn, query_physics_question)
+dbDisconnect(conn)
+exec_query_pq</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
 <div id="retrieving-random-phyiscs-question-answer-choices-from-the-database" class="section level2">
 <h2>Retrieving Random Phyiscs Question Answer Choices from the database</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuY29ubiA8LSBnZXRBV1NDb25uZWN0aW9uKClcbnBoeXNpY3NfcW5faWQgPC0gMVxucXVlcnlfcGNfdGVtcGxhdGUgPC0gXFxTRUxFQ1QgYW5zX0lEXG5gYGAifQ== -->
-<pre class="r"><code>```r
-conn &lt;- getAWSConnection()
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29ubiA8LSBnZXRBV1NDb25uZWN0aW9uKClcbnBoeXNpY3NfcW5faWQgPC0gMVxucXVlcnlfcGNfdGVtcGxhdGUgPC0gXCJTRUxFQ1QgYW5zX0lELCBjaG9pY2UgRlJPTSBQaHlzaWNzQW5zIFdIRVJFIHFuX2lkID0gP3FuX2lkXCJcbnF1ZXJ5X3BoeXNpY3NfY2hvaWNlcyA8LSBzcWxJbnRlcnBvbGF0ZShjb25uLCBxdWVyeV9wY190ZW1wbGF0ZSwgcW5faWQgPSBwaHlzaWNzX3FuX2lkKVxuZXhlY19xdWVyeV9wYyA8LSBkYkdldFF1ZXJ5KGNvbm4sIHF1ZXJ5X3BoeXNpY3NfY2hvaWNlcylcbmRiRGlzY29ubmVjdChjb25uKVxuZXhlY19xdWVyeV9wY1xuYGBgIn0= -->
+<pre class="r"><code>conn &lt;- getAWSConnection()
 physics_qn_id &lt;- 1
-query_pc_template &lt;- \SELECT ans_ID</code></pre>
+query_pc_template &lt;- &quot;SELECT ans_ID, choice FROM PhysicsAns WHERE qn_id = ?qn_id&quot;
+query_physics_choices &lt;- sqlInterpolate(conn, query_pc_template, qn_id = physics_qn_id)
+exec_query_pc &lt;- dbGetQuery(conn, query_physics_choices)
+dbDisconnect(conn)
+exec_query_pc</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -611,13 +498,15 @@ query_pc_template &lt;- \SELECT ans_ID</code></pre>
 <h1>Checking for Defeat Condition</h1>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucXVlcnlfY2FyZHNfcmVzdWx0IDwtIGRiR2V0UXVlcnkoY29ubixcXFNFTEVDVCBDYXJkX0lEIEZST00gQ2FyZERlY2tcXClcbnF1ZXJ5X2NhcmRzX3Jlc3VsdFxuXG5pZiAobnJvdyhxdWVyeV9jYXJkc19yZXN1bHQpID09IDApe1xuICBwcmludChcXFplcm8gcm93cyByZXR1cm5lZFxuYGBgIn0= -->
-<pre class="r"><code>```r
-query_cards_result &lt;- dbGetQuery(conn,\SELECT Card_ID FROM CardDeck\)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucXVlcnlfY2FyZHNfcmVzdWx0IDwtIGRiR2V0UXVlcnkoY29ubixcIlNFTEVDVCBDYXJkX0lEIEZST00gQ2FyZERlY2tcIilcbnF1ZXJ5X2NhcmRzX3Jlc3VsdFxuXG5pZiAobnJvdyhxdWVyeV9jYXJkc19yZXN1bHQpID09IDApe1xuICBwcmludChcIlplcm8gcm93cyByZXR1cm5lZCwgRGVmZWF0IENvbmRpdGlvbiBSZWFjaGVkXCIpXG59XG5cbmRiRGlzY29ubmVjdChjb25uKVxuYGBgIn0= -->
+<pre class="r"><code>query_cards_result &lt;- dbGetQuery(conn,&quot;SELECT Card_ID FROM CardDeck&quot;)
 query_cards_result
 
 if (nrow(query_cards_result) == 0){
-  print(\Zero rows returned</code></pre>
+  print(&quot;Zero rows returned, Defeat Condition Reached&quot;)
+}
+
+dbDisconnect(conn)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -629,15 +518,12 @@ x = 5
 y = x %% 4
 print(y)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDFcbiJ9 -->
-<pre><code>[1] 1</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkJlZWx6ZWJ1bGIncyBMb2dpYyBDb2RlIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCg0KIyBMaWJyYXJpZXMgdGhhdCB3aWxsIGJlIHJlcXVpcmVkDQpgYGB7cn0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShEQkkpDQpsaWJyYXJ5KHJzY29ubmVjdCkNCmBgYA0KDQojIEFXUyBDb25uZWN0aW9uDQpgYGB7cn0NCmdldEFXU0Nvbm5lY3Rpb24gPC0gZnVuY3Rpb24oKXsNCiAgY29ubiA8LSBkYkNvbm5lY3QoDQogICAgZHJ2ID0gUk15U1FMOjpNeVNRTCgpLA0KICAgIGRibmFtZSA9ICJzdHVkZW50MDU1IiwNCiAgICBob3N0ID0gImVzZGRiaW5zdGFuY2UtMS5jZW80ZWh6amVlZzAuYXAtc291dGhlYXN0LTEucmRzLmFtYXpvbmF3cy5jb20iLA0KICAgIHVzZXJuYW1lID0gInN0dWRlbnQwNTUiLA0KICAgIHBhc3N3b3JkID0gImdWVTRLcFdUIikNCiAgY29ubg0KfQ0KYGBgDQoNCg0KIyBDYXJkcyBvZiBBIERlY2sgTG9naWMNCg0KIyMgR2VuZXJhdGluZyB0aGUgZGVjayBvZiBjYXJkcyBkYXRhZnJhbWUNCmBgYHtyfQ0KY2FyZElEX2RlY2sgPC0gcmVwKGMoMTAwMSwgMTAwMiwgMTAwMywgMTAwNCksIGVhY2ggPSA1KQ0KY2FyZE5BTUVfZGVjayA8LSByZXAoYygiV2lyZV8xIiwgIldpcmVfMiIsICJXaXJlXzMiLCAiV2lyZV80IiksIGVhY2ggPSA1KQ0KZGZfaWQgPC0gZGF0YS5mcmFtZShDYXJkX0lEID0gY2FyZElEX2RlY2ssIENhcmRfTmFtZSA9IGNhcmROQU1FX2RlY2spDQoNCmRmX2lkMiA8LSBkYXRhLmZyYW1lKENhcmRfSUQgPSByZXAoYygyMDAxLCAyMDAyLCAyMDAzLCAyMDA0KSwgZWFjaCA9IDUpLCBDYXJkX05hbWUgPSByZXAoYygiV2lyZV9MZWZ0IiwgIldpcmVfUmlnaHQiLCAiV2lyZV9VcCIsICJXaXJlX0Rvd24iKSwgZWFjaCA9IDUpKQ0KIyBkZl9pZDINCmBgYA0KIyMgU2VuZGluZyBGcmVzaCBEZWNrIG9mIENhcmRzIHRvIERhdGFiYXNlIChGb3IgRXZlcnkgbmV3IEdhbWUpDQpgYGB7cn0NCiMgcXVlcnl0ZW1wbGF0ZSA8LSAiSU5TRVJUIElOVE8gQ2FyZERlY2sgKENhcmRfSUQsIENhcmRfTmFtZSkgVkFMVUVTIg0KIyBzcWxfcXJ5IDwtIHBhc3RlMChxdWVyeXRlbXBsYXRlLCBwYXN0ZShzcHJpbnRmKCIoJyVzJywgJyVzJykiLCBhcy5udW1lcmljKGRmX2lkJENhcmRfSUQpLCBkZl9pZCRDYXJkX05hbWUpLCBjb2xsYXBzZSA9ICIsIikpDQojIHByaW50KHNxbF9xcnkpDQojIGNvbm4gPC0gZ2V0QVdTQ29ubmVjdGlvbigpDQojICMgcXVlcnk8LSBzcWxJbnRlcnBvbGF0ZShjb25uLCBzcWxfcXJ5KQ0KIyByZXN1bHQgPC0gZGJFeGVjdXRlKGNvbm4sIHNxbF9xcnkpDQojIHJlc3VsdA0KDQojIyBUUlkgVEhJUw0KIyBJZiBEYXRhZnJhbWUgb3IgVGFibGUgPT0gZGZfaWQ6DQpjb25uIDwtIGdldEFXU0Nvbm5lY3Rpb24oKQ0KZGJXcml0ZVRhYmxlKGNvbm4sICJDYXJkRGVjayIsIGRmX2lkLCBvdmVyd3JpdGUgPSBUUlVFKQ0KYGBgDQoNCiMjIERyYXdpbmcgYSBzYW1wbGUgZnJvbSB0aGUgZGVjaw0KDQpgYGB7cn0NCmNvbm4gPC0gZ2V0QVdTQ29ubmVjdGlvbigpDQpxdWVyeV9kcmF3X2NhcmRzIDwtIGRiR2V0UXVlcnkoY29ubiwgIlNFTEVDVCByb3dfbmFtZXMsIENhcmRfSUQsIENhcmRfTmFtZSBGUk9NIENhcmREZWNrIE9SREVSIEJZIFJBTkQoKSBMSU1JVCA1IikNCmRiRGlzY29ubmVjdChjb25uKQ0KcXVlcnlfZHJhd19jYXJkcw0KYGBgDQojIyBBc3NpZ25pbmcgdGhlIENhcmRzIHRvIHRoZSBQbGF5ZXINCmBgYHtyfQ0KY29ubiA8LSBnZXRBV1NDb25uZWN0aW9uKCkNCnBsYXllcmlkIDwtIDMNCnF1ZXJ5X2RyYXdfY2FyZHNbIlBsYXllcklEIl0gPC0gcGxheWVyaWQNCnF1ZXJ5X2RyYXdfY2FyZHMNCnF1ZXJ5dGVtcGxhdGVfZHJhd2NhcmRzIDwtICJJTlNFUlQgSU5UTyBIYW5kQ2FyZHMgKFBsYXllcklELCBDYXJkX0lELCBDYXJkX05hbWUpIFZBTFVFUyINCnNxbF9xcnkgPC0gcGFzdGUwKHF1ZXJ5dGVtcGxhdGVfZHJhd2NhcmRzLCBwYXN0ZShzcHJpbnRmKCIoJWQsICVkLCAnJXMnKSIsDQphcy5udW1lcmljKHF1ZXJ5X2RyYXdfY2FyZHMkUGxheWVySUQpLA0KYXMubnVtZXJpYyhxdWVyeV9kcmF3X2NhcmRzJENhcmRfSUQpLA0KcXVlcnlfZHJhd19jYXJkcyRDYXJkX05hbWUpLCBjb2xsYXBzZSA9ICIsIikpDQpzcWxfcXJ5DQpzZW5kX3F1ZXJ5IDwtIGRiRXhlY3V0ZShjb25uLCBzcWxfcXJ5KQ0KIyBzZW5kX3F1ZXJ5DQpkYkRpc2Nvbm5lY3QoY29ubikNCmBgYA0KDQoNCiMjIFJlbW92aW5nIHRoZSBzYW1wbGUgZHJhd24gZnJvbSB0aGUgZGVjaw0KDQpgYGB7cn0NCmNvbm4gPC0gZ2V0QVdTQ29ubmVjdGlvbigpDQpmb3IoaSBpbiAxOm5yb3cocXVlcnlfZHJhd19jYXJkcykpew0KICByZW1vdmVfdGVtcGxhdGUgPC0gIkRFTEVURSBGUk9NIENhcmREZWNrIHdoZXJlIHJvd19uYW1lcyA9ID9yb3ciDQogIHFyYyA8LSBzcWxJbnRlcnBvbGF0ZShjb25uLCByZW1vdmVfdGVtcGxhdGUsIHJvdyA9IHF1ZXJ5X2RyYXdfY2FyZHNbaSwgMV0pDQogIHByaW50KHFyYykNCiAgcXVlcnlfcmVtb3ZlX2NhcmQgPC0gZGJFeGVjdXRlKGNvbm4sIHFyYykNCn0NCmRiRGlzY29ubmVjdChjb25uKQ0KYGBgDQoNCg0KIyMgQ2xlYXJpbmcgdGhlIGRhdGFiYXNlIG9mIGFueSBvdGhlciBjYXJkcyBzdGlsbCBpbiBpdCAoV29ya2luZykNCmBgYHtyfQ0KIyB1c2UgICB0cnVuY2F0ZSB0YWJsZU5hbWU7DQojIFRydW5jYXRlOiB3aWxsIGFsc28gZGVsZXRlIHRoZSByb3dzIGZyb20geW91ciB0YWJsZSBidXQgaXQgd2lsbCBzdGFydCBmcm9tIG5ldyByb3cgd2l0aCAxLg0KcXJ5X3RydW5jYXRlIDwtICJUUlVOQ0FURSBDYXJkRGVjayINCmV4ZWNfdHJ1bmN0YXRlIDwtIGRiRXhlY3V0ZShjb25uLCBxcnlfdHJ1bmNhdGUpDQpgYGANCg0KIyBQbGFjaW5nIG9mIENhcmRzIG9uIHRoZSBib2FyZA0KDQojIyBPYnRhaW5pbmcgdGhlIGdyaWQgY2VsbHMgZm9yIHRoZSBib2FyZA0KDQojIyBQbGFjaW5nIGFuIGltYWdlIHRoYXQgd2lsbCByZXByZXNlbnQgdGhlIGJvYXJkDQoNCiMjIE9wZW5pbmcgYSBtb2R1bGUgZm9yIGFueSBvZiB0aGUgY2VsbCB0aGF0IGlzIGNsaWNrZWQuDQoNCiMjIFJldHJpZXZpbmcgZnJvbSBkYXRhYmFzZSB0aGUgY2FyZHMgdGhhdCB0aGUgY3VycmVudCBwbGF5ZXJfaWQgaGFzLg0KDQojIyBEcm9wZG93biBib3ggdG8gc2VsZWN0IHRoZSBjYXJkIGFuZCBwcmVzcyBjb25maXJtDQoNCiMjIFNob3cgdGhlIGNhcmQgb24gdGhlIGJvYXJkLg0KDQoNCg0KDQojIFBoeXNpY3MgUXVlc3Rpb25zDQoNCiMjIEFkZGluZyBvZiBEYXRhIHRvIHRoZSBkYXRhYmFzZXMNCmBgYHtyfQ0KbWNxIDwtIDQNCnFucyA8LSAxMA0KbWNxX2Nob2ljZXMgPC0gZnVuY3Rpb24ocW5zLCBtY3Epew0KICBjaCA8LSBjKCkNCiAgcHJpbnQoY2gpDQogIGZvcihpIGluIDE6cW5zKXsNCiAgICBmb3IoaiBpbiAxOm1jcSl7DQogICAgICBjaCA8LSBjKGNoLCBwYXN0ZSgiVGhpcyBpcyBxbiIsIGksICJhbmQgaGVyZSBpcyB0aGUgY2hvaWNlIiwgaikpDQogICAgfQ0KICB9DQogIHJldHVybihjaCkNCn0NCg0KcGh5c2ljc2FucyA8LSBkYXRhLmZyYW1lKHFuX2lkID0gcmVwKGMoMToxMCksIGVhY2ggPSBtY3EpLA0KICAgICAgICAgICAgICAgICAgICAgICAgICBhbnNfaWQgPSBjKDE6KHFucyptY3EpKSwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgY2hvaWNlID0gbWNxX2Nob2ljZXMocW5zLCBtY3EpKQ0KcGh5c2ljc2Fucw0KICANCmNvbm4gPC0gZ2V0QVdTQ29ubmVjdGlvbigpDQpkYldyaXRlVGFibGUoY29ubiwgIlBoeXNpY3NBbnMiLCBwaHlzaWNzYW5zLCBvdmVyd3JpdGUgPSBUUlVFKQ0KYGBgDQoNCg0KIyMgUmV0cmlldmluZyBSYW5kb20gUGh5c2ljcyBRdWVzdGlvbiBmcm9tIHRoZSBkYXRhYmFzZQ0KDQpgYGB7cn0NCmNvbm4gPC0gZ2V0QVdTQ29ubmVjdGlvbigpDQpwaHlzaWNzX3FuX2lkIDwtIDENCnF1ZXJ5X3BuX3RlbXBsYXRlIDwtICJTRUxFQ1QgcXVlc3Rpb24sIGFuc19pZCBGUk9NIFBoeXNpY3NRbiBXSEVSRSBxbl9pZCA9ID9xbl9pZCINCnF1ZXJ5X3BoeXNpY3NfcXVlc3Rpb24gPC0gc3FsSW50ZXJwb2xhdGUoY29ubiwgcXVlcnlfcG5fdGVtcGxhdGUsIHFuX2lkID0gcGh5c2ljc19xbl9pZCkNCmV4ZWNfcXVlcnlfcHEgPC0gZGJHZXRRdWVyeShjb25uLCBxdWVyeV9waHlzaWNzX3F1ZXN0aW9uKQ0KZGJEaXNjb25uZWN0KGNvbm4pDQpleGVjX3F1ZXJ5X3BxDQpgYGANCg0KDQojIyBSZXRyaWV2aW5nIFJhbmRvbSBQaHlpc2NzIFF1ZXN0aW9uIEFuc3dlciBDaG9pY2VzIGZyb20gdGhlIGRhdGFiYXNlDQoNCmBgYHtyfQ0KY29ubiA8LSBnZXRBV1NDb25uZWN0aW9uKCkNCnBoeXNpY3NfcW5faWQgPC0gMQ0KcXVlcnlfcGNfdGVtcGxhdGUgPC0gIlNFTEVDVCBhbnNfSUQsIGNob2ljZSBGUk9NIFBoeXNpY3NBbnMgV0hFUkUgcW5faWQgPSA/cW5faWQiDQpxdWVyeV9waHlzaWNzX2Nob2ljZXMgPC0gc3FsSW50ZXJwb2xhdGUoY29ubiwgcXVlcnlfcGNfdGVtcGxhdGUsIHFuX2lkID0gcGh5c2ljc19xbl9pZCkNCmV4ZWNfcXVlcnlfcGMgPC0gZGJHZXRRdWVyeShjb25uLCBxdWVyeV9waHlzaWNzX2Nob2ljZXMpDQpkYkRpc2Nvbm5lY3QoY29ubikNCmV4ZWNfcXVlcnlfcGMNCmBgYA0KDQoNCiMjIERpc3BsYXlpbmcgUXVlc3Rpb24gYW5kIENob2ljZXMgb24gYSBtb2R1bGUgc2NyZWVuICh3aXRoIGRyb3AgZG93biBhbmQgY29uZmlybSBidXR0b24gb3IgUmFkaW8gQnV0dG9uKQ0KDQojIyBDaGVja2luZyBpZiB0aGUgYW5zd2VyIGdpdmVuIGlzIHRoZSBzYW1lIGFzIHRoZSBjb3JyZWN0IGFuc3dlciBJRCBpbiB0aGUgZGF0YWJhc2UgZm9yIHRoYXQgcXVlc3Rpb24NCg0KIyMgTW9kdWxlIFJlc3BvbnNlIHRvIHNob3cgd2hldGhlciBjb3JyZWN0IG9yIHdyb25nLg0KDQojIyBDb25zZXF1ZW5jZSBvZiBSaWdodCAvIFdyb25nIGFuc3dlci4NCg0KIyBDaGVja2luZyBmb3IgRGVmZWF0IENvbmRpdGlvbg0KYGBge3J9DQpxdWVyeV9jYXJkc19yZXN1bHQgPC0gZGJHZXRRdWVyeShjb25uLCJTRUxFQ1QgQ2FyZF9JRCBGUk9NIENhcmREZWNrIikNCnF1ZXJ5X2NhcmRzX3Jlc3VsdA0KDQppZiAobnJvdyhxdWVyeV9jYXJkc19yZXN1bHQpID09IDApew0KICBwcmludCgiWmVybyByb3dzIHJldHVybmVkLCBEZWZlYXQgQ29uZGl0aW9uIFJlYWNoZWQiKQ0KfQ0KDQpkYkRpc2Nvbm5lY3QoY29ubikNCmBgYA0KDQoNCmBgYHtyfQ0KDQp4ID0gNQ0KeSA9IHggJSUgNA0KcHJpbnQoeSkNCmBgYA0KDQo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkJlZWx6ZWJ1bGIncyBMb2dpYyBDb2RlIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCg0KIyBMaWJyYXJpZXMgdGhhdCB3aWxsIGJlIHJlcXVpcmVkDQpgYGB7cn0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShEQkkpDQpsaWJyYXJ5KHJzY29ubmVjdCkNCmBgYA0KDQojIEFXUyBDb25uZWN0aW9uDQpgYGB7cn0NCmdldEFXU0Nvbm5lY3Rpb24gPC0gZnVuY3Rpb24oKXsNCiAgY29ubiA8LSBkYkNvbm5lY3QoDQogICAgZHJ2ID0gUk15U1FMOjpNeVNRTCgpLA0KICAgIGRibmFtZSA9ICJzdHVkZW50MDU1IiwNCiAgICBob3N0ID0gImVzZGRiaW5zdGFuY2UtMS5jZW80ZWh6amVlZzAuYXAtc291dGhlYXN0LTEucmRzLmFtYXpvbmF3cy5jb20iLA0KICAgIHVzZXJuYW1lID0gInN0dWRlbnQwNTUiLA0KICAgIHBhc3N3b3JkID0gImdWVTRLcFdUIikNCiAgY29ubg0KfQ0KYGBgDQoNCg0KIyBDYXJkcyBvZiBBIERlY2sgTG9naWMNCg0KIyMgR2VuZXJhdGluZyB0aGUgZGVjayBvZiBjYXJkcyBkYXRhZnJhbWUNCmBgYHtyfQ0KY2FyZElEX2RlY2sgPC0gcmVwKGMoMTAwMSwgMTAwMiwgMTAwMywgMTAwNCksIGVhY2ggPSA1KQ0KY2FyZE5BTUVfZGVjayA8LSByZXAoYygiV2lyZV8xIiwgIldpcmVfMiIsICJXaXJlXzMiLCAiV2lyZV80IiksIGVhY2ggPSA1KQ0KZGZfaWQgPC0gZGF0YS5mcmFtZShDYXJkX0lEID0gY2FyZElEX2RlY2ssIENhcmRfTmFtZSA9IGNhcmROQU1FX2RlY2spDQoNCmRmX2lkMiA8LSBkYXRhLmZyYW1lKENhcmRfSUQgPSByZXAoYygyMDAxLCAyMDAyLCAyMDAzLCAyMDA0KSwgZWFjaCA9IDUpLCBDYXJkX05hbWUgPSByZXAoYygiV2lyZV9MZWZ0IiwgIldpcmVfUmlnaHQiLCAiV2lyZV9VcCIsICJXaXJlX0Rvd24iKSwgZWFjaCA9IDUpKQ0KIyBkZl9pZDINCmBgYA0KIyMgU2VuZGluZyBGcmVzaCBEZWNrIG9mIENhcmRzIHRvIERhdGFiYXNlIChGb3IgRXZlcnkgbmV3IEdhbWUpDQpgYGB7cn0NCiMgcXVlcnl0ZW1wbGF0ZSA8LSAiSU5TRVJUIElOVE8gQ2FyZERlY2sgKENhcmRfSUQsIENhcmRfTmFtZSkgVkFMVUVTIg0KIyBzcWxfcXJ5IDwtIHBhc3RlMChxdWVyeXRlbXBsYXRlLCBwYXN0ZShzcHJpbnRmKCIoJyVzJywgJyVzJykiLCBhcy5udW1lcmljKGRmX2lkJENhcmRfSUQpLCBkZl9pZCRDYXJkX05hbWUpLCBjb2xsYXBzZSA9ICIsIikpDQojIHByaW50KHNxbF9xcnkpDQojIGNvbm4gPC0gZ2V0QVdTQ29ubmVjdGlvbigpDQojICMgcXVlcnk8LSBzcWxJbnRlcnBvbGF0ZShjb25uLCBzcWxfcXJ5KQ0KIyByZXN1bHQgPC0gZGJFeGVjdXRlKGNvbm4sIHNxbF9xcnkpDQojIHJlc3VsdA0KDQojIyBUUlkgVEhJUw0KIyBJZiBEYXRhZnJhbWUgb3IgVGFibGUgPT0gZGZfaWQ6DQpjb25uIDwtIGdldEFXU0Nvbm5lY3Rpb24oKQ0KZGJXcml0ZVRhYmxlKGNvbm4sICJDYXJkRGVjayIsIGRmX2lkLCBvdmVyd3JpdGUgPSBUUlVFKQ0KZGJEaXNjb25uZWN0KGNvbm4pDQpgYGANCg0KIyMgRHJhd2luZyBhIHNhbXBsZSBmcm9tIHRoZSBkZWNrDQoNCmBgYHtyfQ0KY29ubiA8LSBnZXRBV1NDb25uZWN0aW9uKCkNCnF1ZXJ5X2RyYXdfY2FyZHMgPC0gZGJHZXRRdWVyeShjb25uLCAiU0VMRUNUIHJvd19uYW1lcywgQ2FyZF9JRCwgQ2FyZF9OYW1lIEZST00gQ2FyZERlY2sgT1JERVIgQlkgUkFORCgpIExJTUlUIDUiKQ0KZGJEaXNjb25uZWN0KGNvbm4pDQpxdWVyeV9kcmF3X2NhcmRzDQpgYGANCiMjIEFzc2lnbmluZyB0aGUgQ2FyZHMgdG8gdGhlIFBsYXllcg0KYGBge3J9DQpjb25uIDwtIGdldEFXU0Nvbm5lY3Rpb24oKQ0KcGxheWVyaWQgPC0gMw0KcXVlcnlfZHJhd19jYXJkc1siUGxheWVySUQiXSA8LSBwbGF5ZXJpZA0KcXVlcnlfZHJhd19jYXJkcw0KcXVlcnl0ZW1wbGF0ZV9kcmF3Y2FyZHMgPC0gIklOU0VSVCBJTlRPIEhhbmRDYXJkcyAoUGxheWVySUQsIENhcmRfSUQsIENhcmRfTmFtZSkgVkFMVUVTIg0Kc3FsX3FyeSA8LSBwYXN0ZTAocXVlcnl0ZW1wbGF0ZV9kcmF3Y2FyZHMsIHBhc3RlKHNwcmludGYoIiglZCwgJWQsICclcycpIiwNCmFzLm51bWVyaWMocXVlcnlfZHJhd19jYXJkcyRQbGF5ZXJJRCksDQphcy5udW1lcmljKHF1ZXJ5X2RyYXdfY2FyZHMkQ2FyZF9JRCksDQpxdWVyeV9kcmF3X2NhcmRzJENhcmRfTmFtZSksIGNvbGxhcHNlID0gIiwiKSkNCnNxbF9xcnkNCnNlbmRfcXVlcnkgPC0gZGJFeGVjdXRlKGNvbm4sIHNxbF9xcnkpDQojIHNlbmRfcXVlcnkNCmRiRGlzY29ubmVjdChjb25uKQ0KYGBgDQoNCg0KIyMgUmVtb3ZpbmcgdGhlIHNhbXBsZSBkcmF3biBmcm9tIHRoZSBkZWNrDQoNCmBgYHtyfQ0KY29ubiA8LSBnZXRBV1NDb25uZWN0aW9uKCkNCmZvcihpIGluIDE6bnJvdyhxdWVyeV9kcmF3X2NhcmRzKSl7DQogIHJlbW92ZV90ZW1wbGF0ZSA8LSAiREVMRVRFIEZST00gQ2FyZERlY2sgd2hlcmUgcm93X25hbWVzID0gP3JvdyINCiAgcXJjIDwtIHNxbEludGVycG9sYXRlKGNvbm4sIHJlbW92ZV90ZW1wbGF0ZSwgcm93ID0gcXVlcnlfZHJhd19jYXJkc1tpLCAxXSkNCiAgcHJpbnQocXJjKQ0KICBxdWVyeV9yZW1vdmVfY2FyZCA8LSBkYkV4ZWN1dGUoY29ubiwgcXJjKQ0KfQ0KZGJEaXNjb25uZWN0KGNvbm4pDQpgYGANCg0KDQojIyBDbGVhcmluZyB0aGUgZGF0YWJhc2Ugb2YgYW55IG90aGVyIGNhcmRzIHN0aWxsIGluIGl0IChXb3JraW5nKQ0KYGBge3J9DQojIHVzZSAgIHRydW5jYXRlIHRhYmxlTmFtZTsNCiMgVHJ1bmNhdGU6IHdpbGwgYWxzbyBkZWxldGUgdGhlIHJvd3MgZnJvbSB5b3VyIHRhYmxlIGJ1dCBpdCB3aWxsIHN0YXJ0IGZyb20gbmV3IHJvdyB3aXRoIDEuDQpxcnlfdHJ1bmNhdGUgPC0gIlRSVU5DQVRFIENhcmREZWNrIg0KZXhlY190cnVuY3RhdGUgPC0gZGJFeGVjdXRlKGNvbm4sIHFyeV90cnVuY2F0ZSkNCmBgYA0KDQojIFBsYWNpbmcgb2YgQ2FyZHMgb24gdGhlIGJvYXJkDQoNCiMjIE9idGFpbmluZyB0aGUgZ3JpZCBjZWxscyBmb3IgdGhlIGJvYXJkDQoNCiMjIFBsYWNpbmcgYW4gaW1hZ2UgdGhhdCB3aWxsIHJlcHJlc2VudCB0aGUgYm9hcmQNCg0KIyMgT3BlbmluZyBhIG1vZHVsZSBmb3IgYW55IG9mIHRoZSBjZWxsIHRoYXQgaXMgY2xpY2tlZC4NCg0KIyMgUmV0cmlldmluZyBmcm9tIGRhdGFiYXNlIHRoZSBjYXJkcyB0aGF0IHRoZSBjdXJyZW50IHBsYXllcl9pZCBoYXMuDQoNCiMjIERyb3Bkb3duIGJveCB0byBzZWxlY3QgdGhlIGNhcmQgYW5kIHByZXNzIGNvbmZpcm0NCg0KIyMgU2hvdyB0aGUgY2FyZCBvbiB0aGUgYm9hcmQuDQoNCg0KDQoNCiMgUGh5c2ljcyBRdWVzdGlvbnMNCg0KIyMgQWRkaW5nIG9mIERhdGEgdG8gdGhlIGRhdGFiYXNlcw0KYGBge3J9DQptY3EgPC0gNA0KcW5zIDwtIDEwDQptY3FfY2hvaWNlcyA8LSBmdW5jdGlvbihxbnMsIG1jcSl7DQogIGNoIDwtIGMoKQ0KICBwcmludChjaCkNCiAgZm9yKGkgaW4gMTpxbnMpew0KICAgIGZvcihqIGluIDE6bWNxKXsNCiAgICAgIGNoIDwtIGMoY2gsIHBhc3RlKCJUaGlzIGlzIHFuIiwgaSwgImFuZCBoZXJlIGlzIHRoZSBjaG9pY2UiLCBqKSkNCiAgICB9DQogIH0NCiAgcmV0dXJuKGNoKQ0KfQ0KDQpwaHlzaWNzYW5zIDwtIGRhdGEuZnJhbWUocW5faWQgPSByZXAoYygxOjEwKSwgZWFjaCA9IG1jcSksDQogICAgICAgICAgICAgICAgICAgICAgICAgIGFuc19pZCA9IGMoMToocW5zKm1jcSkpLA0KICAgICAgICAgICAgICAgICAgICAgICAgICBjaG9pY2UgPSBtY3FfY2hvaWNlcyhxbnMsIG1jcSkpDQpwaHlzaWNzYW5zDQogIA0KY29ubiA8LSBnZXRBV1NDb25uZWN0aW9uKCkNCmRiV3JpdGVUYWJsZShjb25uLCAiUGh5c2ljc0FucyIsIHBoeXNpY3NhbnMsIG92ZXJ3cml0ZSA9IFRSVUUpDQpgYGANCg0KDQojIyBSZXRyaWV2aW5nIFJhbmRvbSBQaHlzaWNzIFF1ZXN0aW9uIGZyb20gdGhlIGRhdGFiYXNlDQoNCmBgYHtyfQ0KY29ubiA8LSBnZXRBV1NDb25uZWN0aW9uKCkNCnBoeXNpY3NfcW5faWQgPC0gMQ0KcXVlcnlfcG5fdGVtcGxhdGUgPC0gIlNFTEVDVCBxdWVzdGlvbiwgYW5zX2lkIEZST00gUGh5c2ljc1FuIFdIRVJFIHFuX2lkID0gP3FuX2lkIg0KcXVlcnlfcGh5c2ljc19xdWVzdGlvbiA8LSBzcWxJbnRlcnBvbGF0ZShjb25uLCBxdWVyeV9wbl90ZW1wbGF0ZSwgcW5faWQgPSBwaHlzaWNzX3FuX2lkKQ0KZXhlY19xdWVyeV9wcSA8LSBkYkdldFF1ZXJ5KGNvbm4sIHF1ZXJ5X3BoeXNpY3NfcXVlc3Rpb24pDQpkYkRpc2Nvbm5lY3QoY29ubikNCmV4ZWNfcXVlcnlfcHENCmBgYA0KDQoNCiMjIFJldHJpZXZpbmcgUmFuZG9tIFBoeWlzY3MgUXVlc3Rpb24gQW5zd2VyIENob2ljZXMgZnJvbSB0aGUgZGF0YWJhc2UNCg0KYGBge3J9DQpjb25uIDwtIGdldEFXU0Nvbm5lY3Rpb24oKQ0KcGh5c2ljc19xbl9pZCA8LSAxDQpxdWVyeV9wY190ZW1wbGF0ZSA8LSAiU0VMRUNUIGFuc19JRCwgY2hvaWNlIEZST00gUGh5c2ljc0FucyBXSEVSRSBxbl9pZCA9ID9xbl9pZCINCnF1ZXJ5X3BoeXNpY3NfY2hvaWNlcyA8LSBzcWxJbnRlcnBvbGF0ZShjb25uLCBxdWVyeV9wY190ZW1wbGF0ZSwgcW5faWQgPSBwaHlzaWNzX3FuX2lkKQ0KZXhlY19xdWVyeV9wYyA8LSBkYkdldFF1ZXJ5KGNvbm4sIHF1ZXJ5X3BoeXNpY3NfY2hvaWNlcykNCmRiRGlzY29ubmVjdChjb25uKQ0KZXhlY19xdWVyeV9wYw0KYGBgDQoNCg0KIyMgRGlzcGxheWluZyBRdWVzdGlvbiBhbmQgQ2hvaWNlcyBvbiBhIG1vZHVsZSBzY3JlZW4gKHdpdGggZHJvcCBkb3duIGFuZCBjb25maXJtIGJ1dHRvbiBvciBSYWRpbyBCdXR0b24pDQoNCiMjIENoZWNraW5nIGlmIHRoZSBhbnN3ZXIgZ2l2ZW4gaXMgdGhlIHNhbWUgYXMgdGhlIGNvcnJlY3QgYW5zd2VyIElEIGluIHRoZSBkYXRhYmFzZSBmb3IgdGhhdCBxdWVzdGlvbg0KDQojIyBNb2R1bGUgUmVzcG9uc2UgdG8gc2hvdyB3aGV0aGVyIGNvcnJlY3Qgb3Igd3JvbmcuDQoNCiMjIENvbnNlcXVlbmNlIG9mIFJpZ2h0IC8gV3JvbmcgYW5zd2VyLg0KDQojIENoZWNraW5nIGZvciBEZWZlYXQgQ29uZGl0aW9uDQpgYGB7cn0NCnF1ZXJ5X2NhcmRzX3Jlc3VsdCA8LSBkYkdldFF1ZXJ5KGNvbm4sIlNFTEVDVCBDYXJkX0lEIEZST00gQ2FyZERlY2siKQ0KcXVlcnlfY2FyZHNfcmVzdWx0DQoNCmlmIChucm93KHF1ZXJ5X2NhcmRzX3Jlc3VsdCkgPT0gMCl7DQogIHByaW50KCJaZXJvIHJvd3MgcmV0dXJuZWQsIERlZmVhdCBDb25kaXRpb24gUmVhY2hlZCIpDQp9DQoNCmRiRGlzY29ubmVjdChjb25uKQ0KYGBgDQoNCg0KYGBge3J9DQoNCnggPSA1DQp5ID0geCAlJSA0DQpwcmludCh5KQ0KYGBgDQoNCg==</div>
 
 
 

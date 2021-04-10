@@ -104,19 +104,10 @@ getAWSConnection <- function(){
 # General
 nextPlayer <- function(turn){
   conn <- getAWSConnection()
-  print(turn)
-  print("reached turn")
-  if(turn %% 4 == 0){
-    print("Not reached")
-    turn <- 1
-    dbExecute(conn, sprintf("UPDATE TurnNumber SET turn = %d", turn))
-    return(turn)
-  }else{
-    print("Turn + 1")
-    dbExecute(conn, sprintf("UPDATE TurnNumber SET turn = %d", turn+1))
-    return(turn+1)
-  }
+  dbExecute(conn, sprintf("UPDATE TurnNumber SET turn = %d", turn+1))
   dbDisconnect(conn)
+  return(turn+1)
+
 }
 
 startGame <- function(){
@@ -215,10 +206,6 @@ getPlayerID <- function(username,password){
 }
 
 # Game Lobby
-
-
-
-
 gameLobby <- function(totalPlayers, failed = FALSE){
   if(totalPlayers > 3){
     modalDialog(
@@ -332,7 +319,7 @@ physicsResult <- function(result, ans){
 #Get Handcards
 getHandCards <- function(userid){
   conn <- getAWSConnection()
-  q_temp <- "SELECT Card_ID, Card_Name FROM HandCards WHERE ?userid"
+  q_temp <- "SELECT Card_ID, Card_Name FROM HandCards WHERE PlayerID = ?userid"
   query_HandCards <- sqlInterpolate(conn, q_temp, userid = userid)
   exec_query <- dbGetQuery(conn, query_HandCards)
   dbDisconnect(conn)
@@ -386,6 +373,14 @@ chooseCard <- function(pos, handCards, failed=FALSE){
   )
 }
 
+removeCard <- function(userid, cardSelect){
+  conn <- getAWSConnection()
+  remove_template <- "DELETE FROM HandCards WHERE PlayerID = ?userid AND Card_Name = ?cardName LIMIT 1"
+  qrc <- sqlInterpolate(conn, remove_template, userid = userid, cardName = cardSelect)
+  query_remove_card <- dbExecute(conn, qrc)
+  dbDisconnect(conn)
+}
+
 #Checking End Game Condition
 checkWin <- function(){
   conn <- getAWSConnection()
@@ -424,7 +419,7 @@ gameEnd <- function(failed = FALSE){
 ############################################ SERVER ################################################
 server <- function(input, output, session) {
   # vals$turn is to know which player is next. Different from how many turns have passed.
-  vals <- reactiveValues(password = NULL, userid=NULL,username=NULL, lobby=NULL, playercolor=1, turn = 0, gameStart = NULL)
+  vals <- reactiveValues(password = NULL, userid=NULL,username=NULL, lobby=NULL, playercolor=1, turn = 0, gameStart = NULL, players = setNames(data.frame(matrix(ncol = 2, nrow = 0)), c('PlayerID', 'Username')))
   physics <- reactiveValues(qid = NULL, aid = NULL, qn = NULL, q_opt = NULL)
   pieces <- matrix(rep(0,3*5),nrow=3,ncol=5,byrow=TRUE)
   gamevals <- reactiveValues(turncount=0,pieces=pieces)
@@ -444,11 +439,13 @@ server <- function(input, output, session) {
   getPlayerTurn <- function(){
     #open the connection
     conn <- getAWSConnection()
-    turn <- dbGetQuery(conn, "SELECT turn FROM TurnNumber")
+    turn <- dbGetQuery(conn, "SELECT turn FROM TurnNumber")[1, 1]
     dbDisconnect(conn)
-    vals$turn <- turn[1,1]
-    print(vals$players[vals$turn %% 4, 2])
-    output$playerturn <- renderText(paste(sprintf("%s's turn", vals$players[vals$turn %% 4, 2])))
+    if(nrow(vals$players) != 0){
+      vals$turn <- turn
+      print(vals$players[(vals$turn%%4)+1, 2])
+      output$playerturn <- renderText(paste(sprintf("%s's turn", vals$players[(vals$turn%%4)+1, 2])))
+    }
   }
   
   ## Register
@@ -530,21 +527,27 @@ server <- function(input, output, session) {
     conn <- getAWSConnection()
     if(page == "GameLobby"){
       lobby <- dbGetQuery(conn, "SELECT PlayerID, Username FROM GameLobby LIMIT 4")
-      hasGameStarted <- dbGetQuery(conn, "SELECT start FROM StartGame")[1, 1]
-      # print(lobby)
       dbDisconnect(conn)
+      # print(lobby)
       vals$players <- lobby
       output$gameLobbyTable <- renderTable(lobby)
-      if(hasGameStarted == 1){
-        updateTabsetPanel(session, "tabs", selected = "game")
-        removeModal()
-      }
     }
   }
   
+  checkGS <- function(){
+    conn <- getAWSConnection()
+    hasGameStarted <- dbGetQuery(conn, "SELECT start FROM StartGame")[1, 1]
+    if(hasGameStarted == 1){
+      updateTabsetPanel(session, "tabs", selected = "game")
+      drawCard(vals$userid, 5)
+      removeModal()
+      Sys.sleep(2)
+      dbExecute(conn, sprintf("UPDATE StartGame SET start = %d", 0))
+    }
+    dbDisconnect(conn)
+  }
   
   ## Game Tab 
-  
   observeEvent(input$backToGame, {
     updateTabsetPanel(session, "tabs", selected = "game")
   })
@@ -565,7 +568,7 @@ server <- function(input, output, session) {
   
   updateGameState <- function(){
     conn <- getAWSConnection()
-    result <- dbGetQuery(conn, "SELECT * FROM GameState")
+  result <- dbGetQuery(conn, "SELECT * FROM GameState")
     dbDisconnect(conn)
     result$img_num <- as.numeric(result$img_num)
     # for ( i in 1:15) {print(result[["img_num"]][[i]])}
@@ -674,7 +677,6 @@ server <- function(input, output, session) {
     dbWriteTable(conn, "GamePlayers", vals$players, overwrite=TRUE)
     dbDisconnect(conn)
     #Update the Game Turn number
-    vals$turn <- nextPlayer(vals$turn)
     output$playerturn <- renderText(paste(sprintf("%s's turn", vals$players[vals$turn %% 4, 2])))
     output$assignedRole <- renderText(sprintf("You are an %s", getRole(vals$userid)))
     #Resetting Game Lobby (Cant Truncate here, other people needs to enter)
@@ -682,9 +684,7 @@ server <- function(input, output, session) {
     # exec_trunctate <- dbExecute(conn, qry_truncate)
     
     #Inserting Initial Hand Cards from Database
-    drawCard(vals$userid, 5)
-    #drawCard(vals$userid, 5)
-    removeModal()
+    # drawCard(vals$userid, 5)
     updateGameState()
   })
   
@@ -786,11 +786,11 @@ server <- function(input, output, session) {
     query <- sprintf("UPDATE GameState SET img_num=%i, n=%i, s=%i, e=%i, w=%i WHERE cell_number=%i", num_id, boardState[[current_col]][[current_row]][['n']], boardState[[current_col]][[current_row]][['s']], boardState[[current_col]][[current_row]][['e']], boardState[[current_col]][[current_row]][['w']], cell_number)
     result <- dbExecute(conn,query)
     dbDisconnect(conn)
+    #Remove Card From Hand
+    removeCard(vals$userid, input$cardSelect)
     # Update Turn
     print(vals$turn)
     vals$turn <- nextPlayer(vals$turn)
-    ## ERROR HERE
-    output$playerturn <- renderText(paste(sprintf("%s's turn", vals$players[vals$turn %% 4, 2])))
     removeModal()
     updateGameState()
     
@@ -814,6 +814,13 @@ server <- function(input, output, session) {
     }
   })
   
+
+  observeEvent(input$backToHome, {
+    updateTabsetPanel(session, "tabs", selected = "home")
+    removeModal()
+    # resetDatabase()
+  })
+  
   observe({
     invalidateLater(3000, session)
     isolate({updateGameState()})
@@ -829,6 +836,11 @@ server <- function(input, output, session) {
     invalidateLater(1000, session)
     isolate({refresh("GameLobby")})
     isolate({getPlayerTurn()})
+  })
+  
+  observe({
+    invalidateLater(500, session)
+    isolate({checkGS()})
   })
   
 }
