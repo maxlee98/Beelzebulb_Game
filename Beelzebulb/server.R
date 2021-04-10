@@ -824,11 +824,6 @@ server <- function(input, output, session) {
     removeModal()
     # resetDatabase()
   })
-  
-  observe({
-    invalidateLater(3000, session)
-    isolate({updateGameState()})
-  })
 
   observe({
     invalidateLater(1000, session)
