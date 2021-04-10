@@ -35,91 +35,87 @@ boardState <- tibble(
     tibble(n = 0, e = 0, s = 0, w = 0)
   )
 )
-current_row <- 1
-current_col <- 1
 
 cellCheck <- function(df, col, row, prevConn){
-  print(paste0(col, row, prevConn))
-  if (col == 1 & row == 2){
-    return(TRUE)
-  }
-  cell <- df[[col]][[row]]
-  if (col == 5){
-    return(cellCheck(df, col-1, row, "e"))
-  }
-  if (col == 1){
-    if (row == 1){
-      return(cellCheck(df, col, row+1, "n"))
-    }
-    else {
-      return(cellCheck(df, col, row-1, "s"))
-    }
-  }
-  if (row == 1){
-    for (cell_dir in c("n", "e", "w"))
-  }
-  for (cell_dir in c("n", "s", "e", "w")){
-    if (cell_dir != prevConn){
-      if (cell[cell_dir] == 1){
-        
-        
-        
-        
-        
-        
-        
-        
-
-        if (row-1 == 0){
-          if (col-1 == 0){
-            if (cell_dir == "s"){return(cellCheck(df, col, row+1, "n"))}
-            if (cell_dir == "e"){return(cellCheck(df, col+1, row, "w"))}
-          }
-          else if (col +1 ==6){
-            if (cell_dir == "s"){return(cellCheck(df, col, row+1, "n"))}
-            if (cell_dir == "w"){return(cellCheck(df, col-1, row, "e"))}
-          }
-          else {
-            if (cell_dir == "s"){return(cellCheck(df, col, row+1, "n"))}
-            if (cell_dir == "e"){return(cellCheck(df, col+1, row, "w"))}
-            if (cell_dir == "w"){return(cellCheck(df, col-1, row, "e"))}
-          }
-        }
-        else if (row+1 == 4){
-          print("b")
-          if (col - 1 == 0){
-            if (cell_dir == "n"){return(cellCheck(df, col, row-1, "s"))}
-            if (cell_dir == "e"){return(cellCheck(df, col+1, row, "w"))}
-
-          }
-          else if (col +1 == 4){
-            if (cell_dir == "n"){return(cellCheck(df, col, row-1, "s"))}
-            if (cell_dir == "w"){return(cellCheck(df, col-1, row, "e"))}
-          }
-          else {
-            if (cell_dir == "n"){return(cellCheck(df, col, row-1, "s"))}
-            if (cell_dir == "e"){return(cellCheck(df, col+1, row, "w"))}
-            if (cell_dir == "w"){return(cellCheck(df, col-1, row, "e"))}
-          }
-        }
-        else{
-          if (cell_dir == "n"){return(cellCheck(df, col, row-1, "s"))}
-          if (cell_dir == "s"){return(cellCheck(df, col, row+1, "n"))}
-          if (cell_dir == "e"){return(cellCheck(df, col+1, row, "w"))}
-          if (cell_dir == "w"){return(cellCheck(df, col-1, row, "e"))}
-        }
-    }
-  }
-  }
+  
+#   print(paste0(col, row, prevConn))
+#   if (col == 1 & row == 2){
+#     return(TRUE)
+#   }
+#   cell <- df[[col]][[row]]
+#   if (col == 5){
+#     return(cellCheck(df, col-1, row, "e"))
+#   }
+#   if (col == 1){
+#     if (row == 1){
+#       return(cellCheck(df, col, row+1, "n"))
+#     }
+#     else {
+#       return(cellCheck(df, col, row-1, "s"))
+#     }
+#   }
+#   if (row == 1){
+#     for (cell_dir in c("n", "e", "w"))
+#   }
+#   for (cell_dir in c("n", "s", "e", "w")){
+#     if (cell_dir != prevConn){
+#       if (cell[cell_dir] == 1){
+#         
+#         
+#         
+#         
+#         
+#         
+#         
+#         
+# 
+#         if (row-1 == 0){
+#           if (col-1 == 0){
+#             if (cell_dir == "s"){return(cellCheck(df, col, row+1, "n"))}
+#             if (cell_dir == "e"){return(cellCheck(df, col+1, row, "w"))}
+#           }
+#           else if (col +1 ==6){
+#             if (cell_dir == "s"){return(cellCheck(df, col, row+1, "n"))}
+#             if (cell_dir == "w"){return(cellCheck(df, col-1, row, "e"))}
+#           }
+#           else {
+#             if (cell_dir == "s"){return(cellCheck(df, col, row+1, "n"))}
+#             if (cell_dir == "e"){return(cellCheck(df, col+1, row, "w"))}
+#             if (cell_dir == "w"){return(cellCheck(df, col-1, row, "e"))}
+#           }
+#         }
+#         else if (row+1 == 4){
+#           print("b")
+#           if (col - 1 == 0){
+#             if (cell_dir == "n"){return(cellCheck(df, col, row-1, "s"))}
+#             if (cell_dir == "e"){return(cellCheck(df, col+1, row, "w"))}
+# 
+#           }
+#           else if (col +1 == 4){
+#             if (cell_dir == "n"){return(cellCheck(df, col, row-1, "s"))}
+#             if (cell_dir == "w"){return(cellCheck(df, col-1, row, "e"))}
+#           }
+#           else {
+#             if (cell_dir == "n"){return(cellCheck(df, col, row-1, "s"))}
+#             if (cell_dir == "e"){return(cellCheck(df, col+1, row, "w"))}
+#             if (cell_dir == "w"){return(cellCheck(df, col-1, row, "e"))}
+#           }
+#         }
+#         else{
+#           if (cell_dir == "n"){return(cellCheck(df, col, row-1, "s"))}
+#           if (cell_dir == "s"){return(cellCheck(df, col, row+1, "n"))}
+#           if (cell_dir == "e"){return(cellCheck(df, col+1, row, "w"))}
+#           if (cell_dir == "w"){return(cellCheck(df, col-1, row, "e"))}
+#         }
+#     }
+#   }
+#   }
 }
 
 boardLogic <- function(board){
   # First step: check whether cells right next to bulb have any connection first
-  if (boardState[[4]][[2]][["e"]]==1){if (cellCheck(boardState, 4, 2, "e")){return(TRUE)}}
-  if (boardState[[5]][[1]][["s"]]==1){if (cellCheck(boardState, 5, 1, "s")){return(TRUE)}}
-  if (boardState[[5]][[3]][["n"]]==1){if (cellCheck(boardState, 5, 3, "n")){return(TRUE)}}
+  return(cellCheck(boardState, 5, 2, "e"))
   # Then, recursively check 
-  return(FALSE)
 }
 
 # AWS Connection
@@ -420,15 +416,11 @@ chooseCard <- function(pos, handCards, failed=FALSE){
 
 #Checking End Game Condition
 checkWin <- function(){
-<<<<<<< HEAD
-  return(FALSE)
-=======
   conn <- getAWSConnection()
   boardState <-dbGetQuery(conn, "SELECT * FROM GameState")
   dbDisconnect(conn)
   print(boardLogic(boardState))
   return(boardLogic(boardState))
->>>>>>> YS_Development_9/4
 }
 
 checkLoss <- function(){
@@ -623,27 +615,27 @@ server <- function(input, output, session) {
     boardState <<- tibble(
       c1 = list(
         tibble(n = result[["n"]][[1]], e = result[["e"]][[1]], s = result[["s"]][[1]], w = result[["w"]][[1]]),
-        tibble(n = result[["n"]][[2]], e = result[["e"]][[2]], s = result[["s"]][[2]], w = result[["w"]][[2]]),
-        tibble(n = result[["n"]][[3]], e = result[["e"]][[3]], s = result[["s"]][[3]], w = result[["w"]][[3]])
+        tibble(n = result[["n"]][[6]], e = result[["e"]][[6]], s = result[["s"]][[6]], w = result[["w"]][[6]]),
+        tibble(n = result[["n"]][[11]], e = result[["e"]][[11]], s = result[["s"]][[11]], w = result[["w"]][[11]])
       ),
       c2 = list(
-        tibble(n = result[["n"]][[4]], e = result[["e"]][[4]], s = result[["s"]][[4]], w = result[["w"]][[4]]),
-        tibble(n = result[["n"]][[5]], e = result[["e"]][[5]], s = result[["s"]][[5]], w = result[["w"]][[5]]),
-        tibble(n = result[["n"]][[6]], e = result[["e"]][[6]], s = result[["s"]][[6]], w = result[["w"]][[6]])
-      ),
-      c3 = list(
+        tibble(n = result[["n"]][[2]], e = result[["e"]][[2]], s = result[["s"]][[2]], w = result[["w"]][[2]]),
         tibble(n = result[["n"]][[7]], e = result[["e"]][[7]], s = result[["s"]][[7]], w = result[["w"]][[7]]),
-        tibble(n = result[["n"]][[8]], e = result[["e"]][[8]], s = result[["s"]][[8]], w = result[["w"]][[8]]),
-        tibble(n = result[["n"]][[9]], e = result[["e"]][[9]], s = result[["s"]][[9]], w = result[["w"]][[9]])
-      ),
-      c4 = list(
-        tibble(n = result[["n"]][[10]], e = result[["e"]][[10]], s = result[["s"]][[10]], w = result[["w"]][[10]]),
-        tibble(n = result[["n"]][[11]], e = result[["e"]][[11]], s = result[["s"]][[11]], w = result[["w"]][[11]]),
         tibble(n = result[["n"]][[12]], e = result[["e"]][[12]], s = result[["s"]][[12]], w = result[["w"]][[12]])
       ),
+      c3 = list(
+        tibble(n = result[["n"]][[3]], e = result[["e"]][[3]], s = result[["s"]][[3]], w = result[["w"]][[3]]),
+        tibble(n = result[["n"]][[8]], e = result[["e"]][[8]], s = result[["s"]][[8]], w = result[["w"]][[8]]),
+        tibble(n = result[["n"]][[13]], e = result[["e"]][[13]], s = result[["s"]][[13]], w = result[["w"]][[13]])
+      ),
+      c4 = list(
+        tibble(n = result[["n"]][[4]], e = result[["e"]][[4]], s = result[["s"]][[4]], w = result[["w"]][[4]]),
+        tibble(n = result[["n"]][[9]], e = result[["e"]][[9]], s = result[["s"]][[9]], w = result[["w"]][[9]]),
+        tibble(n = result[["n"]][[14]], e = result[["e"]][[14]], s = result[["s"]][[14]], w = result[["w"]][[14]])
+      ),
       c5 = list(
-        tibble(n = result[["n"]][[13]], e = result[["e"]][[13]], s = result[["s"]][[13]], w = result[["w"]][[13]]),
-        tibble(n = result[["n"]][[14]], e = result[["e"]][[14]], s = result[["s"]][[14]], w = result[["w"]][[14]]),
+        tibble(n = result[["n"]][[5]], e = result[["e"]][[5]], s = result[["s"]][[5]], w = result[["w"]][[5]]),
+        tibble(n = result[["n"]][[10]], e = result[["e"]][[10]], s = result[["s"]][[10]], w = result[["w"]][[10]]),
         tibble(n = result[["n"]][[15]], e = result[["e"]][[15]], s = result[["s"]][[15]], w = result[["w"]][[15]])
       )
     )
