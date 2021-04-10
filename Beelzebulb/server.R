@@ -47,17 +47,17 @@ cellCheckHelper <- function(df, col, row, dirToCheck){
   tryCatch(expr={
     if (dirToCheck == "n"){
       if (firstConnection & as.numeric(boardState[[col]][[row-1]][["s"]])){
-        return(c(col,row-1, "e"))
+        return(c(col,row-1, "s"))
       }
     }
     else if (dirToCheck == "s"){
       if (firstConnection & as.numeric(boardState[[col]][[row+1]][["n"]])){
-        return(c(col,row+1, "e"))
+        return(c(col,row+1, "n"))
       }
     }
     else if (dirToCheck == "e"){
       if (firstConnection & as.numeric(boardState[[col+1]][[row]][["w"]])){
-        return(c(col+1,row, "e"))
+        return(c(col+1,row, "w"))
       }
     }
     else if (dirToCheck == "w"){
@@ -76,8 +76,9 @@ cellCheck <- function(df, col, row, prevConn){
   for (dir in c("n", "s", "e", "w")){
     if (dir != prevConn){
       connected <- cellCheckHelper(df, col, row, dir)
+      print(connected)
       if (connected != FALSE){
-        return(cellCheck(df, connected[[1]], connected[[2]], connected[[3]]))
+        return(cellCheck(df, as.numeric(connected[[1]]), as.numeric(connected[[2]]), connected[[3]]))
       }
     }
   }
