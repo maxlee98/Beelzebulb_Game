@@ -559,7 +559,7 @@ server <- function(input, output, session) {
       #select the icon appropriate for this cell
       #imageid <- 1
       #if (!is.null(gamevals$pieces)) #imageid <- cell_num#gamevals$pieces[gridrow,gridcol]+1
-      imgsrc=switch(cell_num,"www/blanksmall.png","www/BlueStoneSmall.png","www/RedStoneSmall.png","www/Wire_Designs-01.png","www/Wire_Designs-02.png","www/Wire_Designs-03.png","www/Wire_Designs-04.png", "www/Wire_Designs-05.png" )
+      imgsrc=switch(cell_num,"www/blanksmall.png","www/BlueStoneSmall.png","www/RedStoneSmall.png","www/Wire_Designs-01.png","www/Wire_Designs-02.png","www/Wire_Designs-03.png","www/Wire_Designs-04.png", "www/Wire_Designs-05.png")
       # Unfortunately, we are not able to re-size the image and still have the click event work.
       # So the image files must have exactly the size we want.
       # Also, z-order works only if 'position' is set.
@@ -727,7 +727,8 @@ server <- function(input, output, session) {
       input$cardSelect == "Wire_1" ~ 4,
       input$cardSelect == "Wire_2" ~ 5,
       input$cardSelect == "Wire_3" ~ 6,
-      input$cardSelect == "Wire_4" ~ 7
+      input$cardSelect == "Wire_4" ~ 7,
+      input$cardSelect == "Wire_5" ~ 8
     )
     cell_number <- case_when(
       current_row == 1 ~ case_when(
@@ -769,19 +770,7 @@ server <- function(input, output, session) {
       boardState[[current_col]][[current_row]] <- tibble(n = 1, e = 0, s = 0, w = 1)
     }
     else if (num_id == 8){
-      boardState[[current_col]][[current_row]] <- tibble(n = 1, e = 0, s = 1, w = 1)
-    }
-    else if (num_id == 9){
-      boardState[[current_col]][[current_row]] <- tibble(n = 1, e = 1, s = 0, w = 1)
-    }
-    else if (num_id == 10){
-      boardState[[current_col]][[current_row]] <- tibble(n = 1, e = 1, s = 1, w = 0)
-    }
-    else if (num_id == 11){
-      boardState[[current_col]][[current_row]] <- tibble(n = 1, e = 1, s = 1, w = 0)
-    }
-    else {
-      boardState[[current_col]][[current_row]] <- tibble(n = 1, e = 1, s = 1, w = 1)
+      boardState[[current_col]][[current_row]] <- tibble(n = 0, e = 1, s = 1, w = 0)
     }
     conn <- getAWSConnection()
     query <- sprintf("UPDATE GameState SET img_num=%i, n=%i, s=%i, e=%i, w=%i WHERE cell_number=%i", num_id, boardState[[current_col]][[current_row]][['n']], boardState[[current_col]][[current_row]][['s']], boardState[[current_col]][[current_row]][['e']], boardState[[current_col]][[current_row]][['w']], cell_number)
