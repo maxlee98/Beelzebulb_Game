@@ -90,6 +90,49 @@ boardLogic <- function(board){
   return(cellCheck(boardState, 5, 2, "e"))
   # Then, recursively check 
 }
+# 
+# newBoard <- function(board){
+#   boardState <<- tibble(
+#     c1 = list(
+#       tibble(n = 0, e = 0, s = 0, w = 0),
+#       tibble(n = 0, e = 1, s = 1, w = 1),
+#       tibble(n = 0, e = 0, s = 0, w = 0)
+#     ),
+#     c2 = list(
+#       tibble(n = 0, e = 0, s = 0, w = 0),
+#       tibble(n = 0, e = 0, s = 0, w = 0),
+#       tibble(n = 0, e = 0, s = 0, w = 0)
+#     ),
+#     c3 = list(
+#       tibble(n = 0, e = 0, s = 0, w = 0),
+#       tibble(n = 0, e = 0, s = 0, w = 0),
+#       tibble(n = 0, e = 0, s = 0, w = 0)
+#     ),
+#     c4 = list(
+#       tibble(n = 0, e = 0, s = 0, w = 0),
+#       tibble(n = 0, e = 0, s = 0, w = 0),
+#       tibble(n = 0, e = 0, s = 0, w = 0)
+#     ),
+#     c5 = list(
+#       tibble(n = 0, e = 0, s = 0, w = 0),
+#       tibble(n = 1, e = 0, s = 1, w = 1),
+#       tibble(n = 0, e = 0, s = 0, w = 0)
+#     )
+#   )
+#   conn <- getAWSConnection()
+#   for (i in c(1:15)){
+#     if (i == 6){
+#       dbExecute(conn, "UPDATE GameState SET img_num = 2, n = 1, s = 1, w = 0, e = 1 WHERE cell_number==6")
+#     }
+#     else if (i == 10){
+#       dbExecute(conn, "UPDATE GameState SET img_num = 3, n = 1, s = 1, w = 1, e = 0 WHERE cell_number==10")
+#     }
+#     else{
+#       dbExecute(conn, sprintf("UPDATE GameState SET img_num = 1, n = 0, s = 0, w = 0, e = 0 WHERE cell_number==%d", i))
+#     }
+#   }
+#   dbDisconnect(conn)
+# }
 
 # AWS Connection
 getAWSConnection <- function(){
@@ -791,6 +834,7 @@ server <- function(input, output, session) {
       vals$players <- rbind(playerWin, playerLose)
       output$resultTable <- renderTable(vals$players)
       showModal(gameEnd(failed=FALSE))
+      #newBoard(boardState)
       return()
     }
     # Check Loss Condition
@@ -800,6 +844,7 @@ server <- function(input, output, session) {
       vals$players <- rbind(playerWin, playerLose)
       output$resultTable <- renderTable(vals$players)
       showModal(gameEnd(failed=FALSE))
+      #newBoard(boardState)
       return()
     }
   })
