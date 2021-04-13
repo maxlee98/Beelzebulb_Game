@@ -1,0 +1,32 @@
+{
+    "id": "CD533D37",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1617959580192.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "expression": "boardState",
+        "caption": "boardState",
+        "totalObservations": "3",
+        "displayedObservations": "3",
+        "variables": "5",
+        "cacheKey": "78A38E59",
+        "object": "boardState",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=boardState&cache_key=78A38E59&max_cols=50",
+        "preview": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 7957688064806756898,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1617959580192,
+    "read_only": false,
+    "read_only_alternatives": []
+}

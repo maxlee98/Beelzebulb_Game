@@ -1,0 +1,24 @@
+{
+    "id": "7D5D5485",
+    "path": "~/GitHub/Beelzebulb_Game/Beelzebulb/server.R",
+    "project_path": "server.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1617957339999.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "cursorPosition": "324,0",
+        "scrollLine": "172"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1618303050,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1618303050,
+    "read_only": false,
+    "read_only_alternatives": []
+}
