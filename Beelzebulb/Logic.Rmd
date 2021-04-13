@@ -7,6 +7,7 @@ output: html_notebook
 ```{r}
 library(tidyverse)
 library(DBI)
+library(readxl)
 library(rsconnect)
 ```
 
@@ -139,8 +140,8 @@ physicsans <- data.frame(qn_id = rep(c(1:10), each = mcq),
                           choice = mcq_choices(qns, mcq))
 physicsans
   
-conn <- getAWSConnection()
-dbWriteTable(conn, "PhysicsAns", physicsans, overwrite = TRUE)
+# conn <- getAWSConnection()
+# dbWriteTable(conn, "PhysicsAns", physicsans, overwrite = TRUE)
 ```
 
 
@@ -168,6 +169,7 @@ exec_query_pc <- dbGetQuery(conn, query_physics_choices)
 dbDisconnect(conn)
 exec_query_pc
 ```
+
 
 
 ## Displaying Question and Choices on a module screen (with drop down and confirm button or Radio Button)
