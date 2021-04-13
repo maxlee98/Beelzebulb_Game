@@ -79,7 +79,7 @@ body <- dashboardBody(
                 uiOutput("moreControls"),
                 # the trick here is to make the gameboard image 'position:absolute;z-order:0'; 
                 # Then, to superimpose images, style them to be 'position:relative;z-order:999'
-                img(src='FantasyMap.jpg',style="position:absolute;z-order:0",width="500px",height="300px"),
+                img(src='Fix_Wiring.png',style="position:absolute;z-order:0",width="500px",height="300px"),
                 imageOutput("cell11",height="100px",width="100px",click="click11",inline=TRUE), # height and width are for the containing div, not the image itself
                 imageOutput("cell12",height="100px",width="100px",click="click12",inline=TRUE),  # height and width are for the containing div, not the image itself
                 imageOutput("cell13",height="100px",width="100px",click="click13",inline=TRUE), # height and width are for the containing div, not the image itself
