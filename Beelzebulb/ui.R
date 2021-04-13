@@ -63,7 +63,8 @@ body <- dashboardBody(
             actionButton("login", "Login"),
             HTML("<p></p>"),
             uiOutput("buttonGameLobby"),
-            uiOutput("backToGame")
+            uiOutput("backToGame"),
+            uiOutput("LobbyFull")
     ),
     
     tabItem(tabName = "game",

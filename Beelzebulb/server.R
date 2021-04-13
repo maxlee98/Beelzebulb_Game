@@ -595,13 +595,35 @@ server <- function(input, output, session) {
   
   refresh <- function(page = NULL){
     conn <- getAWSConnection()
-    if(page == "GameLobby"){
-      lobby <- dbGetQuery(conn, "SELECT PlayerID, Username FROM GameLobby LIMIT 4")
-      dbDisconnect(conn)
+    lobby <- dbGetQuery(conn, "SELECT PlayerID, Username FROM GameLobby")
+    dbDisconnect(conn)
+    if (page == "HomePage"){
+      print(paste0("There are ", nrow(lobby), " People in the lobby"))
+      if(nrow(lobby) > 3){
+        removeUI(selector = "#enterGameLobby")
+        output$LobbyFull <- renderUI({
+          req(vals$userid)
+          tagList(
+            p("There is either a Game Ongoing or more than 3 people in the Game Lobby")
+          )
+        })
+      }else if(nrow(lobby) < 4){
+        removeUI(selector = "#LobbyFull")
+        output$buttonGameLobby <- renderUI({
+          req(vals$userid)
+          tagList(
+            actionButton("enterGameLobby", "Enter Game Lobby")
+            # actionButton("logout", "Log Out")
+          )
+        })
+      }
+    }else if(page == "GameLobby"){
+      lobbyTable <- lobby[1:4, ]
       # print(lobby)
-      vals$players <- lobby
-      output$gameLobbyTable <- renderTable(lobby)
+      vals$players <- lobbyTable
+      output$gameLobbyTable <- renderTable(lobbyTable)
     }
+    
   }
   
   checkGS <- function(){
@@ -609,7 +631,7 @@ server <- function(input, output, session) {
     hasGameStarted <- dbGetQuery(conn, "SELECT start FROM StartGame")[1, 1]
     if(hasGameStarted == 1){
       updateTabsetPanel(session, "tabs", selected = "game")
-      drawCard(vals$userid, 5)
+      drawCard(vals$userid, 3)
       removeModal()
       Sys.sleep(2)
       dbExecute(conn, sprintf("UPDATE StartGame SET start = %d", 0))
@@ -755,9 +777,6 @@ server <- function(input, output, session) {
     #Resetting Game Lobby (Cant Truncate here, other people needs to enter)
     # qry_truncate <- "TRUNCATE GameLobby"
     # exec_trunctate <- dbExecute(conn, qry_truncate)
-    
-    #Inserting Initial Hand Cards from Database
-    # drawCard(vals$userid, 5)
     updateGameState()
   })
   
@@ -778,7 +797,7 @@ server <- function(input, output, session) {
   # Reacting to correct Answer of Physics Question
   observeEvent(input$correctCont, {
     # Draw A card First
-    #drawCard(vals$userid, 1)
+    drawCard(vals$userid, 1)
     #Get hand Cards
     exec_query <- getHandCards(userid = vals$userid)
     showModal(chooseCard(handCards = exec_query, failed=FALSE))
@@ -886,6 +905,7 @@ server <- function(input, output, session) {
   observe({
     invalidateLater(1000, session)
     isolate({refresh("GameLobby")})
+    isolate({refresh("HomePage")})
     isolate({getPlayerTurn()})
   })
 
