@@ -162,6 +162,8 @@ startGame <- function(){
   return(1)
 }
 
+
+
 # REGISTER
 createNewPlayerQuery <- function(conn,username,password){
   #password could contain an SQL insertion attack
@@ -667,32 +669,37 @@ server <- function(input, output, session) {
     dbDisconnect(conn)
   }
   
-  processClickEvent <- function(gridrow,gridcol){
+    processClickEvent <- function(gridrow,gridcol){
     # If it is not this player's turn or if the cell is occupied, then ignore the click
-    # print(paste0("click", gridrow, gridcol))
-    current_row <<- gridrow
-    current_col <<- gridcol
-    qna <- getPhysicsQn()
-    physics$qid <- qna$qid
-    physics$aid <- qna$aid
-    physics$qn <- qna$qn
-    physics$q_opt <- getOptions(physics$qid)
-    showModal(answerPhysicsQn(qn = physics$qn, q_opt = physics$q_opt[, 1, drop=FALSE], failed=FALSE))
-    req(vals$playerid)
-    if ((gamevals$pieces[gridrow,gridcol]==0)&&(vals$turnstate==as.integer(vals$playercolor))){
-      #change the state of the game
-      gamevals$pieces[gridrow,gridcol] <- as.integer(vals$playercolor) # as.integer necessary because vals$playercolor is actually a string
-      gamevals$turncount <- gamevals$turncount+1
-      newstate <- list(turncount=gamevals$turncount,pieces=gamevals$pieces)
-      # check for end of game
-      if (gamevals$turncount>MAXTURNS){
-        vals$turnstate <- 0 # turnstate=0 signals end of the game
-      } else{
-        #switch turnstate between player colors
-        if (vals$turnstate==1)vals$turnstate <- 2 else vals$turnstate <- 1
+    
+    if(vals$username == getPlayerTurn()){
+      if (checkCell(gridrow, gridcol) == 1){
+        current_row <<- gridrow
+        current_col <<- gridcol
+        qna <- getPhysicsQn()
+        physics$qid <- qna$qid
+        physics$aid <- qna$aid
+        physics$qn <- qna$qn
+        physics$q_opt <- getOptions(physics$qid)
+        showModal(answerPhysicsQn(qn = physics$qn, q_opt = physics$q_opt[, 1, drop=FALSE], failed=FALSE))
+        req(vals$playerid)
+        if ((gamevals$pieces[gridrow,gridcol]==0)&&(vals$turnstate==as.integer(vals$playercolor))){
+          #change the state of the game
+          gamevals$pieces[gridrow,gridcol] <- as.integer(vals$playercolor) # as.integer necessary because vals$playercolor is actually a string
+          gamevals$turncount <- gamevals$turncount+1
+          newstate <- list(turncount=gamevals$turncount,pieces=gamevals$pieces)
+          # check for end of game
+          if (gamevals$turncount>MAXTURNS){
+            vals$turnstate <- 0 # turnstate=0 signals end of the game
+          } else{
+            #switch turnstate between player colors
+            if (vals$turnstate==1)vals$turnstate <- 2 else vals$turnstate <- 1
+          }
+          updateGame(vals$playerid,vals$gamevariantid,vals$turnstate,newstate)
+        }
       }
-      updateGame(vals$playerid,vals$gamevariantid,vals$turnstate,newstate)
     }
+    # print(paste0("click", gridrow, gridcol))
   }
   
   observeEvent(input$click11,{processClickEvent(1,1)})
@@ -891,3 +898,4 @@ server <- function(input, output, session) {
 
 
 
+=======
