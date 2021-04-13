@@ -469,6 +469,21 @@ gameEnd <- function(failed = FALSE){
   )
 }
 
+getEndTable <- function(imposter, failed = FALSE){
+  conn <- getAWSConnection()
+  tb <- dbGetQuery(conn, "SELECT * FROM GamePlayers")
+  dbDisconnect(conn)
+  if(imposter == "LOSE"){
+    playerWin <- tb[tb$Roles == "Engineer", ] %>% mutate(Outcome = "Win")
+    playerLose <- tb[tb$Roles == "Imposter", ] %>% mutate(Outcome = "Lose")
+    tb2 <- rbind(playerWin, playerLose)
+  }else if(imposter == "WIN"){
+    playerLose <- tb[tb$Roles == "Engineer", ] %>% mutate(Outcome = "Lose")
+    playerWin <- tb[tb$Roles == "Imposter", ] %>% mutate(Outcome = "Win")
+    tb2 <- rbind(playerWin, playerLose)
+  }
+  return(tb2)
+}
 
 ############################################ SERVER ################################################
 server <- function(input, output, session) {
@@ -839,20 +854,16 @@ server <- function(input, output, session) {
     
     # Check Win Condition
     if(checkWin()){
-      playerWin <- vals$players[vals$players$Roles == "Engineer", ] %>% mutate(Outcome = "Win")
-      playerLose <- vals$players[vals$players$Roles == "Imposter", ] %>% mutate(Outcome = "Lose")
-      vals$players <- rbind(playerWin, playerLose)
-      output$resultTable <- renderTable(vals$players)
+      endtable <- getEndTable(imposter = "LOSE")
+      output$resultTable <- renderTable(endtable)
       showModal(gameEnd(failed=FALSE))
       newBoard(boardState)
       return()
     }
     # Check Loss Condition
     if(checkLoss()){
-      playerLose <- vals$players[vals$players$Roles == "Engineer", ] %>% mutate(Outcome = "Lose")
-      playerWin <- vals$players[vals$players$Roles == "Imposter", ] %>% mutate(Outcome = "Win")
-      vals$players <- rbind(playerWin, playerLose)
-      output$resultTable <- renderTable(vals$players)
+      endtable <- getEndTable(imposter = "WIN")
+      output$resultTable <- renderTable(endtable)
       showModal(gameEnd(failed=FALSE))
       newBoard(boardState)
       return()
