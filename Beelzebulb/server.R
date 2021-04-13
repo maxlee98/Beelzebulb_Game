@@ -162,7 +162,14 @@ startGame <- function(){
   return(1)
 }
 
-
+checkCell <- function(gridrow, gridcol){
+  conn <- getAWSConnection()
+  cell <- (gridrow-1)*5 + gridcol
+  query_template <- sqlInterpolate(conn, "SELECT img_num FROM GameState WHERE cell_number = ?cell", cell = cell)
+  query_cell <- dbGetQuery(conn, query_template)
+  dbDisconnect(conn)
+  return(query_cell[1, 1])
+}
 
 # REGISTER
 createNewPlayerQuery <- function(conn,username,password){
@@ -309,7 +316,7 @@ getPhysicsQn <- function(){
 
 getOptions <- function(qid){
   conn <- getAWSConnection()
-  opt <- sqlInterpolate(conn, "SELECT choice, ans_id FROM PhysicsAns WHERE qn_id = ?qnid ORDER BY RAND()", qnid = qid)
+  opt <- sqlInterpolate(conn, "SELECT choices, ans_id FROM PhysicsAns WHERE qn_id = ?qnid ORDER BY RAND()", qnid = qid)
   q_opt <- dbGetQuery(conn, opt)
   dbDisconnect(conn)
   return(q_opt)
@@ -317,7 +324,7 @@ getOptions <- function(qid){
 
 getAnswer <- function(aid){
   conn <- getAWSConnection()
-  opt <- sqlInterpolate(conn, "SELECT choice FROM PhysicsAns WHERE ans_id = ?aid ORDER BY RAND()", aid = aid)
+  opt <- sqlInterpolate(conn, "SELECT choices FROM PhysicsAns WHERE ans_id = ?aid ORDER BY RAND()", aid = aid)
   ans <- dbGetQuery(conn, opt)
   dbDisconnect(conn)
   return(ans[1, 1])
@@ -492,6 +499,7 @@ server <- function(input, output, session) {
       vals$turn <- turn
       print(vals$players[(vals$turn%%4)+1, 2])
       output$playerturn <- renderText(paste(sprintf("%s's turn", vals$players[(vals$turn%%4)+1, 2])))
+      return(vals$players[(vals$turn%%4)+1, 2])
     }
   }
   
@@ -605,7 +613,7 @@ server <- function(input, output, session) {
       #select the icon appropriate for this cell
       #imageid <- 1
       #if (!is.null(gamevals$pieces)) #imageid <- cell_num#gamevals$pieces[gridrow,gridcol]+1
-      imgsrc=switch(cell_num,"www/blanksmall.png","www/BlueStoneSmall.png","www/RedStoneSmall.png","www/Wire_Designs-01.png","www/Wire_Designs-02.png","www/Wire_Designs-03.png","www/Wire_Designs-04.png", "www/Wire_Designs-05.png")
+      imgsrc=switch(cell_num,"www/blanksmall.png","www/battery.png","www/lightbulb.png","www/Wire_Designs-01.png","www/Wire_Designs-02.png","www/Wire_Designs-03.png","www/Wire_Designs-04.png", "www/Wire_Designs-05.png")
       # Unfortunately, we are not able to re-size the image and still have the click event work.
       # So the image files must have exactly the size we want.
       # Also, z-order works only if 'position' is set.
@@ -671,7 +679,6 @@ server <- function(input, output, session) {
   
     processClickEvent <- function(gridrow,gridcol){
     # If it is not this player's turn or if the cell is occupied, then ignore the click
-    
     if(vals$username == getPlayerTurn()){
       if (checkCell(gridrow, gridcol) == 1){
         current_row <<- gridrow
@@ -699,7 +706,6 @@ server <- function(input, output, session) {
         }
       }
     }
-    # print(paste0("click", gridrow, gridcol))
   }
   
   observeEvent(input$click11,{processClickEvent(1,1)})
@@ -804,10 +810,6 @@ server <- function(input, output, session) {
         current_col == 5 ~ 15
       )
     )
-    print("Here")
-    print(current_col)
-    print(current_row)
-    print(num_id)
     if (num_id == 4){
       boardState[[current_col]][[current_row]] <- tibble(n = 0, e = 0, s = 1, w = 1)
     }
@@ -869,11 +871,6 @@ server <- function(input, output, session) {
     isolate({updateGameState()})
   })
   
-  observeEvent(input$backToHome, {
-    updateTabsetPanel(session, "tabs", selected = "home")
-    removeModal()
-    # resetDatabase()
-  })
 
   observe({
     invalidateLater(1000, session)
@@ -882,20 +879,9 @@ server <- function(input, output, session) {
   })
 
   observe({
-    print("A")
     invalidateLater(1000, session)
     isolate({checkGS()})
   })
   
 }
 
-
-
-
-
-
-
-
-
-
-=======
