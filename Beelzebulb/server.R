@@ -8,8 +8,132 @@ library(rsconnect)
 library(shinyjs)
 
 #Global Variables 
-current_row <- 0
-current_col <- 0
+boardState <- tibble(
+  c1 = list(
+    tibble(n = 0, e = 0, s = 0, w = 0),
+    tibble(n = 1, e = 1, s = 1, w = 0),
+    tibble(n = 0, e = 0, s = 0, w = 0)
+  ),
+  c2 = list(
+    tibble(n = 0, e = 0, s = 0, w = 0),
+    tibble(n = 0, e = 1, s = 0, w = 1),
+    tibble(n = 0, e = 0, s = 0, w = 0)
+  ),
+  c3 = list(
+    tibble(n = 0, e = 0, s = 0, w = 0),
+    tibble(n = 0, e = 1, s = 0, w = 1),
+    tibble(n = 0, e = 0, s = 0, w = 0)
+  ),
+  c4 = list(
+    tibble(n = 0, e = 0, s = 0, w = 0),
+    tibble(n = 0, e = 1, s = 0, w = 1),
+    tibble(n = 0, e = 0, s = 0, w = 0)
+  ),
+  c5 = list(
+    tibble(n = 0, e = 0, s = 0, w = 0),
+    tibble(n = 1, e = 0, s = 1, w = 1),
+    tibble(n = 0, e = 0, s = 0, w = 0)
+  )
+)
+
+cellCheckHelper <- function(df, col, row, dirToCheck){
+  firstConnection <- boardState[[col]][[row]][[dirToCheck]]
+  if (firstConnection == "1" | firstConnection == 1){
+    firstConnection <- 1
+  }
+  else{
+    return(FALSE)
+  }
+  tryCatch(expr={
+    if (dirToCheck == "n"){
+      if (firstConnection & as.numeric(boardState[[col]][[row-1]][["s"]])){
+        return(c(col,row-1, "s"))
+      }
+    }
+    else if (dirToCheck == "s"){
+      if (firstConnection & as.numeric(boardState[[col]][[row+1]][["n"]])){
+        return(c(col,row+1, "n"))
+      }
+    }
+    else if (dirToCheck == "e"){
+      if (firstConnection & as.numeric(boardState[[col+1]][[row]][["w"]])){
+        return(c(col+1,row, "w"))
+      }
+    }
+    else if (dirToCheck == "w"){
+      if (firstConnection & as.numeric(boardState[[col-1]][[row]][["e"]])){
+        return(c(col-1,row, "e"))
+      }
+    }
+  }, error = function(e){return(FALSE)})
+  return(FALSE)
+}
+
+cellCheck <- function(df, col, row, prevConn){
+  if (col == 1 & row == 2){
+    return(TRUE)
+  }
+  for (dir in c("n", "s", "e", "w")){
+    if (dir != prevConn){
+      connected <- cellCheckHelper(df, col, row, dir)
+      print(connected)
+      if (connected != FALSE){
+        return(cellCheck(df, as.numeric(connected[[1]]), as.numeric(connected[[2]]), connected[[3]]))
+      }
+    }
+  }
+  return(FALSE)
+}
+
+boardLogic <- function(board){
+  # First step: check whether cells right next to bulb have any connection first
+  return(cellCheck(boardState, 5, 2, "e"))
+  # Then, recursively check 
+}
+
+newBoard <- function(board){
+  boardState <<- tibble(
+    c1 = list(
+      tibble(n = 0, e = 0, s = 0, w = 0),
+      tibble(n = 0, e = 1, s = 1, w = 1),
+      tibble(n = 0, e = 0, s = 0, w = 0)
+    ),
+    c2 = list(
+      tibble(n = 0, e = 0, s = 0, w = 0),
+      tibble(n = 0, e = 0, s = 0, w = 0),
+      tibble(n = 0, e = 0, s = 0, w = 0)
+    ),
+    c3 = list(
+      tibble(n = 0, e = 0, s = 0, w = 0),
+      tibble(n = 0, e = 0, s = 0, w = 0),
+      tibble(n = 0, e = 0, s = 0, w = 0)
+    ),
+    c4 = list(
+      tibble(n = 0, e = 0, s = 0, w = 0),
+      tibble(n = 0, e = 0, s = 0, w = 0),
+      tibble(n = 0, e = 0, s = 0, w = 0)
+    ),
+    c5 = list(
+      tibble(n = 0, e = 0, s = 0, w = 0),
+      tibble(n = 1, e = 0, s = 1, w = 1),
+      tibble(n = 0, e = 0, s = 0, w = 0)
+    )
+  )
+  conn <- getAWSConnection()
+  for (i in c(1:15)){
+    if (i == 6){
+      dbExecute(conn, "UPDATE GameState SET img_num = 2, n = 1, s = 1, w = 0, e = 1 WHERE cell_number=6")
+    }
+    else if (i == 10){
+      dbExecute(conn, "UPDATE GameState SET img_num = 3, n = 1, s = 1, w = 1, e = 0 WHERE cell_number=10")
+    }
+    else{
+      dbExecute(conn, sprintf("UPDATE GameState SET img_num = 1, n = 0, s = 0, w = 0, e = 0 WHERE cell_number=%d", i))
+    }
+  }
+  dbExecute(conn, "UPDATE StartGame SET start = 0")
+  dbDisconnect(conn)
+}
 
 # AWS Connection
 getAWSConnection <- function(){
@@ -38,14 +162,7 @@ startGame <- function(){
   return(1)
 }
 
-checkCell <- function(gridrow, gridcol){
-  conn <- getAWSConnection()
-  cell <- (gridrow-1)*5 + gridcol
-  query_template <- sqlInterpolate(conn, "SELECT img_num FROM GameState WHERE cell_number = ?cell", cell = cell)
-  query_cell <- dbGetQuery(conn, query_template)
-  dbDisconnect(conn)
-  return(query_cell[1, 1])
-}
+
 
 # REGISTER
 createNewPlayerQuery <- function(conn,username,password){
@@ -313,7 +430,11 @@ removeCard <- function(userid, cardSelect){
 
 #Checking End Game Condition
 checkWin <- function(){
-  return(FALSE)
+  conn <- getAWSConnection()
+  boardState <-dbGetQuery(conn, "SELECT * FROM GameState")
+  dbDisconnect(conn)
+  print(boardLogic(boardState))
+  return(boardLogic(boardState))
 }
 
 checkLoss <- function(){
@@ -371,7 +492,6 @@ server <- function(input, output, session) {
       vals$turn <- turn
       print(vals$players[(vals$turn%%4)+1, 2])
       output$playerturn <- renderText(paste(sprintf("%s's turn", vals$players[(vals$turn%%4)+1, 2])))
-      return(vals$players[(vals$turn%%4)+1, 2])
     }
   }
   
@@ -485,7 +605,7 @@ server <- function(input, output, session) {
       #select the icon appropriate for this cell
       #imageid <- 1
       #if (!is.null(gamevals$pieces)) #imageid <- cell_num#gamevals$pieces[gridrow,gridcol]+1
-      imgsrc=switch(cell_num,"www/blanksmall.png","www/BlueStoneSmall.png","www/RedStoneSmall.png","www/Wire_Designs-01.png","www/Wire_Designs-02.png","www/Wire_Designs-03.png","www/Wire_Designs-04.png", "www/Wire_Designs-05.png" )
+      imgsrc=switch(cell_num,"www/blanksmall.png","www/BlueStoneSmall.png","www/RedStoneSmall.png","www/Wire_Designs-01.png","www/Wire_Designs-02.png","www/Wire_Designs-03.png","www/Wire_Designs-04.png", "www/Wire_Designs-05.png")
       # Unfortunately, we are not able to re-size the image and still have the click event work.
       # So the image files must have exactly the size we want.
       # Also, z-order works only if 'position' is set.
@@ -514,9 +634,42 @@ server <- function(input, output, session) {
     output$cell33 <- renderCell(3,3,result[["img_num"]][[13]])
     output$cell34 <- renderCell(3,4,result[["img_num"]][[14]])
     output$cell35 <- renderCell(3,5,result[["img_num"]][[15]])
+    boardState <<- tibble(
+      c1 = list(
+        tibble(n = result[["n"]][[1]], e = result[["e"]][[1]], s = result[["s"]][[1]], w = result[["w"]][[1]]),
+        tibble(n = result[["n"]][[6]], e = result[["e"]][[6]], s = result[["s"]][[6]], w = result[["w"]][[6]]),
+        tibble(n = result[["n"]][[11]], e = result[["e"]][[11]], s = result[["s"]][[11]], w = result[["w"]][[11]])
+      ),
+      c2 = list(
+        tibble(n = result[["n"]][[2]], e = result[["e"]][[2]], s = result[["s"]][[2]], w = result[["w"]][[2]]),
+        tibble(n = result[["n"]][[7]], e = result[["e"]][[7]], s = result[["s"]][[7]], w = result[["w"]][[7]]),
+        tibble(n = result[["n"]][[12]], e = result[["e"]][[12]], s = result[["s"]][[12]], w = result[["w"]][[12]])
+      ),
+      c3 = list(
+        tibble(n = result[["n"]][[3]], e = result[["e"]][[3]], s = result[["s"]][[3]], w = result[["w"]][[3]]),
+        tibble(n = result[["n"]][[8]], e = result[["e"]][[8]], s = result[["s"]][[8]], w = result[["w"]][[8]]),
+        tibble(n = result[["n"]][[13]], e = result[["e"]][[13]], s = result[["s"]][[13]], w = result[["w"]][[13]])
+      ),
+      c4 = list(
+        tibble(n = result[["n"]][[4]], e = result[["e"]][[4]], s = result[["s"]][[4]], w = result[["w"]][[4]]),
+        tibble(n = result[["n"]][[9]], e = result[["e"]][[9]], s = result[["s"]][[9]], w = result[["w"]][[9]]),
+        tibble(n = result[["n"]][[14]], e = result[["e"]][[14]], s = result[["s"]][[14]], w = result[["w"]][[14]])
+      ),
+      c5 = list(
+        tibble(n = result[["n"]][[5]], e = result[["e"]][[5]], s = result[["s"]][[5]], w = result[["w"]][[5]]),
+        tibble(n = result[["n"]][[10]], e = result[["e"]][[10]], s = result[["s"]][[10]], w = result[["w"]][[10]]),
+        tibble(n = result[["n"]][[15]], e = result[["e"]][[15]], s = result[["s"]][[15]], w = result[["w"]][[15]])
+      )
+    )
   }
   
-  processClickEvent <- function(gridrow,gridcol){
+  retriveBoard <- function(){
+    conn <- getAWSConnection()
+    result <- dbGetQuery(conn, "SELECT * FROM GameState")
+    dbDisconnect(conn)
+  }
+  
+    processClickEvent <- function(gridrow,gridcol){
     # If it is not this player's turn or if the cell is occupied, then ignore the click
     
     if(vals$username == getPlayerTurn()){
@@ -587,6 +740,7 @@ server <- function(input, output, session) {
     updateGameState()
   })
   
+  
 
   
   # Reaction to Choice of Physics Question's Answer
@@ -603,7 +757,7 @@ server <- function(input, output, session) {
   # Reacting to correct Answer of Physics Question
   observeEvent(input$correctCont, {
     # Draw A card First
-    drawCard(vals$userid, 1)
+    #drawCard(vals$userid, 1)
     #Get hand Cards
     exec_query <- getHandCards(userid = vals$userid)
     showModal(chooseCard(handCards = exec_query, failed=FALSE))
@@ -624,7 +778,8 @@ server <- function(input, output, session) {
       input$cardSelect == "Wire_1" ~ 4,
       input$cardSelect == "Wire_2" ~ 5,
       input$cardSelect == "Wire_3" ~ 6,
-      input$cardSelect == "Wire_4" ~ 7
+      input$cardSelect == "Wire_4" ~ 7,
+      input$cardSelect == "Wire_5" ~ 8
     )
     cell_number <- case_when(
       current_row == 1 ~ case_when(
@@ -649,8 +804,27 @@ server <- function(input, output, session) {
         current_col == 5 ~ 15
       )
     )
+    print("Here")
+    print(current_col)
+    print(current_row)
+    print(num_id)
+    if (num_id == 4){
+      boardState[[current_col]][[current_row]] <- tibble(n = 0, e = 0, s = 1, w = 1)
+    }
+    else if (num_id == 5){
+      boardState[[current_col]][[current_row]] <- tibble(n = 0, e = 1, s = 0, w = 1)
+    }
+    else if (num_id == 6){
+      boardState[[current_col]][[current_row]] <- tibble(n = 1, e = 1, s = 0, w = 0)
+    }
+    else if (num_id == 7){
+      boardState[[current_col]][[current_row]] <- tibble(n = 1, e = 0, s = 0, w = 1)
+    }
+    else if (num_id == 8){
+      boardState[[current_col]][[current_row]] <- tibble(n = 0, e = 1, s = 1, w = 0)
+    }
     conn <- getAWSConnection()
-    query <- paste0("UPDATE GameState SET img_num=", num_id, " WHERE cell_number=", cell_number)
+    query <- sprintf("UPDATE GameState SET img_num=%i, n=%i, s=%i, e=%i, w=%i WHERE cell_number=%i", num_id, boardState[[current_col]][[current_row]][['n']], boardState[[current_col]][[current_row]][['s']], boardState[[current_col]][[current_row]][['e']], boardState[[current_col]][[current_row]][['w']], cell_number)
     result <- dbExecute(conn,query)
     dbDisconnect(conn)
     #Remove Card From Hand
@@ -668,6 +842,8 @@ server <- function(input, output, session) {
       vals$players <- rbind(playerWin, playerLose)
       output$resultTable <- renderTable(vals$players)
       showModal(gameEnd(failed=FALSE))
+      newBoard(boardState)
+      return()
     }
     # Check Loss Condition
     if(checkLoss()){
@@ -676,9 +852,12 @@ server <- function(input, output, session) {
       vals$players <- rbind(playerWin, playerLose)
       output$resultTable <- renderTable(vals$players)
       showModal(gameEnd(failed=FALSE))
+      newBoard(boardState)
+      return()
     }
   })
   
+
   observeEvent(input$backToHome, {
     updateTabsetPanel(session, "tabs", selected = "home")
     removeModal()
@@ -689,15 +868,22 @@ server <- function(input, output, session) {
     invalidateLater(3000, session)
     isolate({updateGameState()})
   })
+  
+  observeEvent(input$backToHome, {
+    updateTabsetPanel(session, "tabs", selected = "home")
+    removeModal()
+    # resetDatabase()
+  })
 
   observe({
     invalidateLater(1000, session)
     isolate({refresh("GameLobby")})
     isolate({getPlayerTurn()})
   })
-  
+
   observe({
-    invalidateLater(500, session)
+    print("A")
+    invalidateLater(1000, session)
     isolate({checkGS()})
   })
   
@@ -712,3 +898,4 @@ server <- function(input, output, session) {
 
 
 
+=======
