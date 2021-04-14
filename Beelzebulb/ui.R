@@ -7,39 +7,7 @@ library(rsconnect)
 library(shinyjs)
 
 header <- dashboardHeader(
-  title = "Beelzebulb",
-  dropdownMenu(type = "messages",
-               messageItem(
-                 from = "Sales Dept",
-                 message = "Sales are steady this month."
-               ),
-               messageItem(
-                 from = "New User",
-                 message = "How do I register?",
-                 icon = icon("question"),
-                 time = "13:45"
-               ),
-               messageItem(
-                 from = "Support",
-                 message = "The new server is ready.",
-                 icon = icon("life-ring"),
-                 time = "2014-12-01"
-               )
-  ),
-  dropdownMenu(type = "tasks", badgeStatus = "success",
-               taskItem(value = 90, color = "green",
-                        "Documentation"
-               ),
-               taskItem(value = 17, color = "aqua",
-                        "Project X"
-               ),
-               taskItem(value = 75, color = "yellow",
-                        "Server deployment"
-               ),
-               taskItem(value = 80, color = "red",
-                        "Overall project"
-               )
-  )
+  title = "Beelzebulb"
 )
 
 sidebar <- dashboardSidebar(
@@ -48,7 +16,8 @@ sidebar <- dashboardSidebar(
   sidebarMenu(
     id = "tabs",
     menuItem("Home Page", tabName = "home", icon = icon("home")),
-    menuItem("Game", tabName = "game", icon = icon("dice")) %>% shinyjs::hidden(),
+    menuItem("Game", tabName = "game", icon = icon("dice")),
+    # menuItem("Game", tabName = "game", icon = icon("dice")) %>% shinyjs::hidden(),
     menuItem("Instructions", tabName = "instruct", icon = icon("compass"))
   )
 )
@@ -98,8 +67,20 @@ body <- dashboardBody(
                 imageOutput("cell34",height="100px",width="100px",click="click34",inline=TRUE),  # height and width are for the containing div, not the image itself
                 imageOutput("cell35",height="100px",width="100px",click="click35",inline=TRUE),
                 tags$br(),
-                p("ESD Fantasy Map and Game Pieces by Tan Yi Lin")
-              )
+                p("ESD Fantasy Map and Game Pieces by Tan Yi Lin"),
+              ),
+              fluidRow(box(
+                img(src='Wire_Designs-01.png',style="position:relative;x-order:0",width="50px",height="50px"),
+                htmlOutput("wire1",inline=TRUE),
+                img(src='Wire_Designs-02.png',style="position:relative;x-order:1",width="50px",height="50px"),
+                htmlOutput("wire2",inline=TRUE),
+                img(src='Wire_Designs-03.png',style="position:relative;x-order:2",width="50px",height="50px"),
+                htmlOutput("wire3",inline=TRUE),
+                img(src='Wire_Designs-04.png',style="position:relative;x-order:3",width="50px",height="50px"),
+                htmlOutput("wire4",inline=TRUE),
+                img(src='Wire_Designs-05.png',style="position:relative;x-order:4",width="50px",height="50px"),
+                htmlOutput("wire5",inline=TRUE)
+                ))
             )
             # actionButton("refreshGame", "Refresh")
     ),

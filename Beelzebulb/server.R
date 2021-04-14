@@ -132,6 +132,33 @@ newBoard <- function(board){
     }
   }
   dbExecute(conn, "UPDATE StartGame SET start = 0")
+  dbExecute(conn, "TRUNCATE table CardDeck")
+  for (i in c(1:6)){
+    querytemplate <- "INSERT INTO CardDeck (row_names, Card_ID, Card_Name) VALUES (?id1,?id2,?id3); " ## Edit the Database
+    query<- sqlInterpolate(conn, querytemplate,id1=i,id2=1001,id3="Wire_1" )
+    dbExecute(conn, query)
+  }
+  for (i in c(7:12)){
+    querytemplate <- "INSERT INTO CardDeck (row_names, Card_ID, Card_Name) VALUES (?id1,?id2,?id3); " ## Edit the Database
+    query<- sqlInterpolate(conn, querytemplate,id1=i,id2=1002,id3="Wire_2" )
+    dbExecute(conn, query)
+  }
+  for (i in c(13:18)){
+    querytemplate <- "INSERT INTO CardDeck (row_names, Card_ID, Card_Name) VALUES (?id1,?id2,?id3); " ## Edit the Database
+    query<- sqlInterpolate(conn, querytemplate,id1=i,id2=1003,id3="Wire_3" )
+    dbExecute(conn, query)
+  }
+  for (i in c(19:24)){
+    querytemplate <- "INSERT INTO CardDeck (row_names, Card_ID, Card_Name) VALUES (?id1,?id2,?id3); " ## Edit the Database
+    query<- sqlInterpolate(conn, querytemplate,id1=i,id2=1004,id3="Wire_4" )
+    dbExecute(conn, query)
+  }
+  for (i in c(25:30)){
+    querytemplate <- "INSERT INTO CardDeck (row_names, Card_ID, Card_Name) VALUES (?id1,?id2,?id3); " ## Edit the Database
+    query<- sqlInterpolate(conn, querytemplate,id1=i,id2=1005,id3="Wire_5" )
+    dbExecute(conn, query)
+  }
+  dbExecute(conn, "TRUNCATE table HandCards")
   dbDisconnect(conn)
 }
 
@@ -488,14 +515,18 @@ getEndTable <- function(imposter, failed = FALSE){
 ############################################ SERVER ################################################
 server <- function(input, output, session) {
   # vals$turn is to know which player is next. Different from how many turns have passed.
-  vals <- reactiveValues(password = NULL, userid=NULL,username=NULL, lobby=NULL, playercolor=1, turn = 0, gameStart = NULL, players = setNames(data.frame(matrix(ncol = 2, nrow = 0)), c('PlayerID', 'Username')))
+  vals <- reactiveValues(password = NULL, userid=NULL,username=NULL, lobby=NULL, playercolor=1, turn = 0, gameStart = NULL, players = setNames(data.frame(matrix(ncol = 2, nrow = 0)), c('PlayerID', 'Username')), wires = c(" :0", " :0", " :0", " :0", " :0"))
   physics <- reactiveValues(qid = NULL, aid = NULL, qn = NULL, q_opt = NULL)
   pieces <- matrix(rep(0,3*5),nrow=3,ncol=5,byrow=TRUE)
   gamevals <- reactiveValues(turncount=0,pieces=pieces)
   
   output$playerturn <- renderText("The Game has yet to start.")
   output$assignedRole <- renderText("You have yet to be assigned a role for the game.")
-  
+  output$wire1 <- renderText(vals$wires[1])
+  output$wire2 <- renderText(vals$wires[2])
+  output$wire3 <- renderText(vals$wires[3])
+  output$wire4 <- renderText(vals$wires[4])
+  output$wire5 <- renderText(vals$wires[5])
 
   output$status <- renderText({
     if (is.null(vals$username))
@@ -596,6 +627,12 @@ server <- function(input, output, session) {
   refresh <- function(page = NULL){
     conn <- getAWSConnection()
     lobby <- dbGetQuery(conn, "SELECT PlayerID, Username FROM GameLobby")
+    if (is.null(vals$userid) != TRUE){
+      for (i in c(1:5)){
+        handUIexec <- dbGetQuery(conn, paste0("SELECT COUNT(Card_Name) FROM HandCards WHERE Card_Name='", "Wire_", i, "' AND PlayerID=", vals$userid))
+        vals$wires[i] <- paste0(":",handUIexec[1, 1])
+      }
+    }
     dbDisconnect(conn)
     if (page == "HomePage"){
       print(paste0("There are ", nrow(lobby), " People in the lobby"))
@@ -779,9 +816,6 @@ server <- function(input, output, session) {
     # exec_trunctate <- dbExecute(conn, qry_truncate)
     updateGameState()
   })
-  
-  
-
   
   # Reaction to Choice of Physics Question's Answer
   observeEvent(input$confirmOption, {
