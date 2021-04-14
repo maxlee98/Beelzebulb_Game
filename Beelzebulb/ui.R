@@ -86,12 +86,13 @@ body <- dashboardBody(
     
     tabItem(tabName = "instruct",
             h2("Beelzebulb's Game Instructions"),
-            p("Welcome to Beelzebulb! A 4 Player Game in which 3 Players work together as Engineers 
+            p("Welcome to Beelzebulb, a 4 Player Game in which 3 Players work together as Engineers 
               in attempt to connect wires from the battery all the way to the light bulb! The fourth
               player would play the role of an Imposter, whereby he tries to stop the 3 Engineers from
               reaching the lightbulb."),
             p("Roles of the Players would not be disclosed. It would only appear on each individual's
               screen."),
+            p("Your hand cards are displayed at the bottom of the screen"),
             h3("The Game is comprised of 3 Phases : Standby Phase, Action Phase, End Phase."),
             h4("Standby Phase"),
             p("In the Standby Phase, players would be given a multiple choice physics question.

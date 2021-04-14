@@ -369,7 +369,7 @@ answerPhysicsQn <- function(qn, q_opt, failed = FALSE){
     selectInput("optionSelect", "Which Option is your answer?", choices = c(1:4), selected = 1),
     footer = tagList(
       actionButton("confirmOption", "Confirm"),
-      modalButton("Cancel")
+      # modalButton("Cancel")
     )
   )
 }
@@ -450,7 +450,7 @@ chooseCard <- function(pos, handCards, failed=FALSE){
     selectInput("cardSelect", "Choice of Card", choices = handCards$Card_Name, selected = handCards$Card_Name[1]),
     footer = tagList(
       actionButton("confirmCard", "Confirm"),
-      modalButton("Cancel")
+      # modalButton("Cancel")
     )
   )
 }
