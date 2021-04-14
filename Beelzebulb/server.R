@@ -159,6 +159,7 @@ newBoard <- function(board){
     dbExecute(conn, query)
   }
   dbExecute(conn, "TRUNCATE table HandCards")
+  dbExecute(conn, "TRUNCATE GameLobby")
   dbDisconnect(conn)
 }
 
@@ -659,6 +660,15 @@ server <- function(input, output, session) {
       # print(lobby)
       vals$players <- lobbyTable
       output$gameLobbyTable <- renderTable(lobbyTable)
+    }else if(page == "EndGame"){
+      removeUI(selector = "#backToGame")
+      output$buttonGameLobby <- renderUI({
+        req(vals$userid)
+        tagList(
+          actionButton("enterGameLobby", "Enter Game Lobby")
+          # actionButton("logout", "Log Out")
+        )
+      })
     }
     
   }
@@ -811,9 +821,6 @@ server <- function(input, output, session) {
     #Update the Game Turn number
     output$playerturn <- renderText(paste(sprintf("%s's turn", vals$players[vals$turn %% 4, 2])))
     output$assignedRole <- renderText(sprintf("You are an %s", getRole(vals$userid)))
-    #Resetting Game Lobby (Cant Truncate here, other people needs to enter)
-    # qry_truncate <- "TRUNCATE GameLobby"
-    # exec_trunctate <- dbExecute(conn, qry_truncate)
     updateGameState()
   })
   
@@ -911,6 +918,7 @@ server <- function(input, output, session) {
       output$resultTable <- renderTable(endtable)
       showModal(gameEnd(failed=FALSE))
       newBoard(boardState)
+      refresh('EndGame')
       return()
     }
     # Check Loss Condition
@@ -919,6 +927,7 @@ server <- function(input, output, session) {
       output$resultTable <- renderTable(endtable)
       showModal(gameEnd(failed=FALSE))
       newBoard(boardState)
+      refresh('EndGame')
       return()
     }
   })
