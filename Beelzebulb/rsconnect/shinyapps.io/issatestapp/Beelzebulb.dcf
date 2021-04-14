@@ -1,0 +1,10 @@
+name: Beelzebulb
+title: Beelzebulb
+username:
+account: issatestapp
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3961028
+bundleId: 4469493
+url: https://issatestapp.shinyapps.io/Beelzebulb/
+when: 1618390783.16367

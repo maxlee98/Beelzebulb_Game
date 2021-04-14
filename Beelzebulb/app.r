@@ -180,7 +180,7 @@ nextPlayer <- function(turn){
   dbExecute(conn, sprintf("UPDATE TurnNumber SET turn = %d", turn+1))
   dbDisconnect(conn)
   return(turn+1)
-
+  
 }
 
 startGame <- function(){
@@ -249,7 +249,7 @@ registerModal <- function(failed = FALSE) {
     "If successful, your account will be created with the specified Username and Password.",
     if (failed)
       div(tags$b("The passwords do not match. Try again.", style = "color: red;")),
-    
+
     footer = tagList(
       modalButton("Cancel"),
       actionButton("registerOK", "OK")
@@ -265,7 +265,7 @@ loginModal <- function(failed = FALSE) {
     passwordInput("password3", "Enter your password:"),
     if (failed)
       div(tags$b("There is no registered player with that name and password. Try again or re-register.", style = "color: red;")),
-    
+
     footer = tagList(
       modalButton("Cancel"),
       actionButton("loginOK", "OK")
@@ -446,7 +446,7 @@ chooseCard <- function(pos, handCards, failed=FALSE){
              {img(src='RedStoneSmall.png')}
       )
     }),
-    
+
     selectInput("cardSelect", "Choice of Card", choices = handCards$Card_Name, selected = handCards$Card_Name[1]),
     footer = tagList(
       actionButton("confirmCard", "Confirm"),
@@ -513,6 +513,115 @@ getEndTable <- function(imposter, failed = FALSE){
   return(tb2)
 }
 
+header <- dashboardHeader(
+  title = "Beelzebulb"
+)
+
+sidebar <- dashboardSidebar(
+  useShinyjs(),
+  
+  sidebarMenu(
+    id = "tabs",
+    menuItem("Home Page", tabName = "home", icon = icon("home")),
+    menuItem("Game", tabName = "game", icon = icon("dice")) %>% shinyjs::hidden(),
+    menuItem("Instructions", tabName = "instruct", icon = icon("compass"))
+  )
+)
+
+body <- dashboardBody(
+  tabItems(
+    tabItem(tabName = "home",
+            h1("Welcome to Beelzebulb!"),
+            h3("The R-Shiny game where we teach you about Electrical Circuits!"),
+            verbatimTextOutput("status"),
+            actionButton("register", "Register"),
+            actionButton("login", "Login"),
+            HTML("<p></p>"),
+            uiOutput("buttonGameLobby"),
+            uiOutput("backToGame"),
+            uiOutput("LobbyFull")
+    ),
+    
+    tabItem(tabName = "game",
+            h2("This is the Game Lobby to Game Tab"),
+            verbatimTextOutput("playerturn"),
+            # verbatimTextOutput("gamePhase"),
+            verbatimTextOutput("assignedRole"),
+            fluidRow(
+              box(
+                title = "A Very Simple Board Game",width=12,
+                htmlOutput("playercolorchoice"),
+                uiOutput("moreControls"),
+                # the trick here is to make the gameboard image 'position:absolute;z-order:0'; 
+                # Then, to superimpose images, style them to be 'position:relative;z-order:999'
+                img(src='Fix_Wiring.png',style="position:absolute;z-order:0",width="500px",height="300px"),
+                imageOutput("cell11",height="100px",width="100px",click="click11",inline=TRUE), # height and width are for the containing div, not the image itself
+                imageOutput("cell12",height="100px",width="100px",click="click12",inline=TRUE),  # height and width are for the containing div, not the image itself
+                imageOutput("cell13",height="100px",width="100px",click="click13",inline=TRUE), # height and width are for the containing div, not the image itself
+                imageOutput("cell14",height="100px",width="100px",click="click14",inline=TRUE),  # height and width are for the containing div, not the image itself
+                imageOutput("cell15",height="100px",width="100px",click="click15",inline=TRUE),
+                tags$br(),
+                imageOutput("cell21",height="100px",width="100px",click="click21",inline=TRUE), # height and width are for the containing div, not the image itself
+                imageOutput("cell22",height="100px",width="100px",click="click22",inline=TRUE),  # height and width are for the containing div, not the image itself
+                imageOutput("cell23",height="100px",width="100px",click="click23",inline=TRUE), # height and width are for the containing div, not the image itself
+                imageOutput("cell24",height="100px",width="100px",click="click24",inline=TRUE),  # height and width are for the containing div, not the image itself
+                imageOutput("cell25",height="100px",width="100px",click="click25",inline=TRUE),
+                tags$br(),
+                imageOutput("cell31",height="100px",width="100px",click="click31",inline=TRUE), # height and width are for the containing div, not the image itself
+                imageOutput("cell32",height="100px",width="100px",click="click32",inline=TRUE),  # height and width are for the containing div, not the image itself
+                imageOutput("cell33",height="100px",width="100px",click="click33",inline=TRUE), # height and width are for the containing div, not the image itself
+                imageOutput("cell34",height="100px",width="100px",click="click34",inline=TRUE),  # height and width are for the containing div, not the image itself
+                imageOutput("cell35",height="100px",width="100px",click="click35",inline=TRUE),
+                tags$br(),
+                p("ESD Fantasy Map and Game Pieces by Tan Yi Lin"),
+              ),
+              fluidRow(box(
+                img(src='Wire_Designs-01.png',style="position:relative;x-order:0",width="50px",height="50px"),
+                htmlOutput("wire1",inline=TRUE),
+                img(src='Wire_Designs-02.png',style="position:relative;x-order:1",width="50px",height="50px"),
+                htmlOutput("wire2",inline=TRUE),
+                img(src='Wire_Designs-03.png',style="position:relative;x-order:2",width="50px",height="50px"),
+                htmlOutput("wire3",inline=TRUE),
+                img(src='Wire_Designs-04.png',style="position:relative;x-order:3",width="50px",height="50px"),
+                htmlOutput("wire4",inline=TRUE),
+                img(src='Wire_Designs-05.png',style="position:relative;x-order:4",width="50px",height="50px"),
+                htmlOutput("wire5",inline=TRUE)
+              ))
+            )
+    ),
+    
+    tabItem(tabName = "instruct",
+            h2("Beelzebulb's Game Instructions"),
+            p("Welcome to Beelzebulb, a 4 Player Game in which 3 Players work together as Engineers 
+              in attempt to connect wires from the battery all the way to the light bulb! The fourth
+              player would play the role of an Imposter, whereby he tries to stop the 3 Engineers from
+              reaching the lightbulb."),
+            p("Roles of the Players would not be disclosed. It would only appear on each individual's
+              screen."),
+            p("Your hand cards are displayed at the bottom of the screen"),
+            h3("The Game is comprised of 3 Phases : Standby Phase, Action Phase, End Phase."),
+            h4("Standby Phase"),
+            p("In the Standby Phase, players would be given a multiple choice physics question.
+              Answering the question right allows the player to draw a card. Failure to answer correctly
+              results in the player not being able to draw a card."),
+            h4("Action Phase"),
+            p("In this phase, players would have to choose a card from their hand and place it onto the board."),
+            h4("End Phase"),
+            p("During this phase, the board status would be checked. Upon connection to the bulb or
+              the deck running out of cards, the game will end and the conclusion of the game would
+              be shown.")
+    )
+  )
+)
+
+ui <- dashboardPage(
+  skin = "yellow",
+  header, 
+  sidebar, 
+  body
+)
+
+
 ############################################ SERVER ################################################
 server <- function(input, output, session) {
   # vals$turn is to know which player is next. Different from how many turns have passed.
@@ -528,7 +637,7 @@ server <- function(input, output, session) {
   output$wire3 <- renderText(vals$wires[3])
   output$wire4 <- renderText(vals$wires[4])
   output$wire5 <- renderText(vals$wires[5])
-
+  
   output$status <- renderText({
     if (is.null(vals$username))
       "Not logged in yet."
@@ -537,18 +646,11 @@ server <- function(input, output, session) {
   })
   
   
-  getPlayerTurn <- function(){
-    #open the connection
-    conn <- getAWSConnection()
-    turn <- dbGetQuery(conn, "SELECT turn FROM TurnNumber")[1, 1]
-    dbDisconnect(conn)
-    if(nrow(vals$players) != 0){
-      vals$turn <- turn
-      print(vals$players[(vals$turn%%4)+1, 2])
-      output$playerturn <- renderText(paste(sprintf("%s's turn", vals$players[(vals$turn%%4)+1, 2])))
-      return(vals$players[(vals$turn%%4)+1, 2])
-    }
-  }
+  # getPlayerTurn <- function(){
+  #   #open the connection
+  #   conn <- getAWSConnection()
+  #   
+  # }
   
   ## Register
   observeEvent(input$register, showModal(registerModal(failed=FALSE)))
@@ -626,41 +728,7 @@ server <- function(input, output, session) {
   })
   
   refresh <- function(page = NULL){
-    conn <- getAWSConnection()
-    lobby <- dbGetQuery(conn, "SELECT PlayerID, Username FROM GameLobby")
-    if (is.null(vals$userid) != TRUE){
-      for (i in c(1:5)){
-        handUIexec <- dbGetQuery(conn, paste0("SELECT COUNT(Card_Name) FROM HandCards WHERE Card_Name='", "Wire_", i, "' AND PlayerID=", vals$userid))
-        vals$wires[i] <- paste0(":",handUIexec[1, 1])
-      }
-    }
-    dbDisconnect(conn)
-    if (page == "HomePage"){
-      print(paste0("There are ", nrow(lobby), " People in the lobby"))
-      if(nrow(lobby) > 3){
-        removeUI(selector = "#enterGameLobby")
-        output$LobbyFull <- renderUI({
-          req(vals$userid)
-          tagList(
-            p("There is either a Game Ongoing or more than 3 people in the Game Lobby")
-          )
-        })
-      }else if(nrow(lobby) < 4){
-        removeUI(selector = "#LobbyFull")
-        output$buttonGameLobby <- renderUI({
-          req(vals$userid)
-          tagList(
-            actionButton("enterGameLobby", "Enter Game Lobby")
-            # actionButton("logout", "Log Out")
-          )
-        })
-      }
-    }else if(page == "GameLobby"){
-      lobbyTable <- lobby[1:4, ]
-      # print(lobby)
-      vals$players <- lobbyTable
-      output$gameLobbyTable <- renderTable(lobbyTable)
-    }else if(page == "EndGame"){
+    if(page == "EndGame"){
       removeUI(selector = "#backToGame")
       output$buttonGameLobby <- renderUI({
         req(vals$userid)
@@ -672,19 +740,19 @@ server <- function(input, output, session) {
     }
     
   }
-  
-  checkGS <- function(){
-    conn <- getAWSConnection()
-    hasGameStarted <- dbGetQuery(conn, "SELECT start FROM StartGame")[1, 1]
-    if(hasGameStarted == 1){
-      updateTabsetPanel(session, "tabs", selected = "game")
-      drawCard(vals$userid, 3)
-      removeModal()
-      Sys.sleep(2)
-      dbExecute(conn, sprintf("UPDATE StartGame SET start = %d", 0))
-    }
-    dbDisconnect(conn)
-  }
+  # 
+  # checkGS <- function(){
+  #   conn <- getAWSConnection()
+  #   hasGameStarted <- dbGetQuery(conn, "SELECT start FROM StartGame")[1, 1]
+  #   if(hasGameStarted == 1){
+  #     updateTabsetPanel(session, "tabs", selected = "game")
+  #     drawCard(vals$userid, 3)
+  #     removeModal()
+  #     Sys.sleep(2)
+  #     dbExecute(conn, sprintf("UPDATE StartGame SET start = %d", 0))
+  #   }
+  #   dbDisconnect(conn)
+  # }
   
   ## Game Tab 
   observeEvent(input$backToGame, {
@@ -707,8 +775,56 @@ server <- function(input, output, session) {
   
   updateGameState <- function(){
     conn <- getAWSConnection()
-  result <- dbGetQuery(conn, "SELECT * FROM GameState")
+    result <- dbGetQuery(conn, "SELECT * FROM GameState")
+    hasGameStarted <- dbGetQuery(conn, "SELECT start FROM StartGame")[1, 1]
+    if(hasGameStarted == 1){
+      updateTabsetPanel(session, "tabs", selected = "game")
+      drawCard(vals$userid, 3)
+      removeModal()
+      Sys.sleep(2)
+      dbExecute(conn, sprintf("UPDATE StartGame SET start = %d", 0))
+    }
+    lobby <- dbGetQuery(conn, "SELECT PlayerID, Username FROM GameLobby")
+    if (is.null(vals$userid) != TRUE){
+      for (i in c(1:5)){
+        handUIexec <- dbGetQuery(conn, paste0("SELECT COUNT(Card_Name) FROM HandCards WHERE Card_Name='", "Wire_", i, "' AND PlayerID=", vals$userid))
+        vals$wires[i] <- paste0(":",handUIexec[1, 1])
+      }
+    }
+    turn <- dbGetQuery(conn, "SELECT turn FROM TurnNumber")[1, 1]
     dbDisconnect(conn)
+    if(nrow(vals$players) != 0){
+      vals$turn <- turn
+      print(vals$players[(vals$turn%%4)+1, 2])
+      output$playerturn <- renderText(paste(sprintf("%s's turn", vals$players[(vals$turn%%4)+1, 2])))
+      return(vals$players[(vals$turn%%4)+1, 2])
+    }
+    # print(paste0("There are ", nrow(lobby), " People in the lobby"))
+    if(nrow(lobby) > 3){
+      removeUI(selector = "#enterGameLobby")
+      output$LobbyFull <- renderUI({
+        req(vals$userid)
+        tagList(
+          p("There is either a Game Ongoing or more than 3 people in the Game Lobby")
+        )
+      })
+    }else if(nrow(lobby) < 4){
+      removeUI(selector = "#LobbyFull")
+      output$buttonGameLobby <- renderUI({
+        req(vals$userid)
+        tagList(
+          actionButton("enterGameLobby", "Enter Game Lobby")
+          # actionButton("logout", "Log Out")
+        )
+      })
+    }
+
+    lobbyTable <- lobby[1:4, ]
+    # print(lobby)
+    vals$players <- lobbyTable
+    output$gameLobbyTable <- renderTable(lobbyTable)
+    
+
     result$img_num <- as.numeric(result$img_num)
     # for ( i in 1:15) {print(result[["img_num"]][[i]])}
     output$cell11 <- renderCell(1,1,result[["img_num"]][[1]])
@@ -761,7 +877,7 @@ server <- function(input, output, session) {
     dbDisconnect(conn)
   }
   
-    processClickEvent <- function(gridrow,gridcol){
+  processClickEvent <- function(gridrow,gridcol){
     # If it is not this player's turn or if the cell is occupied, then ignore the click
     if(vals$username == getPlayerTurn()){
       if (checkCell(gridrow, gridcol) == 1){
@@ -932,7 +1048,7 @@ server <- function(input, output, session) {
     }
   })
   
-
+  
   observeEvent(input$backToHome, {
     updateTabsetPanel(session, "tabs", selected = "home")
     removeModal()
@@ -942,20 +1058,23 @@ server <- function(input, output, session) {
   observe({
     invalidateLater(3000, session)
     isolate({updateGameState()})
-  })
-  
-
-  observe({
-    invalidateLater(1000, session)
-    isolate({refresh("GameLobby")})
-    isolate({refresh("HomePage")})
-    isolate({getPlayerTurn()})
+    # isolate({refresh("GameLobby")})
+    # isolate({refresh("HomePage")})
+    # isolate({getPlayerTurn()})
+    # isolate({checkGS()})
+    
   })
 
-  observe({
-    invalidateLater(1000, session)
-    isolate({checkGS()})
-  })
+
+  # observe({
+  #   invalidateLater(1000, session)
+  # 
+  # })
+  # 
+  # observe({
+  #   invalidateLater(1000, session)
+  # })
   
 }
 
+shinyApp(ui, server)
