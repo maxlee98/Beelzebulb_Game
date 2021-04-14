@@ -16,8 +16,7 @@ sidebar <- dashboardSidebar(
   sidebarMenu(
     id = "tabs",
     menuItem("Home Page", tabName = "home", icon = icon("home")),
-    menuItem("Game", tabName = "game", icon = icon("dice")),
-    # menuItem("Game", tabName = "game", icon = icon("dice")) %>% shinyjs::hidden(),
+    menuItem("Game", tabName = "game", icon = icon("dice")) %>% shinyjs::hidden(),
     menuItem("Instructions", tabName = "instruct", icon = icon("compass"))
   )
 )
