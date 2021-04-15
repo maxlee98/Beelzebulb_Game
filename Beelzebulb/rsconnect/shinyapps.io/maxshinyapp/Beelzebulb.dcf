@@ -1,0 +1,13 @@
+name: Beelzebulb
+title: Beelzebulb
+username:
+account: maxshinyapp
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3962235
+bundleId: 4474939
+url: https://maxshinyapp.shinyapps.io/Beelzebulb/
+when: 1618488559.45334
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: app.R|BoardLogicCode.r|Logic.nb.html|Logic.Rmd

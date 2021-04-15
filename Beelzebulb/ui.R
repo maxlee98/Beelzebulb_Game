@@ -1,7 +1,6 @@
 library(stringr)
 library(shiny)
 library(DBI)
-library(jsonlite)
 library(shinydashboard)
 library(rsconnect)
 library(shinyjs)
@@ -81,7 +80,6 @@ body <- dashboardBody(
                 htmlOutput("wire5",inline=TRUE)
                 ))
             )
-            # actionButton("refreshGame", "Refresh")
     ),
     
     tabItem(tabName = "instruct",
