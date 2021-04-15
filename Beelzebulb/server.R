@@ -167,10 +167,10 @@ newBoard <- function(board){
 getAWSConnection <- function(){
   conn <- dbConnect(
     drv = RMySQL::MySQL(),
-    dbname = "student055",
+    dbname = "student012",
     host = "esddbinstance-1.ceo4ehzjeeg0.ap-southeast-1.rds.amazonaws.com",
-    username = "student055",
-    password = "gVU4KpWT")
+    username = "student012",
+    password = "7QhE7cZH")
   conn
 }
 
@@ -707,7 +707,7 @@ server <- function(input, output, session) {
   
   updateGameState <- function(){
     conn <- getAWSConnection()
-  result <- dbGetQuery(conn, "SELECT * FROM GameState")
+    result <- dbGetQuery(conn, "SELECT * FROM GameState")
     dbDisconnect(conn)
     result$img_num <- as.numeric(result$img_num)
     # for ( i in 1:15) {print(result[["img_num"]][[i]])}
@@ -763,7 +763,7 @@ server <- function(input, output, session) {
   
     processClickEvent <- function(gridrow,gridcol){
     # If it is not this player's turn or if the cell is occupied, then ignore the click
-    if(vals$username == getPlayerTurn()){
+    # if(vals$username == getPlayerTurn()){
       if (checkCell(gridrow, gridcol) == 1){
         current_row <<- gridrow
         current_col <<- gridcol
@@ -787,7 +787,7 @@ server <- function(input, output, session) {
             if (vals$turnstate==1)vals$turnstate <- 2 else vals$turnstate <- 1
           }
           updateGame(vals$playerid,vals$gamevariantid,vals$turnstate,newstate)
-        }
+        # }
       }
     }
   }

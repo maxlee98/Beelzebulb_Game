@@ -1,0 +1,81 @@
+﻿row_names,qn_id,ans_id,choices
+1,1,1,0.625 x 10^19
+2,1,2,1.6 x 10^19
+3,1,3,1.6 x 10^-19
+4,1,4,0.625 x 10^-19
+5,2,5,area of the conductor.
+6,2,6,length of the conductor.
+7,2,7,type of material.
+8,2,8,none of these.
+9,3,9,R ohms
+10,3,10,2R ohms
+11,3,11,4R ohms
+12,3,12,8R ohms
+13,4,13,10
+14,4,14,60
+15,4,15,600
+16,4,16,1200
+17,5,17,0.02 F
+18,5,18,0.5 F
+19,5,19,0.05 F
+20,5,20,0.2 F
+21,6,21,160 microF
+22,6,22,10 microF
+23,6,23,40 microF
+24,6,24,5 microF
+25,7,25,Ampere
+26,7,26,Voltage
+27,7,27,Coulomb
+28,7,28,Watt
+29,8,29,ohms.
+30,8,30,ohms * metre
+31,8,31,ohms / metre
+32,8,32,ohms / metre squared
+33,9,33,product of the instantaneous current and rate of change of current
+34,9,34,square of instantaneous current.
+35,9,35,square of the rate of change of current
+36,9,36,temperature of the inductor.
+37,10,37,product of its inductance and current through it.
+38,10,38,ratio of its inductance to current through it.
+39,10,39,ratio of current through it to its inductance.
+40,10,40,product of its inductance and rate of change of current through it.
+41,11,41,Newton
+42,11,42,Ampere turn
+43,11,43,Weber
+44,11,44,Tesla
+45,12,45,Maximum
+46,12,46,Minimum
+47,12,47,Zero
+48,12,48,A finite value
+49,13,49,current
+50,13,50,voltage
+51,13,51,power
+52,13,52,None of the above
+53,14,53,current
+54,14,54,voltage
+55,14,55,power
+56,14,56,None of the above
+57,15,57,zero
+58,15,58,infinite
+59,15,59,finite
+60,15,60,100 ohms
+61,16,61,current calculations.
+62,16,62,voltage calculations.
+63,16,63,power calculations.
+64,16,64,None of the above.
+65,17,65,0 degrees
+66,17,66,90 degrees
+67,17,67,-90 degrees
+68,17,68,45 degrees
+69,18,69,Zero
+70,18,70,Minimum
+71,18,71,Maximum
+72,18,72,Any of the above
+73,19,73,7V
+74,19,74,5V
+75,19,75,4V
+76,19,76,3V
+77,20,77,a few watt.
+78,20,78,100 watt.
+79,20,79,zero watt.
+80,20,80,maximum power.
