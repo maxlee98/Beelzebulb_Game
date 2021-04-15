@@ -15,17 +15,17 @@ boardState <- tibble(
   ),
   c2 = list(
     tibble(n = 0, e = 0, s = 0, w = 0),
-    tibble(n = 0, e = 1, s = 0, w = 1),
+    tibble(n = 0, e = 0, s = 0, w = 0),
     tibble(n = 0, e = 0, s = 0, w = 0)
   ),
   c3 = list(
     tibble(n = 0, e = 0, s = 0, w = 0),
-    tibble(n = 0, e = 1, s = 0, w = 1),
+    tibble(n = 0, e = 0, s = 0, w = 0),
     tibble(n = 0, e = 0, s = 0, w = 0)
   ),
   c4 = list(
     tibble(n = 0, e = 0, s = 0, w = 0),
-    tibble(n = 0, e = 1, s = 0, w = 1),
+    tibble(n = 0, e = 0, s = 0, w = 0),
     tibble(n = 0, e = 0, s = 0, w = 0)
   ),
   c5 = list(
@@ -69,24 +69,19 @@ cellCheckHelper <- function(df, col, row, dirToCheck){
 }
 
 cellCheck <- function(df, col, row, prevConn){
+  print(paste0(col, row, prevConn))
   if (col == 1 & row == 2){
     return(TRUE)
   }
   for (dir in c("n", "s", "e", "w")){
     if (dir != prevConn){
       connected <- cellCheckHelper(df, col, row, dir)
-      if (connected != FALSE){
+      if (connected[[1]] != FALSE){
         return(cellCheck(df, as.numeric(connected[[1]]), as.numeric(connected[[2]]), connected[[3]]))
       }
     }
   }
   return(FALSE)
-}
-
-boardLogic <- function(board){
-  # First step: check whether cells right next to bulb have any connection first
-  return(cellCheck(boardState, 5, 2, "e"))
-  # Then, recursively check 
 }
 
 newBoard <- function(board){
@@ -293,7 +288,8 @@ gameLobby <- function(totalPlayers, failed = FALSE){
       tableOutput("gameLobbyTable"),
       footer = tagList(
         actionButton("entergame", "Start Game")
-      )
+      ),
+      easyClose = TRUE
     )
   }else{
     modalDialog(
@@ -436,7 +432,7 @@ chooseCard <- function(pos, handCards, failed=FALSE){
     p("Which card would you like to play?"),
     lapply(1:cards, function(i){
       img(src='RedStoneSmall.png')
-      switch(sprintf("%d", handCards[i, 1]),
+      switch(sprintf("%d", handCards[i, 2]),
              '1001' = {img(src='Wire_Designs-01.png')},
              '1002' = {img(src='Wire_Designs-02.png')},
              '1003' = {img(src='Wire_Designs-03.png')},
@@ -464,10 +460,11 @@ removeCard <- function(userid, cardSelect){
 
 #Checking End Game Condition
 checkWin <- function(){
-  conn <- getAWSConnection()
-  boardState <-dbGetQuery(conn, "SELECT * FROM GameState")
-  dbDisconnect(conn)
-  return(boardLogic(boardState))
+  return(cellCheck(boardState, 5, 2, "e"))
+  # conn <- getAWSConnection()
+  # boardState <-dbGetQuery(conn, "SELECT * FROM GameState")
+  # dbDisconnect(conn)
+  # return(boardLogic(boardState))
 }
 
 checkLoss <- function(){
@@ -743,10 +740,10 @@ server <- function(input, output, session) {
   }
   
   updateGameState <- function(game_state){
-  #   conn <- getAWSConnection()
-  # result <- dbGetQuery(conn, "SELECT * FROM GameState")
-  #   dbDisconnect(conn)
-    result <- game_state
+    conn <- getAWSConnection()
+    result <- dbGetQuery(conn, "SELECT * FROM GameState")
+    dbDisconnect(conn)
+    # result <- game_state
     result$img_num <- as.numeric(result$img_num)
     # for ( i in 1:15) {print(result[["img_num"]][[i]])}
     output$cell11 <- renderCell(1,1,result[["img_num"]][[1]])
@@ -801,7 +798,7 @@ server <- function(input, output, session) {
   
     processClickEvent <- function(gridrow,gridcol){
     # If it is not this player's turn or if the cell is occupied, then ignore the click
-    if(vals$username == getPlayerTurn(gameState$turnNum)){
+    # if(vals$username == getPlayerTurn(gameState$turnNum)){
       if (checkCell(gridrow, gridcol) == 1){
         current_row <<- gridrow
         current_col <<- gridcol
@@ -825,7 +822,7 @@ server <- function(input, output, session) {
             if (vals$turnstate==1)vals$turnstate <- 2 else vals$turnstate <- 1
           }
           updateGame(vals$playerid,vals$gamevariantid,vals$turnstate,newstate)
-        }
+        # }
       }
     }
   }
@@ -948,7 +945,6 @@ server <- function(input, output, session) {
     vals$turn <- nextPlayer(vals$turn)
     removeModal()
     updateGameState(gameState$state)
-    
     # Check Win Condition
     if(checkWin()){
       endtable <- getEndTable(imposter = "LOSE", gameState$players)
@@ -983,7 +979,7 @@ server <- function(input, output, session) {
   # 
   # 
   observe({
-    invalidateLater(10000, session)
+    invalidateLater(3000, session)
     refreshGameState()
     isolate({refresh("GameLobby", gameState$lobby, gameState$handCards)})
     isolate({refresh("HomePage", gameState$lobby, gameState$handCards)})
