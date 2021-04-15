@@ -125,32 +125,12 @@ newBoard <- function(board){
     }
   }
   dbExecute(conn, "UPDATE StartGame SET start = 0")
+  dbExecute(conn, "UPDATE TurnNumber SET turn = 0")
   dbExecute(conn, "TRUNCATE table CardDeck")
-  for (i in c(1:6)){
-    querytemplate <- "INSERT INTO CardDeck (row_names, Card_ID, Card_Name) VALUES (?id1,?id2,?id3); " ## Edit the Database
-    query<- sqlInterpolate(conn, querytemplate,id1=i,id2=1001,id3="Wire_1" )
-    dbExecute(conn, query)
-  }
-  for (i in c(7:12)){
-    querytemplate <- "INSERT INTO CardDeck (row_names, Card_ID, Card_Name) VALUES (?id1,?id2,?id3); " ## Edit the Database
-    query<- sqlInterpolate(conn, querytemplate,id1=i,id2=1002,id3="Wire_2" )
-    dbExecute(conn, query)
-  }
-  for (i in c(13:18)){
-    querytemplate <- "INSERT INTO CardDeck (row_names, Card_ID, Card_Name) VALUES (?id1,?id2,?id3); " ## Edit the Database
-    query<- sqlInterpolate(conn, querytemplate,id1=i,id2=1003,id3="Wire_3" )
-    dbExecute(conn, query)
-  }
-  for (i in c(19:24)){
-    querytemplate <- "INSERT INTO CardDeck (row_names, Card_ID, Card_Name) VALUES (?id1,?id2,?id3); " ## Edit the Database
-    query<- sqlInterpolate(conn, querytemplate,id1=i,id2=1004,id3="Wire_4" )
-    dbExecute(conn, query)
-  }
-  for (i in c(25:30)){
-    querytemplate <- "INSERT INTO CardDeck (row_names, Card_ID, Card_Name) VALUES (?id1,?id2,?id3); " ## Edit the Database
-    query<- sqlInterpolate(conn, querytemplate,id1=i,id2=1005,id3="Wire_5" )
-    dbExecute(conn, query)
-  }
+  cardID_deck <- rep(c(1001, 1002, 1003, 1004, 1005), each = 6)
+  cardNAME_deck <- rep(c("Wire_1", "Wire_2", "Wire_3", "Wire_4", "Wire_5"), each = 6)
+  df_id <- data.frame(Card_ID = cardID_deck, Card_Name = cardNAME_deck)
+  dbWriteTable(conn, "CardDeck", df_id, overwrite = TRUE)
   dbExecute(conn, "TRUNCATE HandCards")
   dbExecute(conn, "TRUNCATE GameLobby")
   dbDisconnect(conn)
@@ -374,7 +354,7 @@ physicsResult <- function(result, ans){
     modalDialog(
       title = "You got the right answer!",
       strong("You will Draw a Card.."),
-      p("Please press the button below to continue on to your Action Phase to place a card!"),
+      p("Please press the button below to continue on to  place a card!"),
       footer = tagList(
         actionButton("correctCont", "Continue")
       )
@@ -384,7 +364,7 @@ physicsResult <- function(result, ans){
       title = "Your Answer is Wrong",
       strong("The correct answer is:"),
       p(ans),
-      p("For getting the question wrong, you will be moving to the end phase"),
+      p("For getting the question wrong, you will not be drawing a card.."),
       footer = tagList(
         actionButton("wrongCont", "Continue")
       )
@@ -483,7 +463,7 @@ checkLoss <- function(){
 gameEnd <- function(failed = FALSE){
   modalDialog(
     title = "End Game Results",
-    p("testing Input"),
+    p("Please wait patiently for the result table to be shown.."),
     tableOutput("resultTable"),
     footer = tagList(
       # modalButton("Cancel"),
@@ -798,7 +778,7 @@ server <- function(input, output, session) {
   
     processClickEvent <- function(gridrow,gridcol){
     # If it is not this player's turn or if the cell is occupied, then ignore the click
-    # if(vals$username == getPlayerTurn(gameState$turnNum)){
+    if(vals$username == getPlayerTurn(gameState$turnNum)){
       if (checkCell(gridrow, gridcol) == 1){
         current_row <<- gridrow
         current_col <<- gridcol
@@ -822,7 +802,7 @@ server <- function(input, output, session) {
             if (vals$turnstate==1)vals$turnstate <- 2 else vals$turnstate <- 1
           }
           updateGame(vals$playerid,vals$gamevariantid,vals$turnstate,newstate)
-        # }
+        }
       }
     }
   }
@@ -928,7 +908,7 @@ server <- function(input, output, session) {
     }
     else if (num_id == 6){
       boardState[[current_col]][[current_row]] <- tibble(n = 1, e = 1, s = 0, w = 0)
-    }
+    } 
     else if (num_id == 7){
       boardState[[current_col]][[current_row]] <- tibble(n = 1, e = 0, s = 0, w = 1)
     }
@@ -951,7 +931,7 @@ server <- function(input, output, session) {
       output$resultTable <- renderTable(endtable)
       showModal(gameEnd(failed=FALSE))
       newBoard(boardState)
-      refresh('EndGame', gameState$lobby)
+      refresh('EndGame', gameState$lobby, gameState$handCards)
       return()
     }
     # Check Loss Condition
@@ -960,7 +940,7 @@ server <- function(input, output, session) {
       output$resultTable <- renderTable(endtable)
       showModal(gameEnd(failed=FALSE))
       newBoard(boardState)
-      refresh('EndGame', gameState$lobby)
+      refresh('EndGame', gameState$lobby, gameState$handCards)
       return()
     }
   })
@@ -979,7 +959,7 @@ server <- function(input, output, session) {
   # 
   # 
   observe({
-    invalidateLater(3000, session)
+    invalidateLater(6000, session)
     refreshGameState()
     isolate({refresh("GameLobby", gameState$lobby, gameState$handCards)})
     isolate({refresh("HomePage", gameState$lobby, gameState$handCards)})
