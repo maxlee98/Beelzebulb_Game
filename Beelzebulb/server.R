@@ -373,9 +373,10 @@ answerPhysicsQn <- function(qn, q_opt, failed = FALSE){
 
 physicsResult <- function(result, ans){
   if(result == "correct"){
+    drawCard(vals$userid, 1)
     modalDialog(
       title = "You got the right answer!",
-      strong("You will Draw a Card.."),
+      strong("You will Draw a Card."),
       p("Please press the button below to continue on to  place a card!"),
       footer = tagList(
         actionButton("correctCont", "Continue")
@@ -386,12 +387,13 @@ physicsResult <- function(result, ans){
       title = "Your Answer is Wrong",
       strong("The correct answer is:"),
       p(ans),
-      p("For getting the question wrong, you will not be drawing a card.."),
+      p("For getting the question wrong, you will not be drawing a card, your turn will also be skipped if you have no cards in hand."),
       footer = tagList(
-        actionButton("wrongCont", "Continue")
+          actionButton("wrongCont", "Continue")
       )
     )
   }
+  
 }
 
 ############## END OF QUIZ FUNCTIONS ##################
@@ -548,11 +550,11 @@ getStartGame <- function(conn){
 ############################################ SERVER ################################################
 server <- function(input, output, session) {
   # vals$turn is to know which player is next. Different from how many turns have passed.
-  vals <- reactiveValues(password = NULL, userid=NULL,username=NULL, lobby=NULL, playercolor=1, turn = 0, gameStart = NULL, players = setNames(data.frame(matrix(ncol = 2, nrow = 0)), c('PlayerID', 'Username')), wires = c(" :0", " :0", " :0", " :0", " :0"))
+  vals <<- reactiveValues(password = NULL, userid=NULL,username=NULL, lobby=NULL, playercolor=1, turn = 0, gameStart = NULL, players = setNames(data.frame(matrix(ncol = 2, nrow = 0)), c('PlayerID', 'Username')), wires = c(" :0", " :0", " :0", " :0", " :0"))
   physics <- reactiveValues(qid = NULL, aid = NULL, qn = NULL, q_opt = NULL)
   pieces <- matrix(rep(0,3*5),nrow=3,ncol=5,byrow=TRUE)
   gamevals <- reactiveValues(turncount=0,pieces=pieces)
-  gameState <- reactiveValues(players = NULL, state = NULL, turnNum = NULL, handCards = NULL, lobby = NULL, sg = NULL)
+  gameState <<- reactiveValues(players = NULL, state = NULL, turnNum = NULL, handCards = NULL, lobby = NULL, sg = NULL)
   
   output$playerturn <- renderText("The Game has yet to start.")
   output$assignedRole <- renderText("You have yet to be assigned a role for the game.")
@@ -812,7 +814,7 @@ server <- function(input, output, session) {
   
     processClickEvent <- function(gridrow,gridcol){ # MAX & YONG SHENG
     # If it is not this player's turn or if the cell is occupied, then ignore the click
-    if(vals$username == getPlayerTurn(gameState$turnNum)){
+    # if(vals$username == getPlayerTurn(gameState$turnNum)){
       if (checkCell(gridrow, gridcol) == 1){
         current_row <<- gridrow
         current_col <<- gridcol
@@ -836,7 +838,7 @@ server <- function(input, output, session) {
             if (vals$turnstate==1)vals$turnstate <- 2 else vals$turnstate <- 1
           }
           updateGame(vals$playerid,vals$gamevariantid,vals$turnstate,newstate)
-        }
+        # }
       }
     }
   }
@@ -887,7 +889,7 @@ server <- function(input, output, session) {
   # Reacting to correct Answer of Physics Question - YAO DE
   observeEvent(input$correctCont, {
     # Draw A card First
-    drawCard(vals$userid, 1)
+    # drawCard(vals$userid, 1)
     #Get hand Cards
     exec_query <- getHandCards(userid = vals$userid, gameState$handCards)
     showModal(chooseCard(handCards = exec_query, failed=FALSE))
@@ -897,8 +899,22 @@ server <- function(input, output, session) {
   observeEvent(input$wrongCont, {
     #Get Handcards
     exec_query <- getHandCards(userid = vals$userid, gameState$handCards)
-    showModal(chooseCard(handCards = exec_query, failed=FALSE))
+    if (nrow(exec_query) == 0){
+      vals$turn <- nextPlayer(vals$turn)
+      removeModal()
+      updateGameState(gameState$state)
+    }
+    else{
+      showModal(chooseCard(handCards = exec_query, failed=FALSE))
+    }
   })
+  
+  # ### Wrong answer, and no more cards
+  # observeEvent(input$wrongNoCard, {
+  #   vals$turn <- nextPlayer(vals$turn)
+  #   removeModal()
+  #   updateGameState(gameState$state)
+  # })
   
   
   ### Choosing Card - YONG SHENG
