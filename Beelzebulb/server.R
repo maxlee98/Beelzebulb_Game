@@ -814,7 +814,7 @@ server <- function(input, output, session) {
   
     processClickEvent <- function(gridrow,gridcol){ # MAX & YONG SHENG
     # If it is not this player's turn or if the cell is occupied, then ignore the click
-    # if(vals$username == getPlayerTurn(gameState$turnNum)){
+     if(vals$username == getPlayerTurn(gameState$turnNum)){
       if (checkCell(gridrow, gridcol) == 1){
         current_row <<- gridrow
         current_col <<- gridcol
@@ -838,7 +838,7 @@ server <- function(input, output, session) {
             if (vals$turnstate==1)vals$turnstate <- 2 else vals$turnstate <- 1
           }
           updateGame(vals$playerid,vals$gamevariantid,vals$turnstate,newstate)
-        # }
+         }
       }
     }
   }
