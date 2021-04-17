@@ -35,6 +35,8 @@ boardState <- tibble(
   )
 )
 
+############## PATHFINDER ALGORITHM - YONG SHENG ##################
+
 cellCheckHelper <- function(df, col, row, dirToCheck){
   firstConnection <- boardState[[col]][[row]][[dirToCheck]]
   if (firstConnection == "1" | firstConnection == 1){
@@ -83,6 +85,10 @@ cellCheck <- function(df, col, row, prevConn){
   }
   return(FALSE)
 }
+
+############## END OF PATHFINDER ALGORITHM ##################
+
+############## END GAME RESET - YONG SHENG ##################
 
 newBoard <- function(board){
   boardState <<- tibble(
@@ -136,6 +142,9 @@ newBoard <- function(board){
   dbDisconnect(conn)
 }
 
+############## END OF END GAME RESET ##################
+
+
 # AWS Connection
 getAWSConnection <- function(){
   conn <- dbConnect(
@@ -146,6 +155,8 @@ getAWSConnection <- function(){
     password = "gVU4KpWT")
   conn
 }
+
+############## IN-GAME LOGISTICAL FUNCTIONS (1) - MAX ##################
 
 # General
 nextPlayer <- function(turn){
@@ -260,6 +271,11 @@ getPlayerID <- function(username,password){
   playerid
 }
 
+############## END OF IN-GAME LOGISTICAL (1) FUNCTIONS ##################
+
+
+############## LOBBY FUNCTIONS - TIANSHU ##################
+
 # Game Lobby
 gameLobby <- function(totalPlayers, failed = FALSE){
   if(totalPlayers > 3){
@@ -304,6 +320,12 @@ getRole <- function(userid, gamePlayers){
     return("Imposter! Prevent Engineers from reaching the lightbulb!")
   }
 }
+
+############## END OF LOBBY FUNCTIONS ##################
+
+
+############## QUIZ FUNCTIONS - YAO DE ##################
+
 
 #Get Physics Question
 getPhysicsQn <- function(){
@@ -372,6 +394,10 @@ physicsResult <- function(result, ans){
   }
 }
 
+############## END OF QUIZ FUNCTIONS ##################
+
+
+############## IN-GAME LOGISTICAL FUNCTIONS (2) - MAX ##################
 
 #Get Handcards
 getHandCards <- function(userid, handCards){
@@ -472,6 +498,10 @@ gameEnd <- function(failed = FALSE){
   )
 }
 
+############## END OF IN-GAME LOGISTICAL FUNCTIONS (2) ##################
+
+############## LOBBY/TABLE FUNCTIONS - TIANSHU ##########################
+
 getEndTable <- function(imposter, playerTable, failed = FALSE){
   # conn <- getAWSConnection()
   # tb <- dbGetQuery(conn, "SELECT * FROM GamePlayers")
@@ -511,6 +541,10 @@ getLobby <- function(conn){
 getStartGame <- function(conn){
   dbGetQuery(conn, "SELECT * FROM StartGame")
 }
+
+############## END OF LOBBY/TABLE FUNCTIONS ##########################
+
+
 ############################################ SERVER ################################################
 server <- function(input, output, session) {
   # vals$turn is to know which player is next. Different from how many turns have passed.
@@ -546,7 +580,7 @@ server <- function(input, output, session) {
     dbDisconnect(conn)
   }
   
-  getPlayerTurn <- function(turnNum){
+  getPlayerTurn <- function(turnNum){  # MAX
     #open the connection
     # conn <- getAWSConnection()
     # turn <- dbGetQuery(conn, "SELECT turn FROM TurnNumber")[1, 1]
@@ -560,7 +594,7 @@ server <- function(input, output, session) {
   }
   
   ## Register
-  observeEvent(input$register, showModal(registerModal(failed=FALSE)))
+  observeEvent(input$register, showModal(registerModal(failed=FALSE))) 
   observeEvent(input$registerOK, {
     # Check that password1 exists and it matches password2
     if (str_length(input$password1) >0 && (input$password1 == input$password2)) {
@@ -597,7 +631,7 @@ server <- function(input, output, session) {
   ## Logout 
   
   ## Enter Game Lobby
-  output$buttonGameLobby <- renderUI({
+  output$buttonGameLobby <- renderUI({  # MAX
     req(vals$userid)
     tagList(
       actionButton("enterGameLobby", "Enter Game Lobby")
@@ -605,14 +639,14 @@ server <- function(input, output, session) {
     )
   })
   
-  output$backToGame <- renderUI({
+  output$backToGame <- renderUI({  # MAX
     req(vals$gameStart)
     tagList(
       actionButton("backToGame", "Back to Game Board")
     )
   })
   
-  observeEvent(input$enterGameLobby, {
+  observeEvent(input$enterGameLobby, {  # MAX
     #Inserting Player into GameLobby Table
     conn <- getAWSConnection()
     querytemplate <- "INSERT INTO GameLobby (PlayerID, Username) VALUES (?playerid, ?username)"
@@ -627,7 +661,7 @@ server <- function(input, output, session) {
     showModal(gameLobby(totalPlayers = totalPlayers, failed = FALSE))
   })
   
-  observeEvent(input$exitLobby, {
+  observeEvent(input$exitLobby, {  # MAX
     conn <- getAWSConnection()
     querytemplate <- "DELETE FROM GameLobby WHERE PlayerID = ?id"
     qrc <- sqlInterpolate(conn, querytemplate, id = vals$userid)
@@ -636,7 +670,7 @@ server <- function(input, output, session) {
     removeModal()
   })
   
-  refresh <- function(page = NULL, lobby=NULL, handCards = NULL){
+  refresh <- function(page = NULL, lobby=NULL, handCards = NULL){  # MAX AND YONG SHENG
     # conn <- getAWSConnection()
     # lobby <- dbGetQuery(conn, "SELECT PlayerID, Username FROM GameLobby")
     if (is.null(vals$userid) != TRUE){
@@ -687,7 +721,7 @@ server <- function(input, output, session) {
     
   }
   
-  checkGS <- function(sg){
+  checkGS <- function(sg){  # MAX
     conn <- getAWSConnection()
     # hasGameStarted <- dbGetQuery(conn, "SELECT start FROM StartGame")[1, 1]
     if(sg[1, 1] == 1){
@@ -706,7 +740,7 @@ server <- function(input, output, session) {
   })
   
   ### Board Image
-  renderCell <- function(gridrow,gridcol,cell_num=1){
+  renderCell <- function(gridrow,gridcol,cell_num=1){ # MAX
     renderImage({
       #select the icon appropriate for this cell
       #imageid <- 1
@@ -719,7 +753,7 @@ server <- function(input, output, session) {
     },deleteFile=FALSE)
   }
   
-  updateGameState <- function(game_state){
+  updateGameState <- function(game_state){ # YONG SHENG
     conn <- getAWSConnection()
     result <- dbGetQuery(conn, "SELECT * FROM GameState")
     dbDisconnect(conn)
@@ -776,7 +810,7 @@ server <- function(input, output, session) {
     dbDisconnect(conn)
   }
   
-    processClickEvent <- function(gridrow,gridcol){
+    processClickEvent <- function(gridrow,gridcol){ # MAX & YONG SHENG
     # If it is not this player's turn or if the cell is occupied, then ignore the click
     if(vals$username == getPlayerTurn(gameState$turnNum)){
       if (checkCell(gridrow, gridcol) == 1){
@@ -823,7 +857,7 @@ server <- function(input, output, session) {
   observeEvent(input$click34,{processClickEvent(3,4)})
   observeEvent(input$click35,{processClickEvent(3,5)})
   
-  #Giving Each Cell IDs and their Click function
+  #Giving Each Cell IDs and their Click function - MAX
   observeEvent(input$entergame, {
     vals$gameStart <- startGame()
     updateTabsetPanel(session, "tabs", selected = "game")
@@ -839,7 +873,7 @@ server <- function(input, output, session) {
     updateGameState(gameState$state)
   })
   
-  # Reaction to Choice of Physics Question's Answer
+  # Reaction to Choice of Physics Question's Answer - YAO DE
   observeEvent(input$confirmOption, {
     # print(input$optionSelect)
     choice <- input$optionSelect
@@ -850,7 +884,7 @@ server <- function(input, output, session) {
     if(ans_id == physics$aid){showModal(physicsResult("correct", ans))}else{showModal(physicsResult("wrong", ans))}
   })
   
-  # Reacting to correct Answer of Physics Question
+  # Reacting to correct Answer of Physics Question - YAO DE
   observeEvent(input$correctCont, {
     # Draw A card First
     drawCard(vals$userid, 1)
@@ -859,7 +893,7 @@ server <- function(input, output, session) {
     showModal(chooseCard(handCards = exec_query, failed=FALSE))
   })
   
-  # Reacting to Wrong Answer of Physics Question
+  # Reacting to Wrong Answer of Physics Question - YAO DE
   observeEvent(input$wrongCont, {
     #Get Handcards
     exec_query <- getHandCards(userid = vals$userid, gameState$handCards)
@@ -867,7 +901,7 @@ server <- function(input, output, session) {
   })
   
   
-  ### Choosing Card
+  ### Choosing Card - YONG SHENG
   observeEvent(input$confirmCard, {
     # print(paste(current_row, current_col, input$cardSelect))
     num_id <- case_when(
@@ -946,7 +980,7 @@ server <- function(input, output, session) {
   })
   
 
-  observeEvent(input$backToHome, {
+  observeEvent(input$backToHome, { 
     updateTabsetPanel(session, "tabs", selected = "home")
     removeModal()
     # resetDatabase()
