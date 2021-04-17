@@ -101,7 +101,14 @@ body <- dashboardBody(
             h4("End Phase"),
             p("During this phase, the board status would be checked. Upon connection to the bulb or
               the deck running out of cards, the game will end and the conclusion of the game would
-              be shown.")
+              be shown."),
+            br(),
+            br(),
+            p("Attributions:"),
+            p("Board Map (Among Us, Electrical Task) : https://among-us.fandom.com/wiki/Fix_Wiring"),
+            p("Lightbulb : https://www.vecteezy.com/free-vector/light-bulb, Light Bulb Vectors by Vecteezy"),
+            p("Battery: https://www.vecteezy.com/free-vector/battery, Battery Vectors by Vecteezy")
+            
     )
   )
 )
