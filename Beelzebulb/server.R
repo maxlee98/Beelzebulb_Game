@@ -7,7 +7,7 @@ library(rsconnect)
 library(shinyjs)
 
 #Interval Time in seconds
-intervalTime <- 1
+intervalTime <- 6
 
 #Global Variables 
 boardState <- tibble(
@@ -738,12 +738,7 @@ server <- function(input, output, session) {
       removeModal()
       Sys.sleep(intervalTime + 1)
       dbExecute(conn, sprintf("UPDATE StartGame SET start = %d", 0))
-    }
-    dbDisconnect(conn)
-  }
-  
-  checkGE <- function(sg){  # MAX
-    conn <- getAWSConnection()
+    }#Check Game End
     if(sg[1, 2] == 1){
       dbExecute(conn, sprintf("UPDATE StartGame SET end = %d", 0))
       endtable <- getEndTable(imposter = "LOSE", gameState$players)
@@ -1029,7 +1024,6 @@ server <- function(input, output, session) {
     isolate({getPlayerTurn(gameState$turnNum)})
     isolate({checkGS(gameState$sg)})
     isolate({updateGameState(gameState$state)})
-    isolate({checkGE(gameState$sg)})
   })
 
   
