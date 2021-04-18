@@ -35,13 +35,13 @@ body <- dashboardBody(
     ),
     
     tabItem(tabName = "game",
-            h2("This is the Game Lobby to Game Tab"),
+            h2("GAME SCREEN"),
             verbatimTextOutput("playerturn"),
             # verbatimTextOutput("gamePhase"),
             verbatimTextOutput("assignedRole"),
             fluidRow(
               box(
-                title = "A Very Simple Board Game",width=12,
+                title = "BEELZEBULB",width=12,
                 htmlOutput("playercolorchoice"),
                 uiOutput("moreControls"),
                 # the trick here is to make the gameboard image 'position:absolute;z-order:0'; 
@@ -65,7 +65,6 @@ body <- dashboardBody(
                 imageOutput("cell34",height="100px",width="100px",click="click34",inline=TRUE),  # height and width are for the containing div, not the image itself
                 imageOutput("cell35",height="100px",width="100px",click="click35",inline=TRUE),
                 tags$br(),
-                p("ESD Fantasy Map and Game Pieces by Tan Yi Lin"),
               ),
               fluidRow(box(
                 img(src='Wire_Designs-01.png',style="position:relative;x-order:0",width="50px",height="50px"),
@@ -101,7 +100,14 @@ body <- dashboardBody(
             h4("End Phase"),
             p("During this phase, the board status would be checked. Upon connection to the bulb or
               the deck running out of cards, the game will end and the conclusion of the game would
-              be shown.")
+              be shown."),
+            br(),
+            br(),
+            p("Attributions:"),
+            p("Board Map (Among Us, Electrical Task) : https://among-us.fandom.com/wiki/Fix_Wiring"),
+            p("Lightbulb : https://www.vecteezy.com/free-vector/light-bulb, Light Bulb Vectors by Vecteezy"),
+            p("Battery: https://www.vecteezy.com/free-vector/battery, Battery Vectors by Vecteezy")
+            
     )
   )
 )
