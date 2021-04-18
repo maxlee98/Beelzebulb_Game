@@ -6,6 +6,7 @@ library(shinydashboard)
 library(rsconnect)
 library(shinyjs)
 
+#Interval Time in seconds
 intervalTime <- 1
 
 #Global Variables 
@@ -132,7 +133,7 @@ newBoard <- function(board){
       dbExecute(conn, sprintf("UPDATE GameState SET img_num = 1, n = 0, s = 0, w = 0, e = 0 WHERE cell_number=%d", i))
     }
   }
-  dbExecute(conn, "UPDATE StartGame SET start = 0")
+  dbExecute(conn, "UPDATE StartGame SET start = 0, end = 0")
   dbExecute(conn, "UPDATE TurnNumber SET turn = 0")
   dbExecute(conn, "TRUNCATE table CardDeck")
   cardID_deck <- rep(c(1001, 1002, 1003, 1004, 1005), each = 6)
@@ -743,25 +744,21 @@ server <- function(input, output, session) {
   
   checkGE <- function(sg){  # MAX
     conn <- getAWSConnection()
-    # hasGameStarted <- dbGetQuery(conn, "SELECT start FROM StartGame")[1, 1]
     if(sg[1, 2] == 1){
-      # updateTabsetPanel(session, "tabs", selected = "game")
-      # drawCard(vals$userid, 3)
-      # removeModal()
+      dbExecute(conn, sprintf("UPDATE StartGame SET end = %d", 0))
       endtable <- getEndTable(imposter = "LOSE", gameState$players)
       output$resultTable <- renderTable(endtable)
       showModal(gameEnd(failed=FALSE))
       refresh('EndGame', gameState$lobby, gameState$handCards)
       Sys.sleep(intervalTime + 1)
-      dbExecute(conn, sprintf("UPDATE StartGame SET end = %d", 0))
     }
     else if(sg[1, 2] == 2){
+      dbExecute(conn, sprintf("UPDATE StartGame SET end = %d", 0))
       endtable <- getEndTable(imposter = "WIN", gameState$players)
       output$resultTable <- renderTable(endtable)
       showModal(gameEnd(failed=FALSE))
       refresh('EndGame', gameState$lobby, gameState$handCards)
       Sys.sleep(intervalTime + 1)
-      dbExecute(conn, sprintf("UPDATE StartGame SET end = %d", 0))
     }
     dbDisconnect(conn)
   }
@@ -1017,23 +1014,13 @@ server <- function(input, output, session) {
     vals$turn <- nextPlayer(vals$turn)
     removeModal()
     updateGameState(gameState$state)
-    # Check Win Condition
-    
   })
-  
-
   observeEvent(input$backToHome, { 
     updateTabsetPanel(session, "tabs", selected = "home")
     newBoard(game_state)
     removeModal()
   })
   
-  # observe({
-  #   invalidateLater(500, session)
-  #   isolate({updateGameState(gameState$state)})
-  # })
-  # 
-  # 
   observe({
     invalidateLater(intervalTime*1000, session)
     refreshGameState()
@@ -1044,11 +1031,7 @@ server <- function(input, output, session) {
     isolate({updateGameState(gameState$state)})
     isolate({checkGE(gameState$sg)})
   })
-  # 
-  # observe({
-  #   invalidateLater(300, session)
-  #   isolate({checkGS()})
-  # })
+
   
 }
 
