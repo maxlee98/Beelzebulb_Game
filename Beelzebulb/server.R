@@ -7,7 +7,7 @@ library(rsconnect)
 library(shinyjs)
 
 #Interval Time in seconds
-intervalTime <- 6
+intervalTime <- 2
 
 #Global Variables 
 boardState <- tibble(
@@ -736,7 +736,7 @@ server <- function(input, output, session) {
       updateTabsetPanel(session, "tabs", selected = "game")
       drawCard(vals$userid, 3)
       removeModal()
-      Sys.sleep(intervalTime + 1)
+      Sys.sleep(intervalTime + 3)
       dbExecute(conn, sprintf("UPDATE StartGame SET start = %d", 0))
     }#Check Game End
     if(sg[1, 2] == 1){
