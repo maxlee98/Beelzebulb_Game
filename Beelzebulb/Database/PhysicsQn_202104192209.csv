@@ -1,0 +1,21 @@
+"qn_id","question","ans_id"
+1,"If 1 A current flows in a circuit, the number of electrons flowing through this circuit is:",1
+2,The resistivity of the conductor depends on,7
+3,"The resistance of a conductor of diameter d and length l is R Ω. If the diameter of the conductor is halved and its length is doubled, the resistance will be",12
+4,How many coulombs of charge flow through a circuit carrying a current of 10 A in 1 minute?,15
+5,A capacitor carries a charge of 0.1 C at 5 V. Its capacitance is,17
+6," Four capacitors each of 40 µF are connected in parallel, the equivalent capacitance of the system will be",21
+7,"Five capacitors each of 5 µF are connected in series, the equivalent capacitance of the system will be",28
+8,The unit of resistivity is,30
+9,Instantaneous power in inductor is proportional to the,33
+10,"The voltage induced in an inductor is represented as,",40
+11,Magnetic flux has the unit of,43
+12,Power dissipation in ideal inductor is,47
+13,Inductor does not allow the sudden change of,49
+14,Capacitor does not allow the sudden change of,54
+15,Internal resistance of ideal voltage source is,57
+16,Super position theorem is not applicable for,63
+17,Under resonance condition the phase angle between voltage phase and current phase is,65
+18,Average power taken by the pure capacitor is,69
+19,"In a series R, L circuit, voltage across resistor and inductor are 3 V and 4 V respectively, then what is the applied voltage?",74
+20," If a pure inductor is connected across the ac source, the average power taken by the inductor is",79
