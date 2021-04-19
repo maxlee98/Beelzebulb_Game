@@ -7,7 +7,7 @@ library(rsconnect)
 library(shinyjs)
 
 #Interval Time in seconds
-intervalTime <- 6
+intervalTime <- 2
 
 #Global Variables 
 boardState <- tibble(
@@ -288,7 +288,6 @@ gameLobby <- function(totalPlayers, failed = FALSE){
       footer = tagList(
         actionButton("entergame", "Start Game")
       ),
-      easyClose = TRUE
     )
   }else{
     modalDialog(
