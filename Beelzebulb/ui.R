@@ -1,54 +1,22 @@
 library(stringr)
 library(shiny)
 library(DBI)
-library(jsonlite)
 library(shinydashboard)
 library(rsconnect)
-
+library(shinyjs)
 
 header <- dashboardHeader(
-  title = "Beelzebulb",
-  dropdownMenu(type = "messages",
-               messageItem(
-                 from = "Sales Dept",
-                 message = "Sales are steady this month."
-               ),
-               messageItem(
-                 from = "New User",
-                 message = "How do I register?",
-                 icon = icon("question"),
-                 time = "13:45"
-               ),
-               messageItem(
-                 from = "Support",
-                 message = "The new server is ready.",
-                 icon = icon("life-ring"),
-                 time = "2014-12-01"
-               )
-            ),
-  dropdownMenu(type = "tasks", badgeStatus = "success",
-               taskItem(value = 90, color = "green",
-                        "Documentation"
-               ),
-               taskItem(value = 17, color = "aqua",
-                        "Project X"
-               ),
-               taskItem(value = 75, color = "yellow",
-                        "Server deployment"
-               ),
-               taskItem(value = 80, color = "red",
-                        "Overall project"
-               )
-            )
-  )
+  title = "Beelzebulb"
+)
 
 sidebar <- dashboardSidebar(
+  useShinyjs(),
+  
   sidebarMenu(
     id = "tabs",
     menuItem("Home Page", tabName = "home", icon = icon("home")),
-    menuItem("Game", tabName = "game", icon = icon("dice")),
-    menuItem("Instructions", tabName = "instruct", icon = icon("compass")),
-    menuItem("Testing Screen (Test)", tabName = "test", icon = icon("question"))
+    menuItem("Game", tabName = "game", icon = icon("dice")) %>% shinyjs::hidden(),
+    menuItem("Instructions", tabName = "instruct", icon = icon("compass"))
   )
 )
 
@@ -61,45 +29,87 @@ body <- dashboardBody(
             actionButton("register", "Register"),
             actionButton("login", "Login"),
             HTML("<p></p>"),
-            uiOutput("buttonGameLobby")
-            ),
+            uiOutput("buttonGameLobby"),
+            uiOutput("backToGame"),
+            uiOutput("LobbyFull")
+    ),
     
     tabItem(tabName = "game",
-            h1("This is the Game Lobby to Game Tab"),
+            h2("GAME SCREEN"),
             verbatimTextOutput("playerturn"),
-            verbatimTextOutput("gamePhase"),
+            # verbatimTextOutput("gamePhase"),
+            verbatimTextOutput("assignedRole"),
             fluidRow(
-              # the trick here is to make the gameboard image 'position:absolute;z-order:0'; 
-              # Then, to superimpose images, style them to be 'position:relative;z-order:999'
-              img(src='FantasyMap.jpg',style="position:absolute;z-order:0",width="100%",height="300px"),
-              lapply(1:3, function(i){
-                lapply(1:4, function(j){
-                  column(3,
-                  imageOutput(paste0("cell", i, j),height="100px",width="100px",click=paste0("click", i, j),inline=TRUE)
-                  )
-                })
-              })
+              box(
+                title = "BEELZEBULB",width=12,
+                htmlOutput("playercolorchoice"),
+                uiOutput("moreControls"),
+                # the trick here is to make the gameboard image 'position:absolute;z-order:0'; 
+                # Then, to superimpose images, style them to be 'position:relative;z-order:999'
+                img(src='Fix_Wiring.png',style="position:absolute;z-order:0",width="500px",height="300px"),
+                imageOutput("cell11",height="100px",width="100px",click="click11",inline=TRUE), # height and width are for the containing div, not the image itself
+                imageOutput("cell12",height="100px",width="100px",click="click12",inline=TRUE),  # height and width are for the containing div, not the image itself
+                imageOutput("cell13",height="100px",width="100px",click="click13",inline=TRUE), # height and width are for the containing div, not the image itself
+                imageOutput("cell14",height="100px",width="100px",click="click14",inline=TRUE),  # height and width are for the containing div, not the image itself
+                imageOutput("cell15",height="100px",width="100px",click="click15",inline=TRUE),
+                tags$br(),
+                imageOutput("cell21",height="100px",width="100px",click="click21",inline=TRUE), # height and width are for the containing div, not the image itself
+                imageOutput("cell22",height="100px",width="100px",click="click22",inline=TRUE),  # height and width are for the containing div, not the image itself
+                imageOutput("cell23",height="100px",width="100px",click="click23",inline=TRUE), # height and width are for the containing div, not the image itself
+                imageOutput("cell24",height="100px",width="100px",click="click24",inline=TRUE),  # height and width are for the containing div, not the image itself
+                imageOutput("cell25",height="100px",width="100px",click="click25",inline=TRUE),
+                tags$br(),
+                imageOutput("cell31",height="100px",width="100px",click="click31",inline=TRUE), # height and width are for the containing div, not the image itself
+                imageOutput("cell32",height="100px",width="100px",click="click32",inline=TRUE),  # height and width are for the containing div, not the image itself
+                imageOutput("cell33",height="100px",width="100px",click="click33",inline=TRUE), # height and width are for the containing div, not the image itself
+                imageOutput("cell34",height="100px",width="100px",click="click34",inline=TRUE),  # height and width are for the containing div, not the image itself
+                imageOutput("cell35",height="100px",width="100px",click="click35",inline=TRUE),
+                tags$br(),
+              ),
+              fluidRow(box(
+                img(src='Wire_Designs-01.png',style="position:relative;x-order:0",width="50px",height="50px"),
+                htmlOutput("wire1",inline=TRUE),
+                img(src='Wire_Designs-02.png',style="position:relative;x-order:1",width="50px",height="50px"),
+                htmlOutput("wire2",inline=TRUE),
+                img(src='Wire_Designs-03.png',style="position:relative;x-order:2",width="50px",height="50px"),
+                htmlOutput("wire3",inline=TRUE),
+                img(src='Wire_Designs-04.png',style="position:relative;x-order:3",width="50px",height="50px"),
+                htmlOutput("wire4",inline=TRUE),
+                img(src='Wire_Designs-05.png',style="position:relative;x-order:4",width="50px",height="50px"),
+                htmlOutput("wire5",inline=TRUE)
+                ))
             )
-          ),
-
+    ),
+    
     tabItem(tabName = "instruct",
-            h2("Widgets tab content"),
-            p("Instruction goes here")
-          ),
-    tabItem(tabName = "test",
-            h2("Testing Goes Here"),
-            h3("End Game Screen (Result) with a return to lobby button"),
-            actionButton("endGameResult", "End Game Results"),
-            h4("Drawing of cards for each players"),
-            actionButton("drawCards", "Draw Cards"),
-            h3("Placing of Cards on the board"),
-            h4("Edit the game tab with the board and the cells available to be clicked"),
-            h3("Answering of Physics Question"),
-            h4("Popup with a random physics question and the multiple choice answers with submit button"),
-            h3("Defeat Condition Logic"),
-            h4("Running out of cards")
-          )
-        )
+            h2("Beelzebulb's Game Instructions"),
+            p("Welcome to Beelzebulb, a 4 Player Game in which 3 Players work together as Engineers 
+              in attempt to connect wires from the battery all the way to the light bulb! The fourth
+              player would play the role of an Imposter, whereby he tries to stop the 3 Engineers from
+              reaching the lightbulb."),
+            p("Roles of the Players would not be disclosed. It would only appear on each individual's
+              screen."),
+            p("Your hand cards are displayed at the bottom of the screen"),
+            h3("The Game is comprised of 3 Phases : Standby Phase, Action Phase, End Phase."),
+            h4("Standby Phase"),
+            p("In the Standby Phase, players would be given a multiple choice physics question.
+              Answering the question right allows the player to draw a card. Failure to answer correctly
+              results in the player not being able to draw a card."),
+            h4("Action Phase"),
+            p("In this phase, players would have to choose a card from their hand and place it onto the board."),
+            h4("End Phase"),
+            p("During this phase, the board status would be checked. Upon connection to the bulb or
+              the deck running out of cards, the game will end and the conclusion of the game would
+              be shown."),
+            br(),
+            br(),
+            p("Attributions:"),
+            p("Board Map (Among Us, Electrical Task) : https://among-us.fandom.com/wiki/Fix_Wiring"),
+            p("Lightbulb : https://www.vecteezy.com/free-vector/light-bulb, Light Bulb Vectors by Vecteezy"),
+            p("Battery: https://www.vecteezy.com/free-vector/battery, Battery Vectors by Vecteezy")
+            
+    )
+  )
 )
 
 ui <- dashboardPage(
@@ -107,4 +117,4 @@ ui <- dashboardPage(
   header, 
   sidebar, 
   body
-  )
+)
