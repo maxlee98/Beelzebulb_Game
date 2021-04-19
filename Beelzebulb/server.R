@@ -286,7 +286,8 @@ gameLobby <- function(totalPlayers, failed = FALSE){
       title = "Players Currently In Waiting Room:",
       tableOutput("gameLobbyTable"),
       footer = tagList(
-        actionButton("entergame", "Start Game")
+        actionButton("entergame", "Start Game"),
+        actionButton("exitLobby", "Quit Lobby")
       ),
     )
   }else{
