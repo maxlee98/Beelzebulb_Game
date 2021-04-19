@@ -288,7 +288,6 @@ gameLobby <- function(totalPlayers, failed = FALSE){
       footer = tagList(
         actionButton("entergame", "Start Game")
       ),
-      easyClose = TRUE
     )
   }else{
     modalDialog(
